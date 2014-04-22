@@ -1,108 +1,73 @@
-# Angular Desktop App
+# IPython Notebook Desktop
 
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/jgrenon/angular-desktop-app/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+This is a proof of concept desktop interface for the Ipython Notebook. 
 
-This is a simple application skeleton to create desktop application using AngularJS. This application is using node-webkit as our desktop host,
-bower to install client-side libraries as well as normal npm modules as supported by node-webkit.
+## Concept
+Most IPython users end up using local installs of the IPython notebook in their browser. However this is somewhat clunky, mixing the browser interface and the notebook interface and generally requiring a trip to the command line to get the server running.
 
-This is a work in progress and there are currently no test available yet. More features will be added as I have time available.
+The IPython Notebook Desktop wraps the webapp in a more friendly interface, powered by node-webkit. You can configure a notebook to run to power the interface (optionally have it run on startup).
 
-Everything is dynamically loaded through require.js, to ensure that all Angular components are kept separated in separate folders.
+What this does **NOT** do is provide you with a Python installation. This is deliberate, since people have different needs and tastes with regards to their python installs. Some people want to use the python bundled with their operating system, others use Python distributions like Canopy or Anaconda. With iPython desktop the python distribution and the interface are seperate. Eventually, Ipython desktop could be bundled with other distributions or even become part of IPython itself.
 
-# Release Notes
+## How to use
+First, you must have installed IPython itself somehow. My personal recommendation is the Anaconda python distribution.
 
-- [1.2.0 - 2014-02-18]:
-    + Add menubar support with seamless integration into the Angular event system.
-    + Add file open dialog support in nwService with promise returning the selected file path
-    + migrate to node-webkit 0.9.1
-- [1.1.0 - 2014-02-12]:
-    + Migrate project to angular-ui-router, which is much more aligned with managing complex UI state, which is required for rich desktop app. New modular way
-        to declare states (routes) following the exact same pattern we use for other angular modules. See navigation documentation for more details.
-    + Integrated Grunt in the project (thanks to [Tom Lawton](https://github.com/talss89) )
+Then, get ipython-desktop for your OS (see the apps folder, or follow the link)
+Mac: link
 
+** Coming sometime - binary bundles for each platform. Contribuitions welcome **
 
-## Getting Started
+## Configuration
 
-- 1. Get the source code
+Ipython desktop can either launch the Ipython notebook server for you or connect to an existing URL. To launch a server you must define an appropriate command (this will be made more user friendly in the future).
 
-You can either fork this repository and clone it to your local disk or use git branches to integrate this seed with another git repository. The later will
-help you get any bug fixes and improvements we put in the seed.
+** IMPORTANT - you must supply the full path to your IPython install otherwise the mac bundle will fail to launch the ipython server **
+** WARNING: ** ipython-desktop is by no means idiot proof at the moment. If you don't configure the command correctly the page will simply fail to load without explanation. This should improve in future versions.
 
-    $ git remote add seed git@github.com:jgrenon/angular-desktop-app.git
-    $ git fetch seed
-    $ git checkout -b seed seed/master
+By default, IPython-desktop attempts to launch the system default ipython using
+`/usr/bin/ipython notebook --no-browser`
+You can use all allowed ipython options, but you MUST keep the `--no-browser` option.
 
-You can push a copy of the seed to your origin
+### Examples
+Using an Anaconda virtual env (conda env)
+`/Users/yourusername/anaconda/envs/yourenvname/bin/ipython notebook --no-browser`
 
-    $ git push origin seed
+Using a virtuelenv
 
-Merge `seed` to `master` branch:
+`/foo/bar/env/bin/ipython notebook --no-browser`
 
-    $ git checkout master
-    $ git merge seed
+Using a profile
 
-  Resolve merge conflicts then push to `origin/master`:
+`/Users/yourusername/anaconda/envs/yourenvname/bin/ipython notebook --no-browser --profile=myprofile`
 
-    $ git push
-
-- 2. In the application root, execute **npm install && grunt install**. Node-Webkit will be installed locally under ```cache/<platform>/<version>```.
-- 3. To run your application, execute **grunt run**.
+### URL only
+If you set the "remote" option in the config you can simply type in the URL of your IPython server (including http:// at the front!) handy if you just want a nicer interface for a remote system or just for testing.
 
 
-## More Details
+## Building ipython-desktop
+In theory, the followin steps should work (on Mac):
 
-The application is launch and index.html is loaded. Grunt uses LESS to render all stylesheets. The default stylesheet is located in
-./css/app.less and includes bootstrap 3.0. No need to add bootstrap, you just get all bootstrap controls, grid and features. We're declaring the ng-view element which will act as a placeholder
-for Angular views. After that, we bootstrap require.js by loading the  js/main.js file. No other JS files are loaded statically. Everything else is loaded through require.js as described
-in main.js
+Requirements - you must have Xcode developer tools installed as well as `nodejs` with `npm` and `grunt`. If you use Homebrew (and you should) just do brew install node. Then install Grunt via npm with `npm install grunt`.
 
-main.js contains standard require.js configuration entries. We define all libraries that are declared in bower.json in the paths section. We delare a few shims to add require.js support to
-non-compatible libraries. We also define dependencies to help require.js load all libraries in the right order. This reduces also the number of dependencies you have to state in your own
-modules. The control is then passed to the bootstrap module, which will launch the angular application and start loading all application specific modules. The bootstrap load angular an
-Angular application called **app***, which is defined in ./js/app.js.
+In the terminal, `cd` to the source folder and run `npm install` then `grunt install` to set up the dependancies for ipython desktop, this might take a while. 
 
-app.js is a standard Angular 1.2 application, loading all dependent modules to get services, controllers, etc.
+FINALLY you should be able to run `grunt run` and see you shiny new ipython-desktop app, ready to configure.
 
-Each Angular component is defined in its own file and dynamically injected when you need it using require.js. The same pattern is used for all components, an index.js file, loaded by require.js,
-declares all component files. This ensures that all files are loaded automatically. Each Angular component file is a require.js module, which declares the actual Angular component.
+## Known Issues
+- IMPORTANT - you must configure ipython desktop with the FULL PATH of your ipython executable.
+- Certain combinations of starting/stopping ipython servers and opening/closing windows might leave orphaned IPython processes (especially if you force quit the app)
+- 
 
-## Navigation
+## TODO
+- Bundles for all OSes
+- Make sure it actually works in deployed mode
+- Add fault tolerance e.g. for missing or misconfigured Ipython
 
-Application navigation is powered by the angular-ui-router module. This module manages hierarchical ui state and offer a very powerful way to structure complex ui. For example, we now support
-nested views and multi views (multiple ui-view placeholder in the application). This is much more aligned with common desktop app needs.
+## Similar Work
+Enthought provide their Canopy desktop interface with IPython notebook integration. However this ties you into the EPD distribution. The IPython Notebook Desktop aims to be a lighter, more versatile solution
 
-### Declaring a new state
-A state is a particular location in the application UI. We have grouped all routes into the app.states module (js/states/main.js). The main file contains top-level states that can be referenced
-from anywhere in controllers by using `$state.go('signup')`. You can added more top-level states in this file or create additional files (dialogs.js, security.js) to group new state together. Just
-remember to add your file to the dependency list of the index.js file. Follow the main.js structure and your new state will be available in your application.
 
-## Menus
+## Credits
+IPython desktop is powered by Node Webkit and makes use of the angular-desktop-app template.
 
-Menubar and contextual menus are now supported directly in the nwService. The benefits of using the service are :
 
-- Capacity to create a full menu structure in a single call (see node-webkit.js service)
-- Integration with Angular by providing an event name as 'click' value. When the user click the menu, the $rootScope will $broadcast your event name, so it's easy for
-you to register $on(eventName) handlers in any of your scope. You should register your handlers in the AppCtrl for the menubar and directly in your local controller for contextual menus.
-
-## Packaging
-
-To package your application, simply run **grunt build** from the application root.
-
-Check ```releases/<platform>``` for the finished product.
-
-**Known Issue** - Decompressing the executable takes time, sometimes large programs may be slow to start.
-
-## Next Steps
-
-Feel free to contribute pull requests to improve this frame. Adding grunt to launch the app would be nice, adding Jasmine tests, exposing various Node-webkit features as Angular services
-would also be nice. I'll contribute a few myself as I continue the implementation of my own app for my Vibes.IO cloud platform.
-
-DONE - Add better database abstraction for model objects
-DONE - Expose node-webkit menubar as Angular service
-DONE - Provide navigation and layout samples to show the power of angular-ui-router for desktop app (nested and multi views)
-- Add all tests
-- Integrate Server Side communication pattern (through Angular service, socket.io?)
-- Expose node-webkit notification area
-- Integrate our User/Role model with the security service
-- Add a data bootstrap mechanism to create structural data on first load
-- Add socket.io support for real-time communication

@@ -5,9 +5,8 @@
   "main": "index.html",
   "author":{
         "name": "Jon Chambers",
-        "url" : "https://mangecoeur.github.com/"
+        "url" : "https://mangecoeur.github.com"
   },
-  //NO-EDIT WILL NEED TO BE REPLACED WITH LATER UPDATE
   "no-edit-menu": false,
 
   "window": {

@@ -43,7 +43,7 @@ module.exports = function(grunt) {
                 linux64: isLinux64,
                 keep_nw: false,
                 zip: false,
-                mac_icns:'./src/images/angular-desktop-app.icns'
+                mac_icns:'./src/images/ipython-desktop.icns'
             },
             src: ['./src/**/*']
         },

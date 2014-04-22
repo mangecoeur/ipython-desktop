@@ -65,11 +65,7 @@ function StartPage($scope, $timeout, $location, serverConfig, ipythonProc, nwSer
     }
   }
 
-  if ($scope.isRunning && $('#ipython-main-app', frames['ipython-frame'].document).length === 0) {
-    var timeout = $timeout(updateUrl, 200);
-
-  }
-
+  //register callbacks
   $scope.$on("serverStarted", function(id) {
     Page.setTitle(global.runningServer.name);
     var timeout = $timeout(updateUrl, 200);
@@ -79,12 +75,18 @@ function StartPage($scope, $timeout, $location, serverConfig, ipythonProc, nwSer
   $scope.$on("serverStopped", function(id) {
     Page.setTitle("IPython");
     $scope.isRunning = false;
-    $timeout(function(){
-      $scope.serverUrl = "";
-      $scope.$apply();
-
-    }, 400);
+    $scope.$apply();
   });
+
+  //Start the server if autostart is enabled
+  if (serverConfig.autoStart()) {nwService.startIpython();}
+
+  if ($scope.isRunning && $('#ipython-main-app', frames['ipython-frame'].document).length === 0) {
+    var timeout = $timeout(updateUrl, 200);
+
+  }
+
+
 }
 
 /**
@@ -94,9 +96,11 @@ function StartPage($scope, $timeout, $location, serverConfig, ipythonProc, nwSer
 function EditIpythonConfig($scope, serverConfig, nwService) {
   $scope.id = 'default';
   $scope.conf = _.extend({}, serverConfig.get('default')); // Make a simple clone
+  $scope.autoStart = serverConfig.autoStart();
 
   $scope.save = function (){
     serverConfig.set($scope.id, $scope.conf);
+    serverConfig.autoStart($scope.autoStart);
     //gui.Window.get().close();
     window.location.hash = '/';
 
@@ -223,6 +227,8 @@ app.service('nwService',
   this.stopIpython = function () {
     var serverId = serverConfig.defaultServerId();
     ipythonProc.stop(serverId);
+    window.location.hash = '/';
+
     console.log('stopping');
   };
 
@@ -351,7 +357,15 @@ app.factory('serverConfig', function() {
       localStorage.servers = JSON.stringify(serverList);
       serverList = storedConfigs();
     },
-    defaultServerId: function(){ return localStorage.defaultServer; }
+    defaultServerId: function(){ return localStorage.defaultServer; },
+    autoStart: function(value) {
+      if (value !== undefined) {
+        localStorage.autoStart = value;
+      } else {
+        return JSON.parse(localStorage.autoStart);
+      }
+
+    }
   };
 
 });
