@@ -73,9 +73,9 @@ In the terminal, `cd` to the source folder and run `npm install` then `grunt ins
 FINALLY you should be able to run `grunt run` and see you shiny new ipython-desktop app, ready to configure.
 
 ## Known Issues
-- IMPORTANT - you must configure ipython desktop with the FULL PATH of your ipython executable.
+
+- IMPORTANT - you must configure ipython desktop with the FULL PATH of your ipython executable
 - Certain combinations of starting/stopping ipython servers and opening/closing windows might leave orphaned IPython processes (especially if you force quit the app)
-- 
 
 ## TODO
 - Bundles for all OSes
