@@ -7,10 +7,12 @@ Most IPython users end up using local installs of the IPython notebook in their 
 
 The IPython Notebook Desktop wraps the webapp in a more friendly interface, powered by node-webkit. You can configure a notebook to run to power the interface (optionally have it run on startup).
 
-What this does **NOT** do is provide you with a Python installation. This is deliberate, since people have different needs and tastes with regards to their python installs. Some people want to use the python bundled with their operating system, others use Python distributions like Canopy or Anaconda. With iPython desktop the python distribution and the interface are seperate. Eventually, Ipython desktop could be bundled with other distributions or even become part of IPython itself.
+What this does **NOT** do is provide you with a Python installation. This is deliberate, since people have different needs and tastes with regards to their python installs. Some people want to use the python bundled with their operating system, others use Python distributions like Canopy or Anaconda. With IPython desktop the python distribution and the interface are seperate, but you must confiure IPython desktop to use your IPython installation.
+
+Eventually, IPython desktop could be bundled with other distributions or even become part of IPython itself.
 
 ## Pretty pictures
-Ipython embedded
+IPython embedded
 
 ![Screenshot1](https://raw.githubusercontent.com/mangecoeur/ipython-desktop/master/assets/Screenshot1.png "Screenshot1")
 
