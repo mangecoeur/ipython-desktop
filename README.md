@@ -3,13 +3,16 @@
 This is a proof of concept desktop interface for the Ipython Notebook. 
 
 ## Concept
+It's well established that IPython is awesome.
+
 Most IPython users end up using local installs of the IPython notebook in their browser. However this is somewhat clunky, mixing the browser interface and the notebook interface and generally requiring a trip to the command line to get the server running.
 
 The IPython Notebook Desktop wraps the webapp in a more friendly interface, powered by node-webkit. You can configure a notebook to run to power the interface (optionally have it run on startup).
 
 What this does **NOT** do is provide you with a Python installation. This is deliberate, since people have different needs and tastes with regards to their python installs. Some people want to use the python bundled with their operating system, others use Python distributions like Canopy or Anaconda. With IPython desktop the python distribution and the interface are seperate, but you must confiure IPython desktop to use your IPython installation.
 
-Eventually, IPython desktop could be bundled with other distributions or even become part of IPython itself.
+The IPython Notebook Desktop doesn't aim to make it easier to install a scientific python environemnt, but should be easy enough to get by itself. It could eventually be a candidate for bundling with existing packages or with IPython itself.
+
 
 ## Pretty pictures
 IPython embedded
@@ -25,11 +28,10 @@ Config Screen:
 ![Screenshot3](https://raw.githubusercontent.com/mangecoeur/ipython-desktop/master/assets/Screenshot3.png "Screenshot3")
 https://raw.githubusercontent.com/mangecoeur/ipython-desktop/master/assets/Screenshot1.png
 
-## How to use
-First, you must have installed IPython itself somehow. My personal recommendation is the Anaconda python distribution.
-
-Then, get ipython-desktop for your OS (see the apps folder, or follow the link)
+## Get it!
 [App bundle for Mac](https://github.com/mangecoeur/ipython-desktop/blob/master/apps/ipython-desktop.zip)
+
+You also need to have IPython installed. My personal recommendation is the Anaconda python distribution if you are mainly doing science and engineering work.
 
 **Coming sometime - binary bundles for each platform. Contribuitions welcome**
 
@@ -93,4 +95,5 @@ Enthought provide their Canopy desktop interface with IPython notebook integrati
 ## Credits
 IPython desktop is powered by Node Webkit and makes use of the angular-desktop-app template.
 
-
+## LICENCE
+This software is currently under LGPL licence.
