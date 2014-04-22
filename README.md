@@ -29,7 +29,7 @@ Config Screen:
 https://raw.githubusercontent.com/mangecoeur/ipython-desktop/master/assets/Screenshot1.png
 
 ## Get it!
-[App bundle for Mac](https://github.com/mangecoeur/ipython-desktop/blob/master/apps/ipython-desktop.zip)
+[App bundle for Mac](https://github.com/mangecoeur/ipython-desktop/raw/master/apps/ipython-desktop.zip)
 
 You also need to have IPython installed. My personal recommendation is the Anaconda python distribution if you are mainly doing science and engineering work.
 
