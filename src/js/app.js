@@ -11,34 +11,33 @@ var shell = require('nw.gui').Shell;
 var child_process = require('child_process');
 var shortId = require('shortid');
 //var angular = require('angular');
+var nwWin = gui.Window.get();
 
 global.$ = $ = angular.element;
 global.ipythonProcesses = [];
+global.runningServer = false;
+
+
 /* App Module */
 var app = angular.module('ipython', ['ngRoute', 'mgcrea.ngStrap'])
-    .config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
+    .config(
+      function($routeProvider, $locationProvider, $sceDelegateProvider) {
+        //$locationProvider.html5Mode(true);
         $routeProvider
             .when('/',    {templateUrl: 'start.tpl.html', controller: StartPage})
             .when('/config',    {templateUrl: 'edit-servers.tpl.html', controller: EditIpythonConfig})
 
-            .otherwise({redirectTo: '/config'});
-        }]
-);
-
-
-
-
-//'use strict';
-
-
-app.config(function($sceDelegateProvider) {
-   $sceDelegateProvider.resourceUrlWhitelist([
-       // Allow same origin resource loads.
-       'self',
-       // Allow loading from our assets domain.  Notice the difference between * and **.
-       'http://127.0.0.1**'
-  ]);
-});
+            .otherwise({redirectTo: '/'});
+        
+        $sceDelegateProvider.resourceUrlWhitelist([
+             // Allow same origin resource loads.
+             'self',
+             // Allow loading from our assets domain.  Notice the difference between * and **.
+             'http://127.0.0.1**'
+        ]);
+      }
+    );
+      
 
 // helper functions
 function log(message) {
@@ -50,139 +49,65 @@ function log(message) {
   console.log(message);
 }
 
-function getLocalstorage(name, arg1) {
-  if (arg1 === undefined) {
-    if (localStorage[name] !== undefined) {
-      return JSON.parse(localStorage[name]);
-    } else {
-      return {};
-    } 
-  }
-  else if(arg1 !== undefined){
-    return getLocalstorage(name)[arg1];
-  }
-}
+function StartPage($scope, $timeout, $location, serverConfig, ipythonProc, nwService, Page) {
+  $scope.isRunning = global.runningServer === false ? false : true;
 
-function setLocalstorage(name, arg1, arg2) {
-  if (_.isObject(arg1) && arg2 === undefined) {
-    localStorage[name] = JSON.stringify(arg1);
+  $scope.startIpython = nwService.startIpython;
+  $scope.stopIpython = nwService.stopIpython;
+
+  //reload the ipython page until it is ready
+  function updateUrl(){ 
+    $('#ipython-frame').attr('src', global.runningServer.url);
+    $scope.isRunning = true;
+    $scope.$apply();
+    if ($('#ipython-main-app', frames['ipython-frame'].document).length === 0){
+      $timeout(updateUrl, 200);
+    }
   }
-  else {
-      var currentData = getLocalstorage(name);
-      currentData[arg1] = arg2;
-      localStorage[name] = JSON.stringify(currentData);
+
+  if ($scope.isRunning && $('#ipython-main-app', frames['ipython-frame'].document).length === 0) {
+    var timeout = $timeout(updateUrl, 200);
+
   }
+
+  $scope.$on("serverStarted", function(id) {
+    Page.setTitle(global.runningServer.name);
+    var timeout = $timeout(updateUrl, 200);
+
+  });
+
+  $scope.$on("serverStopped", function(id) {
+    Page.setTitle("IPython");
+    $scope.isRunning = false;
+    $timeout(function(){
+      $scope.serverUrl = "";
+      $scope.$apply();
+
+    }, 400);
+  });
 }
 
 /**
- * Put some dummy data as a string into localstorage
+ * Edit the Ipython config. For now, can only change the single default
+ * Ipython server config. In the future, can add multiple configurations
  */
-function dummyData() {
-  localStorage.clear();
-  //var remotes = {};
-  setLocalstorage('remoteServers', 'aabbccddee', {
-              'name': 'Python3 Fake remote server',
-              'url': 'http://127.0.0.1:8888'
-              });
+function EditIpythonConfig($scope, serverConfig, nwService) {
+  $scope.id = 'default';
+  $scope.conf = _.extend({}, serverConfig.get('default')); // Make a simple clone
 
-  setLocalstorage('localServers', 'default', {
-              'name': 'IPython Default',
-              'port': '8888',
-              'command': 'ipython notebook --no-browser',
-              'virtualenv': null
-              });
-  
-  localStorage.autoStart = 'default';
-}
-
-function StartPage($scope, $timeout, serverConfig, ipythonProc, nwService, Page) {
-  $scope.conf = {running: false};
-  var serverId = localStorage.autoStart;
-
-  $scope.startIpython = function () {
-    ipythonProc.start(serverId);
-    $scope.conf = serverConfig.local.get(serverId);
-    $scope.conf.running = true;
-    Page.setTitle($scope.conf.name);
-    $timeout(function(){
-      //nwService.openWindow("http://127.0.0.1:" + $scope.conf.port);
-      $scope.serverUrl = "http://127.0.0.1:" + $scope.conf.port;
-    }, 400);
-  };
-
-  $scope.stopIpython = function () {
-    ipythonProc.stop(serverId);
-    $scope.conf.running = false;
-    $scope.serverUrl = "";
-    Page.setTitle("IPython");
-    $timeout(function(){
-      $scope.serverUrl = "";
-    }, 400);
+  $scope.save = function (){
+    serverConfig.set($scope.id, $scope.conf);
+    //gui.Window.get().close();
+    window.location.hash = '/';
 
   };
+ /*
+ 
+  //All this stuff from initial multi server support. might reenable later
+  $scope.servers = serverConfig.all();
 
-  if (serverId !== null) {
-    //$scope.startIpython();
-  }
-
-
-  var menus = {
-   type: "menubar",
-   items:[{
-       label: "Server",
-       items:[{label: "Start",
-                click: $scope.startIpython
-              },
-              {label: "Stop",
-                click: $scope.stopIpython
-              }
-              ]
-   }]
-  };
-
-var myMenu = nwService.createMenu(menus);
-//assign the myMenu to window menu
-//win.menu = menubar;
-
-  
-/*
-  _.each(serverConfig.local.list, function(conf, id) {
-    if (conf.autoStart === true) {
-      ipythonProc.start(id);
-      $timeout(function(){
-        nwService.openWindow("http://127.0.0.1:" + conf.port);
-      }, 400);
-    }
-  });*/
-}
-
-function EditIpythonConfig($scope, serverConfig, ipythonProc, nwService) {
-  $scope.window = nwService.window;
-
-  $scope.localServers = serverConfig.local;
-  $scope.remoteServers = serverConfig.remote;
-
-  $scope.startIpython = function (id) {
-    ipythonProc.start(id);
-    var conf = $scope.localServers.list[id];
-    conf.running = true;
-    $scope.localServers.save();
-
-    nwService.openWindow("http://127.0.0.1:" + conf.port);
-
-  };
-
-  $scope.stopIpython = function (id) {
-    ipythonProc.stop(id);
-    $scope.localServers.list[id].running = false;
-    $scope.localServers.save();
-
-    //$('#' + id + ' button.start').show();
-    //$('#' + id + ' button.shutdown').hide();
-  };
-  
-  $scope.handleEditRemote = function (el){
-    var parent = $(el).closest('div.edit_remote_modal');
+  $scope.handleEdit = function (el){
+    var parent = $(el).closest('div.edit_modal');
     var form = $(parent).find('form');
     var id = $(form).data('uid');
 
@@ -191,21 +116,8 @@ function EditIpythonConfig($scope, serverConfig, ipythonProc, nwService) {
         data[field.name] = field.value;
     });
 
-    serverConfig.remote.set(id, data);
-  };
-
-  $scope.handleEditLocal = function(el){
-    var parent = $(el).closest('div.edit_local_modal');
-    var form = $(parent).find('form');
-    var id = $(form).data('uid');
-
-    var data = {};
-    _.each($(form).serializeArray(), function(field) {
-        data[field.name] = field.value;
-    });
-    serverConfig.local.set(id, data);
-    };
-
+    serverConfig.set(id, data);
+  };*/
 }
 
 function EditVirtualEnvs($scope) {
@@ -218,7 +130,9 @@ function EditVirtualEnvs($scope) {
  * @param {[type]} Page   [description]
  */
 function TitleCtrl($scope, Page) {
-
+  $scope.$on("serverStarted", function(id) {
+    console.log(id);
+  });
 }
 
 
@@ -234,25 +148,23 @@ app.factory('Page', function() {
 
 /**
  * Node webkit utilities service
- * @param  {[type]} $rootScope  [description]
- * @param  {[type]} $q          [description]
- * @param  {[type]} ipythonProc [description]
- * @return {[type]}             [description]
  */
-app.factory('nwService', ['$rootScope', '$q', 'ipythonProc', function($rootScope, $q, ipythonProc)  {
+app.service('nwService', 
+  function($rootScope, $q, $timeout, ipythonProc, serverConfig, Page)  {
 
     // Expose gui and main window
-    var gui = require("nw.gui");
-    var window = gui.Window.get();
-
-    window.on('close', function() {
+    var gui = this.gui = require("nw.gui");
+    var nwWin = this.nwWin = gui.Window.get();
+    
+    nwWin.on('close', function() {
       //TODO: confirm before exit
-      //TODO: not sure what happens with multiple windows. might need to check if we are closing main window only
-      ipythonProc.stopAll();
-      this.close(true); //have to explicitly close!
+      //TODO: not sure what happens with multiple nwWins. might need to check if we are closing main nwWin only
+      console.log('Closing down');
+      ipythonProc.stop(global.runningServer.id);
+      nwWin.close(true); //have to explicitly close!
     });
 
-    function _createMenu(menuStructure) {
+    var createMenu = this.createMenu = function (menuStructure) {
 
         // Create the top menu
         var menu = new gui.Menu(menuStructure);
@@ -261,16 +173,17 @@ app.factory('nwService', ['$rootScope', '$q', 'ipythonProc', function($rootScope
         if(menuStructure && menuStructure.items) {
 
             console.log("Creating %d menu items for menu", menuStructure.items.length);
-            _createMenuItems(menu, menuStructure.items);
+            this.createMenuItems(menu, menuStructure.items);
         }
 
         if(menu.type === 'menubar') {
-            this.window.menu = menu;
+            nwWin.menu = menu;
         }
 
         return menu;
-    }
-    function _createMenuItems(menu, items) {
+    };
+
+    var createMenuItems = this.createMenuItems = function (menu, items) {
 
         _.each(items, function(i) {
 
@@ -288,47 +201,78 @@ app.factory('nwService', ['$rootScope', '$q', 'ipythonProc', function($rootScope
             // Create a sub-menu if items are provided
             if(i.items) {
                 i.submenu = new gui.Menu();
-                _createMenuItems(i.submenu, i.items);
+                createMenuItems(i.submenu, i.items);
             }
 
             // Append the menu item to the provided menu
             console.log("appending item %s to menu", i.label);
             menu.append(new gui.MenuItem(i));
         });
+    };
+
+  this.startIpython = function () {
+    if (global.runningServer === false) {
+      var serverId = serverConfig.defaultServerId();
+      ipythonProc.start(serverId);
     }
 
+    window.location.hash = '/';
 
-    return {
-    'gui': gui,
-    'window': window,
-    openWindow: gui.Window.open,
-    /**
-     * Create a context or window menu.
-     * @param menuStructure The actual structure of the menu. This is a shortcut to avoid calling all append methods after creation.
-     * Just provide an object with the following supported properties:
-     * {
-     *  root:{
-     *      type: "context|menubar",
-     *      items:[{
-     *          label: "My Menu Label",
-     *          type: "normal|separator|checkbox",
-     *          enabled: true|false,
-     *          tooltip: "This is my tooltip",
-     *          icon: "path-to-icon"
-     *          items:[{recursive}]
-     *      }]
-     *  }
-     * }
-     * @returns {gui.Menu}
-     */
-    createMenu: _createMenu,
+  };
+
+  this.stopIpython = function () {
+    var serverId = serverConfig.defaultServerId();
+    ipythonProc.stop(serverId);
+    console.log('stopping');
+  };
+
+
+  //TODO conditionall enable/disable menus
+    var menus = {
+     type: "menubar",
+     items:[{
+         label: "Server",
+         items:[{label: "Start",
+                  click: "startIpython"
+                },
+                {label: "Stop",
+                  click: "stopIpython"
+                },
+                {label: "Configure",
+                  click: function(){
+                    //gui.Window.open('config')
+                    window.location.hash = '/config';
+                  }
+                }
+            ]
+          },
+     {
+       label: "View",
+       items:[{label: "Refresh Page",
+                click: function(){
+                  //gui.Window.open('config')
+                  //window.location.hash = '/config';
+                  $('#ipython-frame').attr('src', global.runningServer.url);
+                }
+              }]}
+
+     ]
+    };
+
+    var myMenu = this.createMenu(menus);
+    
+
+    $rootScope.$on("startIpython", this.startIpython);
+    $rootScope.$on("stopIpython", this.stopIpython);
+
+    this.openWindow = gui.Window.open;
 
     /**
      * Open the standard file dialog.
      *
      * @param cfg
      */
-    openFileDialog: function(cfg) {
+    openFileDialog = function(cfg) {
         cfg = cfg || {};
         var result = $q.defer();
         var $dlg = $('#fileDialog');
@@ -356,52 +300,126 @@ app.factory('nwService', ['$rootScope', '$q', 'ipythonProc', function($rootScope
         });
         $dlg.trigger('click');
         return result.promise;
-    },
-
-    createMenuItems: _createMenuItems
-  };
-
-    
-}]);
+    };
+});
 
 
 app.factory('serverConfig', function() {
-  dummyData();
-  function confObj(name) {
-    return {
-      list: getLocalstorage(name),
-
-      get: function (id) {
-          return getLocalstorage(name, id);
-      },
-
-      set: function(id, val) {
-        setLocalstorage(id, val);
-        list = getLocalstorage(name);
-      },
-      save: function() {   
-        setLocalstorage(name, this.list);
-        list = getLocalstorage(name);
-      }
-    };
+  /**
+   * Put some dummy data as a string into localstorage
+   */
+    
+  function storedConfigs() {
+    return JSON.parse(localStorage.servers);
   }
 
+  function init() {
+    if (storedConfigs().default === undefined) {
+      var dummy = {
+        'default': {
+                'name': 'IPython Default',
+                'port': '8888',
+                'command': 'ipython notebook --no-browser',
+                'virtualenv': null,
+                'type': 'local',
+
+                }
+        };
+        localStorage.servers = JSON.stringify(dummy);
+        localStorage.defaultServer = 'default';
+        localStorage.autoStart = false;
+      }
+    }
+
+  init();
+  
+  var serverList = storedConfigs();
+
   return {
-    local: confObj('localServers'),
-    remote: confObj('remoteServers'),
+    local: _.where(serverList, {type: 'local'}),
+    remote: _.where(serverList, {type: 'remote'}),
+    all: function() { return serverList; },
+    get: function(id) {
+      return serverList[id];
+    },
+    set: function(id, config) {
+      serverList[id] = config;
+      localStorage.servers = JSON.stringify(serverList);
+      serverList = storedConfigs();
+    },
+    save: function() {
+      localStorage.servers = JSON.stringify(serverList);
+      serverList = storedConfigs();
+    },
+    defaultServerId: function(){ return localStorage.defaultServer; }
   };
 
 });
 
 
-app.factory('ipythonProc', ['serverConfig', function(serverConfig)  {
+app.factory('ipythonProc', function($rootScope, serverConfig)  {
   return {
     self: this,
     list: global.ipythonProcesses,
-    start: function (id, callback) {
-      var cnf = serverConfig.local.get(id); //ipython config
+    running: global.runningServer,
+    start: function (id) {
+      var cnf = serverConfig.get(id); //ipython config
+      console.log(id);
 
-      //TODO: for now, just define the command, so e.g. for venv use just prepend the right path
+      if (cnf.type == 'local') {
+        //todo make sure port and command dont conflict, probably by defining command list instead of str
+        var ipython = child_process.exec(cnf.command);
+        ipython.stdout.on('data', function (data) {
+           log(data.toString());
+         });
+
+        global.ipythonProcesses[id] = ipython;
+        cnf.id=id;
+        cnf.url =  "http://127.0.0.1:" + cnf.port;
+        global.runningServer = cnf;
+
+        log(cnf.name + ' has been started on port:' + cnf.port);
+
+      } else if (cnf.type == 'remote') {
+        global.ipythonProcesses[id] = cnf;
+        cnf.id=id;
+        global.runningServer = cnf;
+      }
+
+      $rootScope.$broadcast("serverStarted", id, cnf);
+      
+    },
+
+    stop: function (id) {
+      var proc = global.ipythonProcesses[id];
+      if( proc !== undefined) {
+        if (proc.kill !== undefined) {proc.kill();}
+        delete global.ipythonProcesses[id];
+        
+        if (global.runningServer.type == 'local') {
+          global.runningServer.url = null;
+        }
+        global.runningServer = false;
+
+        log(serverConfig.get(id).name + ' has been shut down');
+        
+        $rootScope.$broadcast("serverStopped", id);
+   
+      }
+
+    },
+
+    stopAll: function() {
+      _.each(global.ipythonProcesses, function (proc, id) {
+        if (proc.kill !== undefined) {proc.kill();} // only kill subprocesses, do nothing for remotes.
+        console.log("shutdown " + id);
+      });
+      //global.ipythonProcesses = [];
+      console.log("All processes have been shutdown");
+    }
+
+
+          //TODO: for now, just define the command, so e.g. for venv use just prepend the right path
       //later can make this nicer
       /*
       var argarry = ['notebook', '--no-browser'];
@@ -420,40 +438,5 @@ app.factory('ipythonProc', ['serverConfig', function(serverConfig)  {
       
       var ipython = child_process.spawn('ipython', argarry);
       */
-     //todo make sure port and command dont conflict, probably by defining command list instead of str
-     var ipython = child_process.exec(cnf.command);
-      ipython.stdout.on('data', function (data) {
-        log(data.toString());
-      });
-
-      global.ipythonProcesses[id] = ipython;
-      log(cnf.name + ' has been started on port:' + cnf.port);
-
-      if (_.isFunction(callback)) {
-        callback();
-      }
-      
-    },
-
-    stop: function (id, callback) {
-      if(global.ipythonProcesses[id] !== undefined) {
-        global.ipythonProcesses[id].kill();
-        delete global.ipythonProcesses[id];
-        log(serverConfig.local.get(id).name + ' has been shut down');
-        
-        if (_.isFunction(callback)) {
-          callback();
-        }        
-      }
-
-    },
-
-    stopAll: function() {
-      _.each(global.ipythonProcesses, function (proc, id) {
-        proc.kill();
-      });
-      global.ipythonProcesses = [];
-      log("All processes have been shutdown");
-    }
   };
-}]);
+});

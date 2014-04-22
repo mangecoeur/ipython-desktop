@@ -1,96 +1,90 @@
-<div class="navbar">
-  <button id="devtools" class="btn btn-sm" ng-click="window.showDevTools()">dbg</button>
-</div>
 <div class="container-fluid">
   <div class="row">
-    <div class="col-md-12 col-sm-12 col-lg-12"><h2>Local profiles</h2></div>
-  </div>
-  <div class="list_container" id="notebook_local_list">
-    
-    <div ng-repeat="(id, conf) in localServers.list">
-      <div class="list_item row-fluid" id="{{id}}">
-        <div class="col-md-12 col-sm-12 col-lg-12">
-          <a href="http://127.0.0.1:{{conf.port}}" target="_blank" class="item_link"><span class="item_name">{{conf.name}}</span></a>
-          
-          <div class="pull-right">
-          <button class="btn btn-success btn-sm start" ng-click="startIpython(id)" ng-hide="conf.running">Start</button>
-          <button class="btn btn-danger btn-sm shutdown" ng-click="stopIpython(id)" ng-show="conf.running">Shutdown</button>
-          <button class="btn btn-sm" data-toggle="modal" data-target="#edit-local-{{id}}">Edit</button>
-          </div>
-        </div>
+    <div class="col-sm-1 col-md-1"></div>
+    <div class="col-md-10 col-sm-10 col-lg-10">
+      <h3>Notebook server config</h3>
+      
+      <form id="form-edit-{{id}}" class="form-group">
+      <label>Type</label>
+      <div class="input-group">
+             <input type="radio" ng-model="conf.type" value="local"> Local <br/>
+      <input type="radio" ng-model="conf.type" value="remote"> Remote <br/>
       </div>
+          <label>Name</label>
+          <input type="text" name="name" ng-model="conf.name"  class="form-control">
+          <label>Port</label>
+          <input type="text" name="port" ng-model="conf.port"  class="form-control">
+          
+          <div ng-show="conf.type == 'local'">
+            <label>Command</label>
+            <input type="text" name="command" ng-model="conf.command"  class="form-control">
+          </div>
+          <div class="form-group" ng-hide="conf.type == 'local'">
+            <label>URL</label>
+            <input type="text" name="url" ng-model="conf.url" class="form-control">
+          </div>
+        <button class="btn btn-primary" ng-click="save()">Save</button>
+        <a class="btn" href="#/">Cancel</button>
 
-      <!-- Modal -->
+      </form>
 
-      <div id="edit-local-{{id}}" class="modal fade edit_local_modal" tabindex="-1" role="dialog" aria-labelledby="edit-local-{{id}}" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title">Edit</h4>
-            </div>
-            <div class="modal-body">
-              <form data-uid="{{id}}" class="form-group">
-                <label>Name</label>
-                <input type="text" name="name" ng-model="conf.name"  class="form-control">
-                <label>Profile</label>
-                <input type="text" name="command" ng-model="conf.command"  class="form-control">
-                <label>Port</label>
-                <input type="text" name="port" ng-model="conf.port"  class="form-control">
-              </form>
 
+
+      <!-- from aborted multi-server config support
+      <ul  class="list-group" id="notebook_list">
+        <div  ng-repeat="(id, conf) in servers">
+           <li class="list-group-item">
+            {{conf.name}} 
+              
+            <div class="pull-right">
+              <button class="btn btn-sm" data-toggle="modal" data-target="#edit-{{id}}">Edit</button>
             </div>
-            <div class="modal-footer">
-            <button class="btn" data-dismiss="modal">Close</button>
-            <button class="btn btn-primary" ng-click="localServers.save()">Save changes</button>
+          </li>
+
+          <div id="edit-{{id}}" class="modal fade edit_modal" tabindex="-1" role="dialog" aria-labelledby="edit-{{id}}" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  <h4 class="modal-title">Edit</h4>
+                </div>
+                <div class="modal-body">
+                  <form data-uid="{{id}}" class="form-group">
+                  <div class="form-group">
+                    <label><input type="radio" ng-model="conf.type" value="local"> Local </label>
+                    <label><input type="radio" ng-model="conf.type" value="remote"> Remote </label>
+
+                  </div>
+
+
+                    <label>Name</label>
+                    <input type="text" name="name" ng-model="conf.name"  class="form-control">
+                    <label>Port</label>
+                    <input type="text" name="port" ng-model="conf.port"  class="form-control">
+                    
+                    <div ng-show="conf.type='local'">
+                      <label>Command</label>
+                      <input type="text" name="command" ng-model="conf.command"  class="form-control">
+                    </div>
+                    <div class="form-group" ng-show="conf.type='remote'">
+                      <label>URL</label>
+                      <input type="text" name="url" ng-model="conf.url" class="form-control">
+                    </div>
+                  
+                  </form>
+
+                </div>
+                <div class="modal-footer">
+                <button class="btn" data-dismiss="modal">Close</button>
+                <button class="btn btn-primary" ng-click="servers.save()">Save changes</button>
+                </div>
+              </div>
             </div>
-          </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-      </div><!-- /.modal -->
+          </div> -->   
+        </div>
+      </ul>
+
+      <!-- <button class="btn btn-success add" ng-click="createLocal()">Add</button> -->
     </div>
-  </div>
-  
-  <button class="btn btn-success add" ng-click="createLocal()">Add</button>
-
-  <div class="row">
-    <div class="col-md-12 col-sm-12 col-lg-12">
-    <h2>Remote servers</h2></div>
-  </div>
-  <div class="list_container" id="notebook_server_list">
-   <div ng-repeat="(id, conf) in remoteServers.list">
-      <div class="list_item row-fluid" id="{{id}}">
-        <div class="col-md-12 col-sm-12 col-lg-12">
-          <a href="{{conf.url}}" target="_blank" class="item_link">
-          <span class="item_name">
-          {{conf.name}}</span>
-          </a>
-          <div class="item_buttons btn-group pull-right">
-          <button class="btn btn-sm" data-toggle="modal" data-target="#edit-remote-{{id}}">Edit</button>
-        </div>
-        </div>
-        <!-- Modal -->
-      <div id="edit-remote-{{id}}" class="modal fade edit_remote_modal" tabindex="-1" role="dialog" aria-labelledby="edit-remote-{{id}}" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title">Edit</h4>
-            </div>
-              <div class="modal-body">
-              <form data-remoteid="{{id}}"  class="form-group">
-                <label>Name</label>
-                <input type="text" name="name" ng-model="conf.name" class="form-control">
-                <label>URL</label>
-                <input type="text" name="url" ng-model="conf.url" class="form-control">
-              </form>
-              </div>
-              <div class="modal-footer">
-              <button class="btn" data-dismiss="modal">Close</button>
-              <button class="btn btn-primary" ng-click="remoteServers.save()">Save changes</button>
-              </div>
-          </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-      </div> <!-- /.modal -->
-   </div>
   </div>
 </div>

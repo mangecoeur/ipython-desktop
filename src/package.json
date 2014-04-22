@@ -8,10 +8,10 @@
         "url" : "https://mangecoeur.github.com/"
   },
   //NO-EDIT WILL NEED TO BE REPLACED WITH LATER UPDATE
-  "no-edit-menu": true,
+  "no-edit-menu": false,
 
   "window": {
-    "toolbar": true,
+    "toolbar": false,
     "width": 1200,
     "height": 800,
     "icon":"images/favicon.ico"
