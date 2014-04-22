@@ -1,0 +1,18 @@
+{
+  "name": "ipython-desktop",
+  "description": "Ipython notebook desktop interface",
+  "version": "0.2.0",
+  "author":{
+      "name": "Jon Chambers",
+      "url" : "https://github.com/mangecoeur"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-contrib-less": "~0.8.3",
+    "grunt-node-webkit-builder": "~0.1.20",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-shell": "~0.6.4"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "angular-desktop-app",
+  "version": "0.2.0",
+  "main": "index.html",
+  "ignore": [
+    "**/.*",
+    "lib"
+  ],
+  "dependencies": {
+    "lodash": "~2.2.1",
+    "less": "~1.5.1",
+    "jquery": "~2.0.3",
+    "angular-bootstrap": "~0.10.0",
+    "angular-route": "~1.2.16",
+    "angular-strap": "~2.0.1"
+  }
+}
