@@ -33,31 +33,34 @@ Then, get ipython-desktop for your OS (see the apps folder, or follow the link)
 
 ## Configuration
 
-Ipython desktop can either launch the Ipython notebook server for you or connect to an existing URL. To launch a server you must define an appropriate command (this will be made more user friendly in the future).
+Ipython desktop can either launch the Ipython notebook server for you or connect to an existing URL. To launch a server you must define an appropriate command (this will be made more user friendly in the future). Simply click the configure button on the start screen or go to the Server > Configure menu
 
 **IMPORTANT** - you must supply the full path to your IPython install otherwise the mac bundle will fail to launch the ipython server
 
 **WARNING:** ipython-desktop is by no means idiot proof at the moment. If you don't configure the command correctly the page will simply fail to load without explanation. This should improve in future versions.
 
 By default, IPython-desktop attempts to launch the system default ipython using
+
 `/usr/bin/ipython notebook --no-browser`
 
 You can use all allowed ipython options, but you MUST keep the `--no-browser` option.
 
 ### Examples
 Using an Anaconda virtual env (conda env)
+
 `/Users/yourusername/anaconda/envs/yourenvname/bin/ipython notebook --no-browser`
-
-Using a virtuelenv
-
-`/foo/bar/env/bin/ipython notebook --no-browser`
 
 Using a profile
 
 `/Users/yourusername/anaconda/envs/yourenvname/bin/ipython notebook --no-browser --profile=myprofile`
 
+Using an arbitraty ipython executable
+
+`/foo/bar/env/bin/ipython notebook --no-browser`
+
+
 ### URL only
-If you set the "remote" option in the config you can simply type in the URL of your IPython server (including http:// at the front!) handy if you just want a nicer interface for a remote system or just for testing.
+If you set the "remote" option in the config you can simply type in the URL of your IPython server **including `http://` at the front!** handy if you just want a nicer interface for a remote system or just for testing.
 
 
 ## Building ipython-desktop
@@ -76,8 +79,10 @@ FINALLY you should be able to run `grunt run` and see you shiny new ipython-desk
 
 ## TODO
 - Bundles for all OSes
-- Make sure it actually works in deployed mode
 - Add fault tolerance e.g. for missing or misconfigured Ipython
+- More user friendly configuration of ipython
+- better integration with ipython notebooks - start/stop events, clean shutdown
+- Integration with Native menus!
 
 ## Similar Work
 Enthought provide their Canopy desktop interface with IPython notebook integration. However this ties you into the EPD distribution. The IPython Notebook Desktop aims to be a lighter, more versatile solution
