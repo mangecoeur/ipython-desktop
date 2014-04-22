@@ -9,23 +9,39 @@ The IPython Notebook Desktop wraps the webapp in a more friendly interface, powe
 
 What this does **NOT** do is provide you with a Python installation. This is deliberate, since people have different needs and tastes with regards to their python installs. Some people want to use the python bundled with their operating system, others use Python distributions like Canopy or Anaconda. With iPython desktop the python distribution and the interface are seperate. Eventually, Ipython desktop could be bundled with other distributions or even become part of IPython itself.
 
+## Pretty pictures
+Ipython embedded
+
+![Screenshot1](https://raw.githubusercontent.com/mangecoeur/ipython-desktop/master/assets/Screenshot1.png "Screenshot1")
+
+Start Screen:
+
+![Screenshot2](https://raw.githubusercontent.com/mangecoeur/ipython-desktop/master/assets/Screenshot2.png "Start screen")
+
+Config Screen:
+
+![Screenshot3](https://raw.githubusercontent.com/mangecoeur/ipython-desktop/master/assets/Screenshot3.png "Screenshot3")
+https://raw.githubusercontent.com/mangecoeur/ipython-desktop/master/assets/Screenshot1.png
+
 ## How to use
 First, you must have installed IPython itself somehow. My personal recommendation is the Anaconda python distribution.
 
 Then, get ipython-desktop for your OS (see the apps folder, or follow the link)
-Mac: link
+[App bundle for Mac](https://github.com/mangecoeur/ipython-desktop/blob/master/apps/ipython-desktop.zip)
 
-** Coming sometime - binary bundles for each platform. Contribuitions welcome **
+**Coming sometime - binary bundles for each platform. Contribuitions welcome**
 
 ## Configuration
 
 Ipython desktop can either launch the Ipython notebook server for you or connect to an existing URL. To launch a server you must define an appropriate command (this will be made more user friendly in the future).
 
-** IMPORTANT - you must supply the full path to your IPython install otherwise the mac bundle will fail to launch the ipython server **
-** WARNING: ** ipython-desktop is by no means idiot proof at the moment. If you don't configure the command correctly the page will simply fail to load without explanation. This should improve in future versions.
+**IMPORTANT** - you must supply the full path to your IPython install otherwise the mac bundle will fail to launch the ipython server
+
+**WARNING:** ipython-desktop is by no means idiot proof at the moment. If you don't configure the command correctly the page will simply fail to load without explanation. This should improve in future versions.
 
 By default, IPython-desktop attempts to launch the system default ipython using
 `/usr/bin/ipython notebook --no-browser`
+
 You can use all allowed ipython options, but you MUST keep the `--no-browser` option.
 
 ### Examples
