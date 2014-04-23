@@ -1,6 +1,6 @@
 # IPython Notebook Desktop
 
-This is a proof of concept desktop interface for the Ipython Notebook. 
+This is a proof of concept desktop interface for the IPython Notebook. 
 
 ## Concept
 It's well established that IPython is awesome.
