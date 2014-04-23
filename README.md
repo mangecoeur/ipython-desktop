@@ -9,7 +9,7 @@ Most IPython users end up using local installs of the IPython notebook in their 
 
 The IPython Notebook Desktop wraps the webapp in a more friendly interface, powered by node-webkit. You can configure a notebook to run to power the interface (optionally have it run on startup).
 
-What this does **NOT** do is provide you with a Python installation. This is deliberate, since people have different needs and tastes with regards to their python installs. Some people want to use the python bundled with their operating system, others use Python distributions like Canopy or Anaconda. With IPython desktop the python distribution and the interface are separate, but you must configure IPython desktop to use your IPython installation.
+What this does **NOT** do is provide you with an IPython installation. This is deliberate, since people have different needs and tastes with regards to their Python installs. Some people want to use the Python bundled with their operating system, others use Python distributions like Canopy or Anaconda. With IPython Desktop the Python distribution and the interface are separate, but you must configure IPython desktop to use your IPython installation.
 
 The IPython Notebook Desktop doesn't aim to make it easier to install a scientific python environment, but should be easy enough to get by itself. It could eventually be a candidate for bundling with existing packages or with IPython itself.
 
@@ -37,7 +37,7 @@ You also need to have IPython installed. My personal recommendation is the Anaco
 
 ## Configuration
 
-Ipython desktop can either launch the Ipython notebook server for you or connect to an existing URL. To launch a server you must define an appropriate command (this will be made more user friendly in the future). Simply click the configure button on the start screen or go to the Server > Configure menu
+IPython desktop can either launch the IPython notebook server for you or connect to an existing URL. To launch a server you must define an appropriate command (this will be made more user friendly in the future). Simply click the configure button on the start screen or go to the Server > Configure menu
 
 **IMPORTANT** - you must supply the full path to your IPython install otherwise the mac bundle will fail to launch the ipython server
 
