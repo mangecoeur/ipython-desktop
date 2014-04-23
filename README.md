@@ -1,6 +1,6 @@
 # IPython Notebook Desktop
 
-This is a proof of concept desktop interface for the Ipython Notebook. 
+This is a proof of concept desktop interface for the IPython Notebook. 
 
 ## Concept
 It's well established that IPython is awesome.
@@ -91,6 +91,7 @@ FINALLY you should be able to run `grunt run` and see you shiny new ipython-desk
 ## Similar Work
 - Canopy: Enthought provide their Canopy desktop interface with IPython notebook integration. However this ties you into the EPD distribution. The IPython Notebook Desktop aims to be a lighter, more versatile solution
 - [IPython notebook](https://github.com/liyanage/ipython-notebook) Works in a similar vein, though is Mac only. It also differs in aim, since it bundles the essentials for scientific python computing. My aim with this project is to allow the interface to work with different Python installs, making it possible to use different python version and different virtual environments.
+- [IPyApp](https://github.com/ptone/IPyApp) Another project that uses node-webkit to wrap IPython notebook, but embeds the full python executable environment in the app.
 
 
 
