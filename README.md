@@ -26,7 +26,7 @@ Start Screen:
 Config Screen:
 
 ![Screenshot3](https://raw.githubusercontent.com/mangecoeur/ipython-desktop/master/assets/Screenshot3.png "Screenshot3")
-https://raw.githubusercontent.com/mangecoeur/ipython-desktop/master/assets/Screenshot1.png
+
 
 ## Get it!
 [App bundle for Mac](https://github.com/mangecoeur/ipython-desktop/raw/master/apps/ipython-desktop.zip)
@@ -90,7 +90,7 @@ FINALLY you should be able to run `grunt run` and see you shiny new ipython-desk
 
 ## Similar Work
 - Canopy: Enthought provide their Canopy desktop interface with IPython notebook integration. However this ties you into the EPD distribution. The IPython Notebook Desktop aims to be a lighter, more versatile solution
-- (Ipython notebook)[https://github.com/liyanage/ipython-notebook] Works in a similar vein, though is Mac only. It also differs in aim, since it bundles the essentials for scientific python computing. My aim with this project is to allow the interface to work with different Python installs, making it possible to use different python version and different virtual environments.
+- [IPython notebook](https://github.com/liyanage/ipython-notebook) Works in a similar vein, though is Mac only. It also differs in aim, since it bundles the essentials for scientific python computing. My aim with this project is to allow the interface to work with different Python installs, making it possible to use different python version and different virtual environments.
 
 
 
