@@ -320,7 +320,10 @@ app.factory('serverConfig', function() {
   }
 
   function init() {
-    if (storedConfigs().default === undefined) {
+    if (localStorage.servers === undefined) {
+      localStorage.servers = JSON.stringify({});
+    }
+    if (localStorage.servers.default === undefined) {
       var dummy = {
         'default': {
                 'name': 'IPython Default',
