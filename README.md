@@ -9,9 +9,9 @@ Most IPython users end up using local installs of the IPython notebook in their 
 
 The IPython Notebook Desktop wraps the webapp in a more friendly interface, powered by node-webkit. You can configure a notebook to run to power the interface (optionally have it run on startup).
 
-What this does **NOT** do is provide you with a Python installation. This is deliberate, since people have different needs and tastes with regards to their python installs. Some people want to use the python bundled with their operating system, others use Python distributions like Canopy or Anaconda. With IPython desktop the python distribution and the interface are seperate, but you must confiure IPython desktop to use your IPython installation.
+What this does **NOT** do is provide you with a Python installation. This is deliberate, since people have different needs and tastes with regards to their python installs. Some people want to use the python bundled with their operating system, others use Python distributions like Canopy or Anaconda. With IPython desktop the python distribution and the interface are separate, but you must configure IPython desktop to use your IPython installation.
 
-The IPython Notebook Desktop doesn't aim to make it easier to install a scientific python environemnt, but should be easy enough to get by itself. It could eventually be a candidate for bundling with existing packages or with IPython itself.
+The IPython Notebook Desktop doesn't aim to make it easier to install a scientific python environment, but should be easy enough to get by itself. It could eventually be a candidate for bundling with existing packages or with IPython itself.
 
 
 ## Pretty pictures
@@ -33,7 +33,7 @@ https://raw.githubusercontent.com/mangecoeur/ipython-desktop/master/assets/Scree
 
 You also need to have IPython installed. My personal recommendation is the Anaconda python distribution if you are mainly doing science and engineering work.
 
-**Coming sometime - binary bundles for each platform. Contribuitions welcome**
+**Coming sometime - binary bundles for each platform. Contributions welcome**
 
 ## Configuration
 
@@ -58,7 +58,7 @@ Using a profile
 
 `/Users/yourusername/anaconda/envs/yourenvname/bin/ipython notebook --no-browser --profile=myprofile`
 
-Using an arbitraty ipython executable
+Using an arbitrary ipython executable
 
 `/foo/bar/env/bin/ipython notebook --no-browser`
 
@@ -68,11 +68,11 @@ If you set the "remote" option in the config you can simply type in the URL of y
 
 
 ## Building ipython-desktop
-In theory, the followin steps should work (on Mac):
+In theory, the following steps should work (on Mac):
 
 Requirements - you must have Xcode developer tools installed as well as `nodejs` with `npm` and `grunt`. If you use Homebrew (and you should) just do brew install node. Then install Grunt via npm with `npm install grunt`.
 
-In the terminal, `cd` to the source folder and run `npm install` then `grunt install` to set up the dependancies for ipython desktop, this might take a while. 
+In the terminal, `cd` to the source folder and run `npm install` then `grunt install` to set up the dependencies for ipython desktop, this might take a while. 
 
 FINALLY you should be able to run `grunt run` and see you shiny new ipython-desktop app, ready to configure.
 
@@ -89,7 +89,9 @@ FINALLY you should be able to run `grunt run` and see you shiny new ipython-desk
 - Integration with Native menus!
 
 ## Similar Work
-Enthought provide their Canopy desktop interface with IPython notebook integration. However this ties you into the EPD distribution. The IPython Notebook Desktop aims to be a lighter, more versatile solution
+- Canopy: Enthought provide their Canopy desktop interface with IPython notebook integration. However this ties you into the EPD distribution. The IPython Notebook Desktop aims to be a lighter, more versatile solution
+- (Ipython notebook)[https://github.com/liyanage/ipython-notebook] Works in a similar vein, though is Mac only. It also differs in aim, since it bundles the essentials for scientific python computing. My aim with this project is to allow the interface to work with different Python installs, making it possible to use different python version and different virtual environments.
+
 
 
 ## Credits
