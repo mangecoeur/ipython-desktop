@@ -328,7 +328,7 @@ app.factory('serverConfig', function() {
         'default': {
                 'name': 'IPython Default',
                 'port': '8888',
-                'command': 'ipython notebook --no-browser',
+                'command': '/usr/bin/ipython notebook --no-browser',
                 'virtualenv': null,
                 'type': 'local',
 
