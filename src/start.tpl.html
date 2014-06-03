@@ -1,17 +1,25 @@
+<div class="jumbotron" ng-show="isWaiting">
+	<div class="container" >
+		<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Loading...
+	</div>
+</div>
 <iframe ng-show="isRunning"
    		id="ipython-frame"
    		class="container"
            style="min-height: 200px; height: 100%; border: 0"
            ng-src="{{serverUrl}}">
 </iframe>
-<div class="jumbotron" ng-hide="isRunning">
-<div class="container" >
-  <h1>Welcome to Ipython Desktop</h1>
-  <p>...</p>
-  
-  <button class="btn btn-success btn-lg start" ng-click="startIpython()" ng-hide="isRunning">Start Server</button>
-  <button class="btn btn-danger btn-lg shutdown" ng-click="stopIpython()" ng-show="isRunning">Shutdown</button>
-  <a class="btn btn-lg" href="#/config" ng-hide="isRunning">Configure</a>
 
-</div>
+
+
+<div class="jumbotron" ng-hide="isRunning">
+	<div class="container" >
+	  <h1>Welcome to Ipython Desktop</h1>
+	  <p>...</p>
+	  
+	  <button class="btn btn-success btn-lg start" ng-click="startIpython()" ng-hide="isRunning">Start Server</button>
+	  <button class="btn btn-danger btn-lg shutdown" ng-click="stopIpython()" ng-show="isRunning">Shutdown</button>
+	  <a class="btn btn-lg" href="#/config" ng-hide="isRunning">Configure</a>
+
+	</div>
 </div>

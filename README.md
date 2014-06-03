@@ -96,7 +96,7 @@ FINALLY you should be able to run `grunt run` and see you shiny new ipython-desk
 
 
 ## Credits
-IPython desktop is powered by Node Webkit and makes use of the angular-desktop-app template.
+IPython desktop is powered by Node Webkit and makes use of the angular-desktop-app template. Icon is [IPython faenza](http://gnome-look.org/content/show.php?content=162145)
 
 ## LICENCE
 This software is currently under LGPL licence.

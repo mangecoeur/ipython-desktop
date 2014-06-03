@@ -3,8 +3,6 @@
  * this should be used for top-level module definitions only
  */
 
-
-
 var _ = require('underscore');
 var gui = require('nw.gui');
 var shell = require('nw.gui').Shell;
@@ -51,6 +49,7 @@ function log(message) {
 
 function StartPage($scope, $timeout, $location, serverConfig, ipythonProc, nwService, Page) {
   $scope.isRunning = global.runningServer === false ? false : true;
+  $scope.isWaiting = false;
 
   $scope.startIpython = nwService.startIpython;
   $scope.stopIpython = nwService.stopIpython;
@@ -59,9 +58,13 @@ function StartPage($scope, $timeout, $location, serverConfig, ipythonProc, nwSer
   function updateUrl(){ 
     $('#ipython-frame').attr('src', global.runningServer.url);
     $scope.isRunning = true;
+    $scope.isWaiting = true;
+
     $scope.$apply();
     if ($('#ipython-main-app', frames['ipython-frame'].document).length === 0){
       $timeout(updateUrl, 200);
+    } else {
+      $scope.isWaiting = false;
     }
   }
 
@@ -373,7 +376,10 @@ app.factory('serverConfig', function() {
 
 });
 
-
+//TODO: want to use wait() or similar to make sure desktop cannot close before
+//processes finished. 
+//TODO: make best effort to ensure processes close if parent crashes, e.g. open a pipe that will close
+//a well behaved process should know it should terminate.
 app.factory('ipythonProc', function($rootScope, serverConfig)  {
   return {
     self: this,
