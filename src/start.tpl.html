@@ -1,6 +1,8 @@
 <div class="jumbotron" ng-show="isWaiting">
 	<div class="container" >
 		<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Loading...
+		<br>
+		<div class="pull-right"><button class="btn btn-default btn-md shutdown" ng-click="stopIpython()" ng-show="isRunning"><span class="glyphicon glyphicon-remove"></span>&nbsp; Cancel</button></div>
 	</div>
 </div>
 <iframe ng-show="isRunning"

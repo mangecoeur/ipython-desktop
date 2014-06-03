@@ -52,16 +52,22 @@ function StartPage($scope, $timeout, $location, serverConfig, ipythonProc, nwSer
   $scope.isWaiting = false;
 
   $scope.startIpython = nwService.startIpython;
-  $scope.stopIpython = nwService.stopIpython;
+  $scope.stopIpython = function() {
+    $scope.isWaiting = false;
+    $scope.isRunning = false;
+        $scope.$apply();
+
+    nwService.stopIpython();
+  };
 
   //reload the ipython page until it is ready
   function updateUrl(){ 
     $('#ipython-frame').attr('src', global.runningServer.url);
-    $scope.isRunning = true;
+    $scope.isRunning = global.runningServer === false ? false : true;
     $scope.isWaiting = true;
 
     $scope.$apply();
-    if ($('#ipython-main-app', frames['ipython-frame'].document).length === 0){
+    if ($scope.isRunning && $('#ipython-main-app', frames['ipython-frame'].document).length === 0){
       $timeout(updateUrl, 200);
     } else {
       $scope.isWaiting = false;
