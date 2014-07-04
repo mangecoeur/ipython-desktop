@@ -325,7 +325,7 @@ app.factory('serverConfig', function() {
     if (localStorage.servers === undefined) {
       localStorage.servers = JSON.stringify({});
     }
-    if (localStorage.servers.default === undefined) {
+    if (storedConfigs().default === undefined) {
       //var ipython_bin = sh.exec("which ipython").output.replace(/[\r\n]/g, "");
 
 
@@ -462,7 +462,7 @@ app.factory('ipythonProc', function($rootScope, serverConfig)  {
             global.ipythonProcesses[id] = ipython;
             cnf.id=id;
             global.runningServer = cnf;
-          $rootScope.$broadcast("serverStarted", cnf.id, cnf);
+            $rootScope.$broadcast("serverStarted", cnf.id, cnf);
 
             connect(cnf);
           }
@@ -471,9 +471,6 @@ app.factory('ipythonProc', function($rootScope, serverConfig)  {
         ipython.on('close', function (code) {
           log('child process exited with code ' + code);
         });
-
-
-        
 
       }
       else if (cnf.type == 'remote') {
