@@ -3,12 +3,17 @@
  * this should be used for top-level module definitions only
  */
 
+//TODO: save list of running processes as a file, so that when you restart you can pick them up again
+
 var _ = require('underscore');
+//var sh = require('shelljs');
+
 var gui = require('nw.gui');
 var shell = require('nw.gui').Shell;
 var child_process = require('child_process');
+var fs = require('fs');
+var path = require('path');
 var shortId = require('shortid');
-//var angular = require('angular');
 var nwWin = gui.Window.get();
 
 global.$ = $ = angular.element;
@@ -75,7 +80,7 @@ function StartPage($scope, $timeout, $location, serverConfig, ipythonProc, nwSer
   }
 
   //register callbacks
-  $scope.$on("serverStarted", function(id) {
+  $scope.$on("serverReady", function(id) {
     Page.setTitle(global.runningServer.name);
     var timeout = $timeout(updateUrl, 200);
 
@@ -114,27 +119,6 @@ function EditIpythonConfig($scope, serverConfig, nwService) {
     window.location.hash = '/';
 
   };
- /*
- 
-  //All this stuff from initial multi server support. might reenable later
-  $scope.servers = serverConfig.all();
-
-  $scope.handleEdit = function (el){
-    var parent = $(el).closest('div.edit_modal');
-    var form = $(parent).find('form');
-    var id = $(form).data('uid');
-
-    var data = {};
-    _.each($(form).serializeArray(), function(field) {
-        data[field.name] = field.value;
-    });
-
-    serverConfig.set(id, data);
-  };*/
-}
-
-function EditVirtualEnvs($scope) {
-
 }
 
 /**
@@ -147,7 +131,6 @@ function TitleCtrl($scope, Page) {
     console.log(id);
   });
 }
-
 
 app.factory('Page', function() {
    var title = 'IPython';
@@ -241,6 +224,12 @@ app.service('nwService',
     console.log('stopping');
   };
 
+  this.connectLocal = function () {
+    ipythonProc.connectLocal(global.runningServer);
+    log("try to connect");
+  };
+
+
 
   //TODO conditionall enable/disable menus
     var menus = {
@@ -252,6 +241,9 @@ app.service('nwService',
                 },
                 {label: "Stop",
                   click: "stopIpython"
+                },
+                {label: "Connect",
+                  click: "connectLocal"
                 },
                 {label: "Configure",
                   click: function(){
@@ -279,6 +271,7 @@ app.service('nwService',
 
     $rootScope.$on("startIpython", this.startIpython);
     $rootScope.$on("stopIpython", this.stopIpython);
+    $rootScope.$on("connectLocal", this.connectLocal);
 
     this.openWindow = gui.Window.open;
 
@@ -333,19 +326,27 @@ app.factory('serverConfig', function() {
       localStorage.servers = JSON.stringify({});
     }
     if (localStorage.servers.default === undefined) {
-      var dummy = {
-        'default': {
-                'name': 'IPython Default',
-                'port': '8888',
-                'command': '/usr/bin/ipython notebook --no-browser',
-                'virtualenv': null,
-                'type': 'local',
+      //var ipython_bin = sh.exec("which ipython").output.replace(/[\r\n]/g, "");
 
-                }
-        };
-        localStorage.servers = JSON.stringify(dummy);
-        localStorage.defaultServer = 'default';
-        localStorage.autoStart = false;
+
+        var ipython_bin;
+        child_process.exec("which ipython", function(out, stout, sterr) {
+          ipython_bin = stout.trim().replace(/[\r\n]/g, "");
+          log(ipython_bin);
+          var dummy = {
+            'default': {
+                    'name': 'IPython Default',
+                    'ipython': ipython_bin, //=which ipython
+                    'virtualenv': null,
+                    'type': 'local',
+
+                    }
+            };
+            localStorage.servers = JSON.stringify(dummy);
+            localStorage.defaultServer = 'default';
+            localStorage.autoStart = false;
+        });
+
       }
     }
 
@@ -355,21 +356,34 @@ app.factory('serverConfig', function() {
 
   return {
     local: _.where(serverList, {type: 'local'}),
+    
     remote: _.where(serverList, {type: 'remote'}),
+    
     all: function() { return serverList; },
+    
     get: function(id) {
       return serverList[id];
     },
-    set: function(id, config) {
+    
+    set: function(id, config) {      
+      if (config.ipythonProfile) {
+        config.ipythonProfile = config.ipythonProfile.trim();        
+      }
+      if (config.ipythonOpts) {
+        config.ipythonOpts = config.ipythonOpts.trim().split(" ");        
+      }
       serverList[id] = config;
       localStorage.servers = JSON.stringify(serverList);
       serverList = storedConfigs();
     },
+
     save: function() {
       localStorage.servers = JSON.stringify(serverList);
       serverList = storedConfigs();
     },
+    
     defaultServerId: function(){ return localStorage.defaultServer; },
+    
     autoStart: function(value) {
       if (value !== undefined) {
         localStorage.autoStart = value;
@@ -387,35 +401,88 @@ app.factory('serverConfig', function() {
 //TODO: make best effort to ensure processes close if parent crashes, e.g. open a pipe that will close
 //a well behaved process should know it should terminate.
 app.factory('ipythonProc', function($rootScope, serverConfig)  {
+
+  function connect(cnf) {
+    cnf = serverConfig.get("default");
+    var cmd_profile = cnf.ipython + " profile locate";
+    if(cnf.ipythonProfile){
+      cmd_profile = cmd_profile + " " + cnf.ipythonProfile;
+    }
+
+    child_process.exec(cmd_profile, function(out, stout, sterr) {
+      var profile_dir = stout.trim().replace(/[\r\n]/g, "");
+      var srv_json_path = path.join(profile_dir, "security", "nbserver-" + global.ipythonProcesses[cnf.id].pid + ".json");
+      log(srv_json_path);
+
+      var srv_info = JSON.parse(fs.readFileSync(srv_json_path));
+
+      cnf.url = srv_info.url;
+      global.runningServer = cnf;
+
+      log(cnf.name + ' has been started at:' + cnf.url);
+      $rootScope.$broadcast("serverReady", cnf.id, cnf);
+
+    });
+  }
+
   return {
     self: this,
     list: global.ipythonProcesses,
     running: global.runningServer,
+    connectLocal: function(c) {connect(c);},
     start: function (id) {
       var cnf = serverConfig.get(id); //ipython config
-      console.log(id);
 
       if (cnf.type == 'local') {
         //todo make sure port and command dont conflict, probably by defining command list instead of str
-        var ipython = child_process.exec(cnf.command);
+        //'/usr/bin/ipython notebook --no-browser'
+        var argList = ['notebook', '--no-browser'];
+        
+        if (cnf.ipythonProfile && cnf.ipythonProfile !== ""){
+          argList.push("--profile=" + cnf.ipythonProf);
+        }
+
+        if (cnf.ipythonOpts) {
+          argList = argList.concat(cnf.ipythonOpts);
+        }
+
+        var ipython = child_process.spawn(cnf.ipython, argList);
+
+        //var ipython = child_process.exec(cnf.command);
         ipython.stdout.on('data', function (data) {
            log(data.toString());
          });
 
-        global.ipythonProcesses[id] = ipython;
-        cnf.id=id;
-        cnf.url =  "http://127.0.0.1:" + cnf.port;
-        global.runningServer = cnf;
+        ipython.stderr.on('data', function (data) {
+          log('stderr: ' + data);
 
-        log(cnf.name + ' has been started on port:' + cnf.port);
+          //The first time we get something from stderror we know there server has started
+          //so then try to connect to it.
+          if (!global.ipythonProcesses[id]) {
+            global.ipythonProcesses[id] = ipython;
+            cnf.id=id;
+            global.runningServer = cnf;
+          $rootScope.$broadcast("serverStarted", cnf.id, cnf);
 
-      } else if (cnf.type == 'remote') {
+            connect(cnf);
+          }
+        });
+
+        ipython.on('close', function (code) {
+          log('child process exited with code ' + code);
+        });
+
+
+        
+
+      }
+      else if (cnf.type == 'remote') {
         global.ipythonProcesses[id] = cnf;
         cnf.id=id;
         global.runningServer = cnf;
+        $rootScope.$broadcast("serverStarted", id, cnf);
       }
 
-      $rootScope.$broadcast("serverStarted", id, cnf);
       
     },
 
@@ -443,29 +510,8 @@ app.factory('ipythonProc', function($rootScope, serverConfig)  {
         if (proc.kill !== undefined) {proc.kill();} // only kill subprocesses, do nothing for remotes.
         console.log("shutdown " + id);
       });
-      //global.ipythonProcesses = [];
       console.log("All processes have been shutdown");
     }
 
-
-          //TODO: for now, just define the command, so e.g. for venv use just prepend the right path
-      //later can make this nicer
-      /*
-      var argarry = ['notebook', '--no-browser'];
-      
-      function pushIfValid(ojb, argname, list){
-        if (ojb[argname] !== undefined && ojb[argname] !== null && ojb[argname] !== '' ) {
-          argarry.push('--' + argname);
-          argarry.push(ojb[argname]);
-        }
-        return argarry;
-      }
-
-      //TODO enable support for all ipython cmd options
-      pushIfValid(cnf, 'profile', argarry);
-      pushIfValid(cnf, 'port', argarry);
-      
-      var ipython = child_process.spawn('ipython', argarry);
-      */
   };
 });

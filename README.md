@@ -87,6 +87,9 @@ FINALLY you should be able to run `grunt run` and see you shiny new ipython-desk
 - More user friendly configuration of ipython
 - better integration with ipython notebooks - start/stop events, clean shutdown
 - Integration with Native menus!
+- Try to find the current iPython install using "which iPython"
+- Try to auto-config profiles using "ipython profile locate"
+- Get url/port of running ipython using json from profile folder
 
 ## Similar Work
 - Canopy: Enthought provide their Canopy desktop interface with IPython notebook integration. However this ties you into the EPD distribution. The IPython Notebook Desktop aims to be a lighter, more versatile solution

@@ -3,27 +3,25 @@
   "description": "Desktop IPython application developed using AngularJS and web technologies. Powered by node-webkit",
   "version": "0.2.0",
   "main": "index.html",
-  "author":{
-        "name": "Jon Chambers",
-        "url" : "https://mangecoeur.github.com"
+  "author": {
+    "name": "Jon Chambers",
+    "url": "https://mangecoeur.github.com"
   },
   "no-edit-menu": false,
-
   "window": {
     "toolbar": true,
     "width": 1200,
     "height": 800,
-    "icon":"images/favicon.ico"
+    "icon": "images/favicon.ico"
   },
   "dependencies": {
-    "moment": "~2.4.0",
-    "shortid": "~2.0.0",
     "angular": ">=1.2.16",
+    "moment": "~2.4.0",
+    "shelljs": "^0.3.0",
+    "shortid": "~2.0.0",
     "underscore": ">=1.6.0"
-
   },
-  "scripts":{
-    "postinstall" : "node ../etc/scripts/postinstall.js"
+  "scripts": {
+    "postinstall": "node ../etc/scripts/postinstall.js"
   }
-
 }

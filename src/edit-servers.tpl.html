@@ -16,8 +16,12 @@
           <input type="text" name="port" ng-model="conf.port"  class="form-control">
           
           <div ng-show="conf.type == 'local'">
-            <label>Command</label>
-            <input type="text" name="command" ng-model="conf.command"  class="form-control">
+            <label>IPython executable</label>
+            <input type="text" name="ipython" ng-model="conf.ipython"  class="form-control">
+            <label>IPython profile name</label>
+            <input type="text" name="ipython-profile" ng-model="conf.ipythonProfile"  class="form-control">
+            <label>IPython Options</label>
+            <input type="text" name="ipython-options" ng-model="conf.ipythonOpts"  class="form-control">
           </div>
           <div class="form-group" ng-hide="conf.type == 'local'">
             <label>URL</label>

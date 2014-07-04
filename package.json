@@ -2,9 +2,9 @@
   "name": "ipython-desktop",
   "description": "Ipython notebook desktop interface",
   "version": "0.2.0",
-  "author":{
-      "name": "Jon Chambers",
-      "url" : "https://github.com/mangecoeur"
+  "author": {
+    "name": "Jon Chambers",
+    "url": "https://github.com/mangecoeur"
   },
   "dependencies": {
   },
