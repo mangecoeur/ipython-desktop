@@ -2,6 +2,9 @@
 
 This is a proof of concept desktop interface for the IPython Notebook. 
 
+## What's new
+The latest revision improves ipython configuration and process handling. It will now try to automatically figure out the location of your ipython install and the url where the server is available when launched.
+
 ## Concept
 It's well established that IPython is awesome.
 
@@ -37,30 +40,14 @@ You also need to have IPython installed. My personal recommendation is the Anaco
 
 ## Configuration
 
-IPython desktop can either launch the IPython notebook server for you or connect to an existing URL. To launch a server you must define an appropriate command (this will be made more user friendly in the future). Simply click the configure button on the start screen or go to the Server > Configure menu
+IPython desktop can either launch the IPython notebook server for you or connect to an existing URL. 
 
-**IMPORTANT** - you must supply the full path to your IPython install otherwise the mac bundle will fail to launch the ipython server
+To launch a server you must specify the location of your Ipython executable, by default this is pre-filled using `which ipython`. You can optionally specify a Profile to use (which will be used with --profile=...)
 
-**WARNING:** ipython-desktop is by no means idiot proof at the moment. If you don't configure the command correctly the page will simply fail to load without explanation. This should improve in future versions.
 
-By default, IPython-desktop attempts to launch the system default ipython using
+**IMPORTANT** - you must supply the full path to your IPython install otherwise it will fail to launch the ipython server
 
-`/usr/bin/ipython notebook --no-browser`
-
-You can use all allowed ipython options, but you MUST keep the `--no-browser` option.
-
-### Examples
-Using an Anaconda virtual env (conda env)
-
-`/Users/yourusername/anaconda/envs/yourenvname/bin/ipython notebook --no-browser`
-
-Using a profile
-
-`/Users/yourusername/anaconda/envs/yourenvname/bin/ipython notebook --no-browser --profile=myprofile`
-
-Using an arbitrary ipython executable
-
-`/foo/bar/env/bin/ipython notebook --no-browser`
+**WARNING:** ipython-desktop is by no means idiot proof at the moment. If you don't configure it correctly the page will simply fail to load without explanation. This should improve in future versions.
 
 
 ### URL only
@@ -87,7 +74,7 @@ FINALLY you should be able to run `grunt run` and see you shiny new ipython-desk
 - More user friendly configuration of ipython
 - better integration with ipython notebooks - start/stop events, clean shutdown
 - Integration with Native menus!
-- Try to find the current iPython install using "which iPython"
+- Try to find the current iPython install using "which iPython" -> Done!
 - Try to auto-config profiles using "ipython profile locate"
 - Get url/port of running ipython using json from profile folder
 

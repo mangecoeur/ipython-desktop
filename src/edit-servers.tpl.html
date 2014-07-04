@@ -11,10 +11,7 @@
       <input type="radio" ng-model="conf.type" value="remote"> Remote <br/>
       </div>
           <label>Name</label>
-          <input type="text" name="name" ng-model="conf.name"  class="form-control">
-          <label>Port</label>
-          <input type="text" name="port" ng-model="conf.port"  class="form-control">
-          
+          <input type="text" name="name" ng-model="conf.name"  class="form-control">          
           <div ng-show="conf.type == 'local'">
             <label>IPython executable</label>
             <input type="text" name="ipython" ng-model="conf.ipython"  class="form-control">
