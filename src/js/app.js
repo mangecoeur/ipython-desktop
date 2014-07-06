@@ -144,9 +144,10 @@ app.factory('Page', function() {
    var title = 'IPython';
    return {
      title: function() { return title; },
-     setTitle: function(newTitle) { title = newTitle;
-      document.title = title;
-    }
+     setTitle: function(newTitle) { 
+        title = newTitle;
+        document.title = title;
+      }
    };
 });
 
@@ -214,17 +215,15 @@ app.service('nwService',
         return menu;
     }
 
-
-    //TODO: some mess between multi vs single server model. don't really need to pass args to start
     this.startIpython = function () {
       if (!ipythonProc.isRunning()) {
-        ipythonProc.start(serverConfig.defaultServerId());
+        ipythonProc.start();
       }
       window.location.hash = '/';
     };
 
     this.stopIpython = function () {
-      ipythonProc.stop(serverConfig.defaultServerId());
+      ipythonProc.stop();
       window.location.hash = '/';
       console.log('stopping');
     };
@@ -450,13 +449,6 @@ app.factory('ipythonProc', function($rootScope, serverConfig)  {
     return global.runningServer;
   }
 
-  // function serverStatus(value) {
-  //   if (value !== undefined){
-  //     global.serverStatus = value;
-  //   }
-  //   return global.serverStatus;
-  // }
-
   return {
     running: runningServer,
     connectLocal: connect,
@@ -467,8 +459,6 @@ app.factory('ipythonProc', function($rootScope, serverConfig)  {
         id = serverConfig.defaultServerId();
       }
       var cnf = serverConfig.get(id);
-
-      var ipythonServer;
 
       if (cnf.type == 'local') {
         //handle ipython command args
@@ -485,7 +475,7 @@ app.factory('ipythonProc', function($rootScope, serverConfig)  {
         var ipython = child_process.spawn(cnf.ipython, argList);
         
         //upgrade this to handle mulit server
-        ipythonServer = {
+        global.runningServer = {
           'id': cnf.id,
           'name': cnf.name,
           'process': ipython,
@@ -493,7 +483,6 @@ app.factory('ipythonProc', function($rootScope, serverConfig)  {
           'url': null
         };
 
-        global.runningServer = ipythonServer;
         global.serverStatus = "serverStarting";
         //Don't wait for the server to be ready to broadcast that we triggered it to start
         // - that way we can change the UI accordingly straight away
@@ -511,7 +500,7 @@ app.factory('ipythonProc', function($rootScope, serverConfig)  {
           //so then try to connect to it.
           //TODO: do this properly with events, with a state tracker that knows how to trigger or not events depends on last received
           if (global.serverStatus === "serverStarting") {
-            connect(ipythonServer);
+            connect(global.runningServer);
           }
         });
 
@@ -524,13 +513,12 @@ app.factory('ipythonProc', function($rootScope, serverConfig)  {
 
       }
       else if (cnf.type == 'remote') {
-        ipythonServer = {
+        global.runningServer = {
           'id': cnf.id,
           'process': null,
           'config': cnf,
           'url': cnf.url
         };
-        global.runningServer = ipythonServer;
       }
       $rootScope.$broadcast("serverStarting", id, global.runningServer);
 
@@ -538,14 +526,15 @@ app.factory('ipythonProc', function($rootScope, serverConfig)  {
 
     //Stop the ipython server with the given internal id.
     stop: function (id) {
+      if (id === undefined) {
+        id = serverConfig.defaultServerId();
+      }
       global.serverStatus = 'stopping';
       if(runningServer() !== null) {        
         if (runningServer().process !== undefined && runningServer().process.kill !== undefined) {
           runningServer().process.kill();
         }
-        
-        //runningServer().url = null; 
-        
+                
         global.runningServer = null;
         global.connected = false;
         //TODO: correctly handle remote case
