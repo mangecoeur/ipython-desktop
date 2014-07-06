@@ -7,9 +7,10 @@
     "name": "Jon Chambers",
     "url": "https://mangecoeur.github.com"
   },
+  "node-remote": ["<local>"],
   "no-edit-menu": false,
   "window": {
-    "toolbar": false,
+    "toolbar": true,
     "width": 1200,
     "height": 800,
     "icon": "images/favicon.ico"

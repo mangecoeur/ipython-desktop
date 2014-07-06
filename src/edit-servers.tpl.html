@@ -5,35 +5,35 @@
       <h3>Notebook server config</h3>
       
       <form id="form-edit-{{id}}" class="form-group">
-      <label>Type</label>
-      <div class="input-group">
-             <input type="radio" ng-model="conf.type" value="local"> Local <br/>
-      <input type="radio" ng-model="conf.type" value="remote"> Remote <br/>
-      </div>
-          <label>Name</label>
-          <input type="text" name="name" ng-model="conf.name"  class="form-control">          
-          <div ng-show="conf.type == 'local'">
-            <label>IPython executable</label>
-            <input type="text" name="ipython" ng-model="conf.ipython"  class="form-control">
-            <label>IPython profile name</label>
-            <input type="text" name="ipython-profile" ng-model="conf.ipythonProfile"  class="form-control">
-            <label>IPython Options</label>
-            <input type="text" name="ipython-options" ng-model="conf.ipythonOpts"  class="form-control">
-          </div>
-          <div class="form-group" ng-hide="conf.type == 'local'">
-            <label>URL</label>
-            <input type="text" name="url" ng-model="conf.url" class="form-control">
-          </div>
-          <div class="form-group">
+        <label>Type</label>
+        <div class="input-group">
+          <input type="radio" ng-model="conf.type" value="local"> Local <br/>
+          <input type="radio" ng-model="conf.type" value="remote"> Remote <br/>
+        </div>
+        <label>Name</label>
+        <input type="text" name="name" ng-model="conf.name"  class="form-control">          
+        <div ng-show="conf.type == 'local'">
+          <label>IPython executable</label>
+          <input type="text" name="ipython" ng-model="conf.ipython"  class="form-control">
+          <label>IPython profile name</label>
+          <input type="text" name="ipython-profile" ng-model="conf.ipythonProfile"  class="form-control">
+          <label>IPython Options</label>
+          <input type="text" name="ipython-options" ng-model="conf.ipythonOpts"  class="form-control">
+        </div>
+        <div class="form-group" ng-hide="conf.type == 'local'">
+          <label>URL</label>
+          <input type="text" name="url" ng-model="conf.url" class="form-control">
+        </div>
+        <div class="form-group">
           <label>Auto Start on open</label>
           <input type="checkbox" ng-model="autoStart" />            
-          </div>
+        </div>
 
         <button class="btn btn-primary" ng-click="save()">Save</button>
-        <a class="btn" href="#/">Cancel</button>
+        <button class="btn" href="#/">Cancel</button>
+      <button class="btn pull-right" ng-click="resetConf()">Reset defaults</button>
 
       </form>
-
 
 
       <!-- from aborted multi-server config support
@@ -86,9 +86,9 @@
                 </div>
               </div>
             </div>
-          </div> -->   
+          </div> 
         </div>
-      </ul>
+      </ul>-->
 
       <!-- <button class="btn btn-success add" ng-click="createLocal()">Add</button> -->
     </div>
