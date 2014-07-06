@@ -2,9 +2,7 @@
  * loads sub modules and wraps them up into the main module
  * this should be used for top-level module definitions only
  */
-//TODO: usability
 //TODO: create custom.js for ipython profile to interact with node-webkit 
-//TODO: config reset defaults button
 //TODO: save config as human readable file in .ipython-desktop folder or something similar
 // - idea: ipython desktop picks up available ipthons from configs in its folder, offers you a list of options
 // that way, ipython or an ipython bundle could write itself in when it installs, creating a friendly way to pick
@@ -59,7 +57,7 @@ function log(message) {
 }
 
 function StartPage($scope, $timeout, $location, serverConfig, ipythonProc, nwService, Page) {
-  $scope.isRunning = global.runningServer === null ? false : true;
+  $scope.isRunning = ipythonProc.isRunning();
   $scope.isWaiting = false;
 
   $scope.startIpython = nwService.startIpython;
@@ -73,8 +71,8 @@ function StartPage($scope, $timeout, $location, serverConfig, ipythonProc, nwSer
 
   //reload the ipython page until it is ready
   function updateUrl(){
-    $('#ipython-frame').attr('src', global.runningServer.url);
-    $scope.isRunning = global.runningServer === null ? false : true;
+    $('#ipython-frame').attr('src', ipythonProc.running().url);
+    $scope.isRunning = ipythonProc.isRunning();
     $scope.isWaiting = true;
 
     $scope.$apply();
@@ -88,7 +86,7 @@ function StartPage($scope, $timeout, $location, serverConfig, ipythonProc, nwSer
 
   //register callbacks
   $scope.$on("serverStarting", function(id) {
-    Page.setTitle(global.runningServer.name);
+    Page.setTitle(ipythonProc.running().name);
     var timeout = $timeout(updateUrl, 200);
   });
 
@@ -136,7 +134,7 @@ function EditIpythonConfig($scope, serverConfig, nwService) {
  */
 function TitleCtrl($scope, Page) {
   $scope.$on("serverReady", function(id) {
-    console.log(id);
+    //console.log(id);
   });
 }
 
@@ -165,7 +163,9 @@ app.service('nwService',
       //TODO: confirm before exit
       //TODO: not sure what happens with multiple nwWins. might need to check if we are closing main nwWin only
       console.log('Closing down');
-      ipythonProc.stop(global.runningServer.id);
+      if (ipythonProc.running() !== null) {
+        ipythonProc.stop(ipythonProc.running().id);
+      }
       nwWin.close(true); //have to explicitly close!
     });
 
@@ -410,10 +410,14 @@ app.factory('ipythonProc', function($rootScope, serverConfig)  {
     });
   }
 
+  function runningServer() {
+    return global.runningServer;
+  }
+
   return {
     self: this,
     list: global.ipythonProcesses,
-    running: global.runningServer,
+    running: runningServer,
     connectLocal: connect,
     //start an ipython server with the given id, where id is the name of an available ipython config
     start: function (id) {
@@ -443,10 +447,12 @@ app.factory('ipythonProc', function($rootScope, serverConfig)  {
         //var ipython = child_process.exec(cnf.command);
         ipython.stdout.on('data', function (data) {
            log(data.toString());
-         });
+        });
 
         //connect to the stderr stream. Use it to know when ipython has actually started.
         ipython.stderr.on('data', function (data) {
+          //TODO: could parse some of the messages for start/stop status, could also use to get the URL instead of
+          //reading the process json.
           log('stderr: ' + data);
 
           //The first time we get something from stderror we know the server has started
@@ -455,6 +461,9 @@ app.factory('ipythonProc', function($rootScope, serverConfig)  {
           if (global.serverStatus === 'starting') {
             global.serverStatus = "started";
             connect(cnf);
+          }
+          if (global.serverStatus === 'stopping') {
+            global.serverStatus = 'stopped';
           }
         });
 
@@ -502,6 +511,10 @@ app.factory('ipythonProc', function($rootScope, serverConfig)  {
         console.log("shutdown " + id);
       });
       console.log("All processes have been shutdown");
+    },
+
+    isRunning: function() {
+      return global.runningServer === null ? false : true;
     }
   };
 });
