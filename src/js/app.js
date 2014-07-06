@@ -291,7 +291,6 @@ app.factory('serverConfig', function() {
   //Try to figure out the default IPython using "which" - FIXME - NO WINDOWS SUPPORT
   //calls fn handleExecName(path of ipython bin) when found
   function detectDefaultIpython(handleExecName){
-    //TODO: "which" will not work on windows!
     child_process.exec("which ipython", function(out, stout, sterr) {
       var ipython_bin = stout.trim().replace(/[\r\n]/g, "");
       handleExecName(ipython_bin);
