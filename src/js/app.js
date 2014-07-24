@@ -2,15 +2,23 @@
  * loads sub modules and wraps them up into the main module
  * this should be used for top-level module definitions only
  */
-//Support multiple config profiles (even if you can only run one of them)
-//TODO: create custom.js for ipython profile to interact with node-webkit 
-//TODO: save config as human readable file in .ipython-desktop folder or something similar
-// - idea: ipython desktop picks up available ipthons from configs in its folder, offers you a list of options
-// that way, ipython or an ipython bundle could write itself in when it installs, creating a friendly way to pick
-// up confs.
-// - idea: alt/extension - use the ipython profile mechanism to get conf.
-//TODO: save list of running processes as a file, so that when you restart you can pick them up again
+//GOAL: easy set up, simple config
+//GOAL: run without terminal faffing
+//GOAL: clean UI without excess junk
+//GOAL: customise keyboard since we don't conflict with browser shortcuts
+
+//TODO: make location of profile dir associated with config more easily available
+//TODO: decide if using ipython profile locate is really necessary rather than just hardcoding paths for now...
+//TODO: linux support
+//TODO: startup wizard
+//TODO: create custom.js for ipython profile to interact with node-webkit, customize keyboard
 //TODO: provide fault feedback, if any part of server launch fails, cancel whatever's been done and display message
+//TODO: keyboard customization interface that writes pref into own custom.js which is dynamically copied into profile
+//dir on start (backing up potential local copies first) and reverting it to original on stop
+//TODO: Autostart option in window menu (with tickmark?)
+//TODO: autodetect common installed pythons
+//TODO - not priority - pull out the menu toolbar into the native menu (requires multi-window handling and directing
+//correct events to correct window)
 var _ = require('underscore');
 var gui = require('nw.gui');
 var shell = require('nw.gui').Shell;
@@ -20,18 +28,23 @@ var path = require('path');
 var shortId = require('shortid');
 var nwWin = gui.Window.get();
 
-global.$ = $ = angular.element;
+$ = angular.element; //so we don't need jquery
 global.runningServer = null;
 // bit awkward, want to track if the server is starting up or
 // shutting down and act differently while waiting for that to finish
 global.serverStatus = null;
+global.gui = gui;
+
+console.log(process.mainModule.blob);
+process.mainModule.exports.requireNode = require;
+
+//process.mainModule.exports.requireNode = require;
 
 
 /* App Module */
 var app = angular.module('ipython', ['ngRoute', 'mgcrea.ngStrap'])
     .config(
       function($routeProvider, $locationProvider, $sceDelegateProvider) {
-        //$locationProvider.html5Mode(true);
         $routeProvider
             .when('/',    {templateUrl: 'start.tpl.html', controller: StartPage})
             .when('/config',    {templateUrl: 'edit-servers.tpl.html', controller: EditIpythonConfig})
@@ -67,6 +80,7 @@ function StartPage($scope, $timeout, $location, serverConfig, ipythonProc, nwSer
   $scope.stopIpython = function() {
     $scope.isWaiting = false;
     $scope.isRunning = false;
+    $('#ipython-frame').attr('src', 'about:blank') ;
     $scope.$apply();
     nwService.stopIpython();
   };
@@ -88,7 +102,11 @@ function StartPage($scope, $timeout, $location, serverConfig, ipythonProc, nwSer
 
   //register callbacks
   $scope.$on("serverStarting", function(id) {
-    Page.setTitle(ipythonProc.running().name);
+    var title = "IPython Notebook";
+    if (ipythonProc.running().ipyProfile) {
+      title += " - " + ipythonProc.running().ipyProfile;
+    }
+    Page.setTitle(title);
     var timeout = $timeout(updateUrl, 200);
   });
 
@@ -112,20 +130,35 @@ function StartPage($scope, $timeout, $location, serverConfig, ipythonProc, nwSer
  * Edit the Ipython config. For now, can only change the single default
  * Ipython server config. In the future, can add multiple configurations
  */
-function EditIpythonConfig($scope, serverConfig, nwService) {
-  $scope.id = 'defaultSrv';
-  $scope.conf = _.extend({}, serverConfig.get('defaultSrv')); // Make a simple clone
+function EditIpythonConfig($scope, serverConfig, nwService, Page) {
+  Page.setTitle("IPython Desktop preferences");
+  $scope.configurations = serverConfig.all();
   $scope.autoStart = serverConfig.autoStart();
+  $scope.defaultServer = serverConfig.defaultServerId();
 
   $scope.save = function (){
-    serverConfig.set($scope.id, $scope.conf);
+    serverConfig.all($scope.configurations);
     serverConfig.autoStart($scope.autoStart);
-    //gui.Window.get().close();
     window.location.hash = '/';
   };
 
   $scope.resetConf = function (){
     serverConfig.reset();
+    $scope.conf = _.extend({}, serverConfig.get('defaultSrv'));
+  };
+
+  $scope.addServer = function (){
+    //extend configurations with new default config
+    serverConfig.newConf(function(conf) {
+      $scope.configurations.push(conf);
+      console.log($scope.configurations);
+      $scope.$apply();
+    });
+  };
+
+  $scope.setAsDefault = function(id){
+      $scope.defaultServer = serverConfig.defaultServerId(id);
+      $scope.configurations = serverConfig.all();
   };
 }
 
@@ -171,6 +204,8 @@ app.service('nwService',
       }
       nwWin.close(true); //have to explicitly close!
     });
+
+    this.openWindow = gui.Window.open; // shourtcut to open new window
 
     function createMenuItems(menu, items) {
 
@@ -268,8 +303,6 @@ app.service('nwService',
     
     createMenu(menus);
     
-    this.openWindow = gui.Window.open;
-
     //Register callbacks for menu button events
     $rootScope.$on("startIpython", this.startIpython);
     $rootScope.$on("stopIpython", this.stopIpython);
@@ -282,105 +315,195 @@ app.service('nwService',
  * @return angular service
  */
 app.factory('serverConfig', function() {
-  
-  //TODO - use user folder to save config file instead of localstorage
-  function saveServerConf(confObject){
-    localStorage.servers = JSON.stringify(confObject);
+  var homeDir = process.env[(process.platform == 'win32') ? ' ' : 'HOME'];
+  var confDir = path.join(homeDir, ".ipython-desktop");
+  var serverConfDir = path.join(confDir, "servers");
+
+  //Create the config dir, then the server config dir
+  ensureExists(confDir, function() {
+      ensureExists(serverConfDir);
+  });
+
+  //From http://stackoverflow.com/a/21196961
+  function ensureExists(path, mask, cb) {
+    if (typeof mask == 'function') { // allow the `mask` parameter to be optional
+        cb = mask;
+        mask = 0777;
+    }
+    else if (mask === undefined && cb === undefined){
+      cb = function(){};
+    }
+    fs.mkdir(path, mask, function(err) {
+        if (err) {
+            if (err.code == 'EEXIST') cb(null); // ignore the error if the folder already exists
+            else cb(err); // something else went wrong
+        } else cb(null); // successfully created folder
+    });
   }
 
+  function defaultServerId(value){ 
+    if (value !== undefined) {
+      localStorage.defaultServer = value;
+    }
+    return localStorage.defaultServer;
+  }
+
+  function autoStart(value) {
+      if (value !== undefined) {
+        localStorage.autoStart = value;
+      } else {
+        return JSON.parse(localStorage.autoStart);
+      }
+  }
+
+  //TODO - use user folder to save config file instead of localstorage
+  //TODO: maybe have one file per configuration
+  function saveServerConf(config){
+    if (config.ipyProfile) {
+      config.ipyProfile = config.ipyProfile.trim();        
+    }
+    if (config.ipythonOpts) {
+      config.ipythonOpts = config.ipythonOpts.trim().split(" ");        
+    }
+    if (config.isDefault !== undefined) {
+      //don't save default server to file
+      delete config.isDefault;
+    }
+
+    config = _.pick(config, "id", "ipython", "type", "ipyProfile");
+    var confFileName = path.join(serverConfDir, config.id + ".json");
+    
+    ensureExists(serverConfDir, function(){
+      //Save conf as json file
+      fs.writeFile(confFileName, JSON.stringify(config, null, 4), function(err) {
+          if(err) {
+            console.log(err);
+          } else {
+            console.log("JSON saved to " + confFileName);
+          }
+      }); 
+    });
+  }
+
+  //read all server configs from the config directory
+  //append them to list.
   function serverConf() {
-    return JSON.parse(localStorage.servers);
+    try {
+      var files = fs.readdirSync(serverConfDir);
+      var confList = [];
+      
+      for (var i = files.length - 1; i >= 0; i--) {
+        var filename = files[i];
+
+        if (path.extname(filename) === ".json"){
+          var data = fs.readFileSync(path.join(serverConfDir,filename));
+          var conf = JSON.parse(data);
+          if (conf.id == defaultServerId()) {
+            conf.isDefault = true;
+          }
+          confList.push(conf);
+        }
+      }
+      return confList;
+
+    } catch(e) {
+      return undefined;
+    }
   }
 
   //Try to figure out the default IPython using "which" - FIXME - NO WINDOWS SUPPORT
   //calls fn handleExecName(path of ipython bin) when found
-  function detectDefaultIpython(handleExecName){
-    child_process.exec("which ipython", function(out, stout, sterr) {
-      var ipython_bin = stout.trim().replace(/[\r\n]/g, "");
-      handleExecName(ipython_bin);
+  function detectDefaultIpython(callback){
+    child_process.exec("which ipython", function(err, stout, sterr) {
+      if (err) {
+        //if call to process failed, replace with generic system ipython
+        //with no guarantee it exists
+        //TODO: warn user instead.
+        console.warn("could not find default ipython");
+        callback("/usr/bin/ipython");
+      }
+      else {
+        var ipython_bin = stout.trim().replace(/[\r\n]/g, "");
+        callback(ipython_bin);        
+      }
     });
   }
 
   function resetDefaultConf(){
     detectDefaultIpython(function(ipython_bin_loc){
       var defaultConf = {
-        'defaultSrv': {
-                'name': 'IPython Default',
-                'ipython': ipython_bin_loc,
-                'type': 'local',
-                }
-        };
-        saveServerConf(defaultConf);
+                        'id': 'defaultSrv',
+                        'name': 'IPython Default',
+                        'ipython': ipython_bin_loc,
+                        'type': 'local',
+                        };
+      saveServerConf(defaultConf);
 
         //TODO: decide where best to save these
-        localStorage.defaultServer = 'defaultSrv';
-        localStorage.autoStart = false;
-      });  
+      localStorage.defaultServer = 'defaultSrv';
+      localStorage.autoStart = false;
+    });  
   }
 
   function initConf() {
-    if (localStorage.servers === undefined) {
-      saveServerConf({});
+    if (serverConf() === undefined) {
+      resetDefaultConf();
     }
+
+    //TODO - put this also in user conf dir
     if (localStorage.defaultServer === undefined) {
       resetDefaultConf();
     }
   }
 
-  //initialize the config on startup (when serverConfig factory is first required)
-  initConf();
-  
-  return {
-    local: function() {
-      var srv_list = serverConf();
+  function localServers() {
+    var srv_list = serverConf();
       return _.where(srv_list, {type: 'local'});
-    },
-    
-    remote: function() {
-      var srv_list = serverConf();
+  }
+
+  function remoteServers() {
+    var srv_list = serverConf();
       return _.where(srv_list, {type: 'remote'});
-    },
+  }
 
-    all: function() { return serverConf(); },
-    
-    get: function(id) {
-      var cnf = serverConf()[id];
-      cnf.id=id;
-      return cnf;
-    },
-    //Set config options
-    //TODO: validate options before saving.
-    set: function(id, config) {      
-      if (config.ipythonProfile) {
-        config.ipythonProfile = config.ipythonProfile.trim();        
+  function all(configList) {
+      if (configList !== undefined) {
+        _.each(configList, saveServerConf);
       }
-      if (config.ipythonOpts) {
-        config.ipythonOpts = config.ipythonOpts.trim().split(" ");        
-      }
+      return serverConf();
+  }
 
-      var serverList = serverConf();
-      serverList[id] = config;
+  function get(id, callback) {
+    return _.find(serverConf(), function(cnf){return cnf.id === id;});
+  }
 
-      saveServerConf(serverList);
-    },
+  //have to use async because of using exec. kinda a pain and pointless.
+  function newConf(callback) {
+    console.log(callback);
+    detectDefaultIpython(function(ipython_bin_loc){
+      var defaultConf = {
+                    'id': shortId(),
+                    'ipython': ipython_bin_loc,
+                    'type': 'local',
+                    };
+      callback(defaultConf);
+    });
+  }
 
+  //initialize the config on startup
+  initConf();
+
+  //TODO: can probably define functions as property of parent function and return "this"
+  return {
+    local: localServers,
+    remote: remoteServers,
+    all: all,
+    get: get,
+    newConf: newConf,
+    save: saveServerConf,
     reset: resetDefaultConf,
-    
-    defaultServerId: function(value){ 
-      if (value !== undefined) {
-        localStorage.defaultServer = value;
-      } else {
-        return localStorage.defaultServer;
-      }
-    },
-    
-    autoStart: function(value) {
-      if (value !== undefined) {
-        localStorage.autoStart = value;
-      } else {
-        return JSON.parse(localStorage.autoStart);
-      }
-    }
+    defaultServerId: defaultServerId,
+    autoStart: autoStart
   };
 
 });
@@ -405,14 +528,19 @@ app.factory('ipythonProc', function($rootScope, serverConfig)  {
   function connect(ipyServer) {
     var cmd_profile = ipyServer.conf.ipython + " profile locate";
     
-    if(ipyServer.conf.ipythonProfile){
-      cmd_profile = cmd_profile + " " + ipyServer.conf.ipythonProfile;
+    if(ipyServer.conf.ipyProfile){
+      cmd_profile = cmd_profile + " " + ipyServer.conf.ipyProfile;
     }
     
     //set before async call so that it happens immediately  
     global.serverStatus = "serverReady";
 
-    child_process.exec(cmd_profile, function(out, stout, sterr) {
+    child_process.exec(cmd_profile, function(err, stout, sterr) {
+      if (err !== null) {
+        console.log('problem locating profile: ' + error);
+        return; // skip the rest
+      }
+
       var profile_dir = stout.trim().replace(/[\r\n]/g, "");
       var pid = runningServer().process.pid;
 
@@ -423,8 +551,9 @@ app.factory('ipythonProc', function($rootScope, serverConfig)  {
 
       function readSrv(){
         fs.readFile(srv_json_path, function(err, data) {
-          if (err && retryCount < 10) {
+          if (err && retryCount < 40) {
             retryCount += 1;
+            //retry readSrv until it succeeds or give up after about 8s
             setTimeout(readSrv, 200);
           }
           else if(err && retryCount >= 10) {
@@ -434,13 +563,14 @@ app.factory('ipythonProc', function($rootScope, serverConfig)  {
             srv_info = JSON.parse(data);
             ipyServer.url = srv_info.url;
 
-            log(ipyServer.name + ' has been started at:' + ipyServer.url);
+            log(ipyServer.id + ' has been started at:' + ipyServer.url);
             
             // broadcast ready when we were able to read the server info
             $rootScope.$broadcast('serverReady', ipyServer.id, ipyServer);
           }
         });
       }
+      
       readSrv();
     });
   }
@@ -448,147 +578,111 @@ app.factory('ipythonProc', function($rootScope, serverConfig)  {
   function runningServer() {
     return global.runningServer;
   }
+  
+  //start an ipython server with the given id
+  function start(id) {
+    if (id === undefined) {
+      id = serverConfig.defaultServerId();
+
+    }
+    var cnf = serverConfig.get(id);
+          console.log(cnf);
+return;
+    global.serverStatus = "serverStarting";
+
+    if (cnf.type == 'local') {
+      //handle ipython command args
+      var argList = ['notebook', '--no-browser'];
+      
+      if (cnf.ipyProfile && cnf.ipyProfile !== ""){
+        argList.push("--profile=" + cnf.ipyProfile);
+      }
+
+      if (cnf.ipythonOpts) {
+        argList = argList.concat(cnf.ipythonOpts);
+      }
+      var ipython = child_process.spawn(cnf.ipython, argList);
+      
+      //Note: upgrade this to handle multi server
+      global.runningServer = {
+        'id': cnf.id,
+        'name': cnf.name,
+        'process': ipython,
+        'conf': cnf,
+        'url': null
+      };
+
+      //Don't wait for the server to be ready to broadcast that we triggered it to start
+      // - that way we can change the UI accordingly straight away
+      ipython.stdout.on('data', function (data) {
+         log(data.toString());
+      });
+
+      //connect to the stderr stream. Use it to know when ipython has actually started.
+      ipython.stderr.on('data', function (data) {
+        //TODO: could parse some of the messages for start/stop status
+        log('stderr: ' + data);
+
+        //The first time we get something from stderror we know the server has started
+        //so then try to connect to it.
+        //TODO: do this properly with events, with a state tracker that knows how to trigger or not events depends on last received
+        if (global.serverStatus === "serverStarting") {
+          connect(global.runningServer);
+        }
+      });
+
+      //Broadcast server closed on process terminate
+      ipython.on('close', function (code) {
+        log('child process exited with code ' + code);
+        global.serverStatus = null;
+        $rootScope.$broadcast("serverStopped", id);
+      });
+
+    }
+    else if (cnf.type == 'remote') {
+      global.runningServer = {
+        'id': cnf.id,
+        'process': null,
+        'config': cnf,
+        'url': cnf.url
+      };
+    }
+
+    //only broadcast after runningServer is set
+    $rootScope.$broadcast("serverStarting", id, global.runningServer);
+
+  }
+  
+  //Stop the ipython server with the given internal id.
+  function stop(id) {
+    if (id === undefined) {
+      id = serverConfig.defaultServerId();
+    }
+    global.serverStatus = 'stopping';
+    if(runningServer() !== null) {        
+      if (runningServer().process !== undefined && runningServer().process.kill !== undefined) {
+        runningServer().process.kill();
+      }
+              
+      global.runningServer = null;
+      global.connected = false;
+      //TODO: correctly handle remote case
+      $rootScope.$broadcast("serverStopping", id);
+      log(serverConfig.get(id).id + ' has been shut down');
+    }
+
+  }
+
+  function isRunning() {
+    return global.runningServer === null ? false : true;
+  }
+
 
   return {
     running: runningServer,
     connectLocal: connect,
-    
-    //start an ipython server with the given id, where id is the name of an available ipython config
-    start: function (id) {
-      if (id === undefined) {
-        id = serverConfig.defaultServerId();
-      }
-      var cnf = serverConfig.get(id);
-
-      if (cnf.type == 'local') {
-        //handle ipython command args
-        var argList = ['notebook', '--no-browser'];
-        
-        if (cnf.ipythonProfile && cnf.ipythonProfile !== ""){
-          argList.push("--profile=" + cnf.ipythonProfile);
-        }
-
-        if (cnf.ipythonOpts) {
-          argList = argList.concat(cnf.ipythonOpts);
-        }
-
-        var ipython = child_process.spawn(cnf.ipython, argList);
-        
-        //upgrade this to handle mulit server
-        global.runningServer = {
-          'id': cnf.id,
-          'name': cnf.name,
-          'process': ipython,
-          'conf': cnf,
-          'url': null
-        };
-
-        global.serverStatus = "serverStarting";
-        //Don't wait for the server to be ready to broadcast that we triggered it to start
-        // - that way we can change the UI accordingly straight away
-        ipython.stdout.on('data', function (data) {
-           log(data.toString());
-        });
-
-        //connect to the stderr stream. Use it to know when ipython has actually started.
-        ipython.stderr.on('data', function (data) {
-          //TODO: could parse some of the messages for start/stop status, could also use to get the URL instead of
-          //reading the process json.
-          log('stderr: ' + data);
-
-          //The first time we get something from stderror we know the server has started
-          //so then try to connect to it.
-          //TODO: do this properly with events, with a state tracker that knows how to trigger or not events depends on last received
-          if (global.serverStatus === "serverStarting") {
-            connect(global.runningServer);
-          }
-        });
-
-        //Broadcast server closed on process terminate
-        ipython.on('close', function (code) {
-          log('child process exited with code ' + code);
-          global.serverStatus = null;
-          $rootScope.$broadcast("serverStopped", id);
-        });
-
-      }
-      else if (cnf.type == 'remote') {
-        global.runningServer = {
-          'id': cnf.id,
-          'process': null,
-          'config': cnf,
-          'url': cnf.url
-        };
-      }
-      $rootScope.$broadcast("serverStarting", id, global.runningServer);
-
-    },
-
-    //Stop the ipython server with the given internal id.
-    stop: function (id) {
-      if (id === undefined) {
-        id = serverConfig.defaultServerId();
-      }
-      global.serverStatus = 'stopping';
-      if(runningServer() !== null) {        
-        if (runningServer().process !== undefined && runningServer().process.kill !== undefined) {
-          runningServer().process.kill();
-        }
-                
-        global.runningServer = null;
-        global.connected = false;
-        //TODO: correctly handle remote case
-        $rootScope.$broadcast("serverStopping", id);
-        log(serverConfig.get(id).name + ' has been shut down');
-      }
-
-    },
-
-    isRunning: function() {
-      return global.runningServer === null ? false : true;
-    },
+    start: start,
+    stop: stop,
+    isRunning: isRunning,
   };
 });
-
-//leftover from multi-server support, bring back one day
-    // stopAll: function() {
-    //   _.each(global.ipythonProcesses, function (proc, id) {
-    //     if (proc.kill !== undefined) {proc.kill();} // only kill subprocesses, do nothing for remotes.
-    //     console.log("shutdown " + id);
-    //   });
-    //   console.log("All processes have been shutdown");
-    // },
-
-/*
-  from seed project, example of how to handle native file dialog, might be handy
-
-    openFileDialog = function(cfg) {
-        cfg = cfg || {};
-        var result = $q.defer();
-        var $dlg = $('#fileDialog');
-        if(!$dlg) {
-            $dlg = $("body").append('<input style="display:none;" id="fileDialog" type="file" />');
-        }
-
-        if(cfg.accept) {
-            $dlg.attr('accept', cfg.accept);
-        }
-
-        $dlg.one('change', function(evt) {
-            result.resolve($(this).val());
-            evt.preventDefault();
-        });
-        $dlg.one('cancel', function(evt) {
-            console.log("Cancel was called");
-            evt.preventDefault();
-            result.resolve(false);
-        });
-        $dlg.one('close', function(evt) {
-            console.log("Close was called");
-            evt.preventDefault();
-            result.resolve(false);
-        });
-        $dlg.trigger('click');
-        return result.promise;
-    };
- */

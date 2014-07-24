@@ -1,96 +1,59 @@
 <div class="container-fluid">
   <div class="row">
-    <div class="col-sm-1 col-md-1"></div>
-    <div class="col-md-10 col-sm-10 col-lg-10">
-      <h3>IPython Notebook server configuration</h3>
-      
-      <form id="form-edit-{{id}}" class="form-group">
-        <label>Type</label>
-        <div class="input-group">
-          <input type="radio" ng-model="conf.type" value="local"> Local <br/>
-          <input type="radio" ng-model="conf.type" value="remote"> Remote <br/>
-        </div>
-        <label>Name</label>
-        <input type="text" name="name" ng-model="conf.name"  class="form-control">          
-        <div ng-show="conf.type == 'local'">
-          <label>IPython executable</label>
-          <input type="text" name="ipython" ng-model="conf.ipython"  class="form-control">
-          <label>IPython profile name</label>
-          <input type="text" name="ipython-profile" ng-model="conf.ipythonProfile"  class="form-control">
-          <label>IPython Options</label>
-          <input type="text" name="ipython-options" ng-model="conf.ipythonOpts"  class="form-control">
-        </div>
-        <div class="form-group" ng-hide="conf.type == 'local'">
-          <label>URL</label>
-          <input type="text" name="url" ng-model="conf.url" class="form-control">
-        </div>
-        <div class="form-group">
-          <label>Auto Start on open</label>
-          <input type="checkbox" ng-model="autoStart" />            
-        </div>
+    <div class="col-sm-0 col-md-1 col-lg-1"></div>
+    <div class="col-sm-8 col-md-6 col-lg-6">
+      <h2>IPython Desktop Preferences</h2>
 
-        <button class="btn btn-primary" ng-click="save()">Save</button>
-        <a class="btn" href="#/">Cancel</a>
-        <button class="btn btn-warning pull-right" ng-click="resetConf()">Reset defaults</button>
-
-      </form>
+      <button class="btn btn-primary" ng-click="save()">Save</button>
+      <a class="btn" href="#/">Cancel</a>    
+      <h3>General</h3>
+      <div class="form-group">
+        <label>Auto start server</label>
+        <input type="checkbox" ng-model="autoStart" />            
+      </div>    
 
 
-      <!-- from aborted multi-server config support
-      <ul  class="list-group" id="notebook_list">
-        <div  ng-repeat="(id, conf) in servers">
-           <li class="list-group-item">
-            {{conf.name}} 
-              
-            <div class="pull-right">
-              <button class="btn btn-sm" data-toggle="modal" data-target="#edit-{{id}}">Edit</button>
+    <h3>Servers</h3>
+    <button class="btn" ng-click="addServer()"><span class="glyphicon glyphicon-plus"></span>new</button>
+    <br><br>
+    <div class="clearfix"></div>
+    <div class="row" ng-repeat="conf in configurations">
+        <div class="col-sm-12 col-md-12 col-lg-12" ng-class="{'alert alert-success': conf.isDefault}">
+          <form id="form-edit-{{conf.id}}" class="form-group form-group-sm">
+           <!--  <label>Name</label>
+            <input type="text" name="name" ng-model="conf.name"  class="form-control input-sm">    -->       
+            <div ng-show="conf.type == 'local'">
+              <label>IPython executable</label>
+              <input type="text" name="ipython" ng-model="conf.ipython"  class="form-control input-sm">
+              <label>IPython profile name</label>
+              <input type="text" name="ipython-profile" ng-model="conf.ipyProfile"  class="form-control input-sm">
+              <label>IPython Options</label>
+              <input type="text" name="ipython-options" ng-model="conf.ipythonOpts"  class="form-control input-sm">
             </div>
-          </li>
-
-          <div id="edit-{{id}}" class="modal fade edit_modal" tabindex="-1" role="dialog" aria-labelledby="edit-{{id}}" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                  <h4 class="modal-title">Edit</h4>
-                </div>
-                <div class="modal-body">
-                  <form data-uid="{{id}}" class="form-group">
-                  <div class="form-group">
-                    <label><input type="radio" ng-model="conf.type" value="local"> Local </label>
-                    <label><input type="radio" ng-model="conf.type" value="remote"> Remote </label>
-
-                  </div>
-
-
-                    <label>Name</label>
-                    <input type="text" name="name" ng-model="conf.name"  class="form-control">
-                    <label>Port</label>
-                    <input type="text" name="port" ng-model="conf.port"  class="form-control">
-                    
-                    <div ng-show="conf.type='local'">
-                      <label>Command</label>
-                      <input type="text" name="command" ng-model="conf.command"  class="form-control">
-                    </div>
-                    <div class="form-group" ng-show="conf.type='remote'">
-                      <label>URL</label>
-                      <input type="text" name="url" ng-model="conf.url" class="form-control">
-                    </div>
-                  
-                  </form>
-
-                </div>
-                <div class="modal-footer">
-                <button class="btn" data-dismiss="modal">Close</button>
-                <button class="btn btn-primary" ng-click="servers.save()">Save changes</button>
-                </div>
-              </div>
+            <div class="form-group" ng-hide="conf.type == 'local'">
+              <label>URL</label>
+              <input type="text" name="url" ng-model="conf.url" class="form-control input-sm">
             </div>
-          </div> 
-        </div>
-      </ul>-->
+            <label>Type</label>
+            <div class="input-group">
+              <label class="radio-inline">
+                <input type="radio" ng-model="conf.type" value="local"> Local
+              </label>
+              <label class="radio-inline">
+                <input type="radio" ng-model="conf.type" value="remote"> Remote
+              </label>
+            </div>
+<!--             <button class="btn btn-warning pull-right" ng-click="resetConf()">Reset defaults</button>
+ -->
+          </form>
+          <div ng-hide="conf.isDefault"><button class="btn btn-sm pull-right" ng-click="setAsDefault(conf.id)">Set as default</button>
+            <br >
+            <br>
+          </div>
+          <p class="text-right" ng-show="conf.isDefault"><em><small>default server</small></em></p>
 
-      <!-- <button class="btn btn-success add" ng-click="createLocal()">Add</button> -->
+        </div>
+    </div>
     </div>
   </div>
 </div>

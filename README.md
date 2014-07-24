@@ -42,7 +42,7 @@ You also need to have IPython installed. My personal recommendation is the Anaco
 
 IPython desktop can either launch the IPython notebook server for you or connect to an existing URL. 
 
-To launch a server you must specify the location of your Ipython executable, by default this is pre-filled using `which ipython`. You can optionally specify a Profile to use (which will be used with --profile=...)
+To launch a server you must specify the location of your IPython executable, by default this is pre-filled (using the output of the command `which ipython`). You can optionally specify a Profile to use (which will be used with --profile=...)
 
 
 **IMPORTANT** - you must supply the full path to your IPython install otherwise it will fail to launch the ipython server
@@ -57,9 +57,13 @@ If you set the "remote" option in the config you can simply type in the URL of y
 ## Building ipython-desktop
 In theory, the following steps should work (on Mac):
 
-Requirements - you must have Xcode developer tools installed as well as `nodejs` with `npm` and `grunt`. If you use Homebrew (and you should) just do brew install node. Then install Grunt via npm with `npm install grunt`.
+Requirements 
+- Xcode developer tools installed 
+- `node` (nodejs) with `npm`, if you use Homebrew (and you should) just do `brew install node`.
+- `grunt` and `grunt-cli` (`npm install -g grunt grunt-cli` normally you will have to use sudo)
 
-In the terminal, `cd` to the source folder and run `npm install` then `grunt install` to set up the dependencies for ipython desktop, this might take a while. 
+Set up the project
+In the terminal, `cd` into the source folder. Run `npm install`, `grunt nodewebkit`, `grunt install` to set up the dependencies for ipython desktop.
 
 FINALLY you should be able to run `grunt run` and see you shiny new ipython-desktop app, ready to configure.
 
