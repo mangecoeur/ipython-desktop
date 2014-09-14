@@ -1,3 +1,6 @@
+try {
+
+
 exports.requireNode = require;
 exports.processes = {};
 
@@ -7,13 +10,11 @@ exports.processes = {};
  * @return angular service
  */
 function init() {
+  var path = require('path');
 
   var _ = require('underscore');
-
-  require('shelljs/global');
-  //var shell = require('shelljs');
-
-  var path = require('path');
+  var fs = require('fs');
+  var shell = require('shelljs');
   var shortId = require('shortid');
 
 
@@ -21,16 +22,16 @@ function init() {
   exports.servers = servers;
   exports.getServer = getServer;
   exports.newServer = newServer;
-  exports.saveServer = saveServerConf;
+  exports.saveServer = saveServer;
   exports.deleteServer = deleteServer;
   exports.reset = resetDefaultConf;
   exports.defaultServerId = defaultServerId;
-  exports.autoStart = false;//autoStart;
+  exports.autoStart = autoStart;//autoStart;
 
-  exports.start: startServer;
-  exports.stop: stopServer;
-  exports.isRunning: isRunning;
-  exports.cleanUp: cleanUp;
+  exports.start= startServer;
+  exports.stop= stopServer;
+  exports.isRunning= isRunning;
+  exports.cleanUp= cleanUp;
   var runningServers = {};
   exports.runningServers = runningServers;
 
@@ -41,34 +42,35 @@ function init() {
 
 
   // --- Init
-  var homeDir = process.env[(process.platform == 'win32') ? ' ' : 'HOME'];
-  var BASE_CONF_DIR = path.join(homeDir, ".ipython-desktop");
+  var HOME_DIR = process.env[(process.platform == 'win32') ? ' ' : 'HOME'];
+  var BASE_CONF_DIR = path.join(HOME_DIR, ".ipython-desktop");
   var SERVER_CONF_DIR = path.join(BASE_CONF_DIR, "servers");
-
+  var DEFAULT_SERVER = null;//'defaultSrv';  
+  var AUTO_START = false;
   //create the config path
-  mkdir('-p', SERVER_CONF_DIR);
+  shell.mkdir('-p', SERVER_CONF_DIR);
 
   if (servers() === undefined) {
     resetDefaultConf();
   }
 
   //TODO - put this also in user conf dir
-  if (localStorage.defaultServer === undefined) {
+  if (!DEFAULT_SERVER) {
     resetDefaultConf();
   }
 
   function defaultServerId(value){ 
     if (value !== undefined) {
-      localStorage.defaultServer = value;
+      DEFAULT_SERVER = value;
     }
-    return localStorage.defaultServer;
+    return DEFAULT_SERVER;
   }
 
   function autoStart(value) {
       if (value !== undefined) {
-        localStorage.autoStart = value;
+        AUTO_START = value;
       } else {
-        return JSON.parse(localStorage.autoStart);
+        return AUTO_START;
       }
   }
 
@@ -81,19 +83,16 @@ function init() {
     if (config.ipythonOpts) {
       config.ipythonOpts = config.ipythonOpts.trim().split(" ");        
     }
-    if (config.isDefault !== undefined) {
-      //don't save default server to file
-      delete config.isDefault;
-    }
 
     //set the location of the ipython profile configuration for when we want to get the server running info file.
     //avoids having to run the search when we are waiting for the server to start.
-    conf.ipythonConfDir = profileConfDir(conf);
-
+    config.ipythonConfDir = profileConfDir(config);
+    //Ignore any extra fields, such as isDefault
     config = _.pick(config, "id", "ipython", "type", "ipyProfile", "ipythonConfDir");
     var confFileName = path.join(SERVER_CONF_DIR, config.id + ".json");
-    
+
     //Save conf as json file
+    fs.writeFile(confFileName, JSON.stringify(config, null, 4)); 
     fs.writeFile(confFileName, JSON.stringify(config, null, 4), function(err) {
         if(err) {
           console.log(err);
@@ -121,19 +120,28 @@ function init() {
   function deleteServer(id, cb){
     var config = getServer(id);
     var confFileName = path.join(SERVER_CONF_DIR, config.id + ".json");
-    rm(confFileName);
+    shell.rm(confFileName);
   }
 
 
-  function profileConfDir(conf){
-    var cmd_profile = conf.ipython + " profile locate";
-    
-    if(ipyServer.conf.ipyProfile){
-      cmd_profile = cmd_profile + " " + ipyServer.conf.ipyProfile;
+  function profileConfDir(config){
+    var cmd_profile = config.ipython + " profile locate";
+    var profile_dir
+    if(config.ipyProfile){
+      cmd_profile = cmd_profile + " " + config.ipyProfile;
     }
     
-    result = exec(cmd_profile, {async: false});
-    var profile_dir = result.output.trim().replace(/[\r\n]/g, "");
+    try {
+      result = shell.exec(cmd_profile, {async: false});
+      profile_dir = result.output.trim().replace(/[\r\n]/g, "");
+    } catch(err) {
+      profile_dir = path.join(HOME_DIR, '.ipython');
+      if(config.ipyProfile){
+        profile_dir = path.join(profile_dir, "profile_" + config.ipyProfile);
+      }
+    }
+    console.log(profile_dir);
+
     return profile_dir;
 
     // child_process.exec(cmd_profile, function(err, stout, sterr) {
@@ -176,12 +184,23 @@ function init() {
   //Try to figure out the default IPython using "which" - FIXME - NO WINDOWS SUPPORT
   //calls fn handleExecName(path of ipython bin) when found
   function detectDefaultIpython(callback){
-    var ipython_bin = which('ipython');
-
-    if (!ipython_bin || ipython_bin === '') {
+    var ipython_bin
+    try {
+     ipython_bin = shell.which('ipython');
+     console.log(ipython_bin);
+    } catch(err) {
       ipython_bin = "/usr/bin/ipython";
-      console.warn("could not find default ipython");
     }
+
+//FIXME get which working
+    if (!ipython_bin || ipython_bin === '') {
+
+      ipython_bin ='/Users/jonathanchambers/anaconda/bin/ipython';
+      //ipython_bin = "/usr/bin/ipython";
+      console.log("could not find default ipython");
+
+    }
+     console.log(ipython_bin);
 
     return ipython_bin;
   }
@@ -194,16 +213,16 @@ function init() {
                         'ipython': ipython_bin_loc,
                         'type': 'local',
                         };
-      saveServerConf(defaultConf);
+      saveServer(defaultConf);
 
       //TODO: decide where best to save these. probably together with server settings
-      localStorage.defaultServer = 'defaultSrv';
-      localStorage.autoStart = false;
+      DEFAULT_SERVER = 'defaultSrv';
+      autoStart(false);
   }
 
   function servers(configList) {
       if (configList !== undefined) {
-        _.each(configList, saveServerConf);
+        _.each(configList, saveServer);
       }
       return getServerConfList();
   }
@@ -320,7 +339,8 @@ function init() {
   }
 
   function cleanUp(){
-    //TODO: make sync
+    //TODO: run this like a garbage collect, nuke leftovers...
+    console.log("Cleaning up"); 
     for (var id in runningServers) {
       var srv = runningServers[id];
       stopServer(srv);
@@ -329,14 +349,8 @@ function init() {
 
   }
 }
+init();
 
-
-  // function localServers() {
-  //   var srv_list = getServerConf();
-  //     return _.where(srv_list, {type: 'local'});
-  // }
-
-  // function remoteServers() {
-  //   var srv_list = getServerConf();
-  //     return _.where(srv_list, {type: 'remote'});
-  // }
+} catch (err){
+  console.log(err.toString());
+}

@@ -25,31 +25,28 @@
 //TODO: add ipython console panel to see stderr output from ipython
 var _ = require('underscore');
 var gui = require('nw.gui');
-var shell = require('nw.gui').Shell;
-var child_process = require('child_process');
-var fs = require('fs');
-var path = require('path');
-var shortId = require('shortid');
-var nwWin = gui.Window.get();
-require('shelljs/global');
+// var shell = require('nw.gui').Shell;
+ var nwWin = gui.Window.get();
+// require('shelljs/global');
 
-console.log(which);
-$ = angular.element; //so we don't need jquery
-global.runningServer = null;
-// bit awkward, want to track if the server is starting up or
-// shutting down and act differently while waiting for that to finish
-global.serverStatus = null;
-global.gui = gui;
+// console.log(which);
+// $ = angular.element; //so we don't need jquery
+// global.runningServer = null;
+// // bit awkward, want to track if the server is starting up or
+// // shutting down and act differently while waiting for that to finish
+// global.serverStatus = null;
+// global.gui = gui;
 
-console.log(process.mainModule);
 
-process.mainModule.init();
+//process.mainModule.init();
+var MYPYTHON = process.mainModule.exports
+console.log(MYPYTHON);
 
-var ipythonHandler = process.mainModule
+//init();
 /* App Module */
 angular.module('ipython', ['ngRoute', 'mgcrea.ngStrap'])
     .config(
-      function($routeProvider, $locationProvider, $sceDelegateProvider) {
+      function($routeProvider, $sceDelegateProvider) {
         $routeProvider
             .when('/',    {templateUrl: 'start.tpl.html', controller: StartPage})
             .when('/config',    {templateUrl: 'edit-servers.tpl.html', controller: EditIpythonConfig})
@@ -64,11 +61,12 @@ angular.module('ipython', ['ngRoute', 'mgcrea.ngStrap'])
         ]);
       })
   //.service('nwService', ['$rootScope', '$timeout', NodeWebkitService])
-  .service('nwService',NodeWebkitService)
+  .service('nwService', NodeWebkitService)
   //.factory('serverConfig', ServerConfigService)
   //.factory('ipythonProc', ['$rootScope', 'serverConfig', IpythonProcService])
-.factory('Page', PageService)
- ;
+.factory('Page', PageService);
+
+
  /*
  * Set the page title, doesn't need to do anything part from inject the Page service
  * @param {[type]} $scope [description]
@@ -105,8 +103,9 @@ function log(message) {
 
 //------
 //Main UI page!
-function StartPage($scope, $timeout, $location, nwService, Page) {
-  $scope.isRunning = ipythonHandler.isRunning(ipythonHandler.defaultServerId());
+function StartPage($scope, $timeout, nwService, Page) {
+  //$scope.isRunning = MYPYTHON.isRunning(MYPYTHON.defaultServerId());
+  $scope.isRunning = false;
   $scope.isWaiting = false;
 
   $scope.startIpython = nwService.startIpython;
@@ -121,13 +120,15 @@ function StartPage($scope, $timeout, $location, nwService, Page) {
 
   //reload the ipython page until it is ready
   function updateUrl(){
-    $('#ipython-frame').attr('src', ipythonHandler.runningServer(ipythonHandler.defaultServerId()).url);
+    console.log(MYPYTHON.defaultServerId());
+    console.log(MYPYTHON.runningServer(MYPYTHON.defaultServerId()))
+    $('#ipython-frame').attr('src', MYPYTHON.runningServer(MYPYTHON.defaultServerId()).url);
     $scope.isRunning = ipythonProc.isRunning();
     $scope.isWaiting = true;
 
     $scope.$apply();
     //try to update the iframe as long as the server is running but the document is not loaded
-    if ($scope.isRunning && ipythonHandler.runningServer(ipythonHandler.defaultServerId()).type === 'local' && $('#ipython-main-app', frames['ipython-frame'].document).length === 0){
+    if ($scope.isRunning && MYPYTHON.runningServer(MYPYTHON.defaultServerId()).type === 'local' && $('#ipython-main-app', frames['ipython-frame'].document).length === 0){
       $timeout(updateUrl, 200);
     } else {
       $scope.isWaiting = false;
@@ -137,8 +138,8 @@ function StartPage($scope, $timeout, $location, nwService, Page) {
   //register callbacks
   $scope.$on("serverStarting", function(id) {
     var title = "IPython Notebook";
-    if (ipythonHandler.runningServer(ipythonHandler.defaultServerId()).ipyProfile) {
-      title += " - " + ipythonHandler.runningServer(ipythonHandler.defaultServerId()).ipyProfile;
+    if (MYPYTHON.runningServer(MYPYTHON.defaultServerId()).ipyProfile) {
+      title += " - " + MYPYTHON.runningServer(MYPYTHON.defaultServerId()).ipyProfile;
     }
     Page.setTitle(title);
     var timeout = $timeout(updateUrl, 200);
@@ -151,7 +152,7 @@ function StartPage($scope, $timeout, $location, nwService, Page) {
   });
 
   //Start the server if autostart is enabled
-  if (ipythonHandler.autoStart()) {
+  if (MYPYTHON.autoStart()) {
     nwService.startIpython();
   }
 
@@ -167,24 +168,24 @@ function StartPage($scope, $timeout, $location, nwService, Page) {
  */
 function EditIpythonConfig($scope, nwService, Page) {
   Page.setTitle("IPython Desktop preferences");
-  $scope.configurations = ipythonHandler.servers();
-  $scope.autoStart = ipythonHandler.autoStart();
-  $scope.defaultServer = ipythonHandler.defaultServerId();
+  $scope.configurations = MYPYTHON.servers();
+  $scope.autoStart = MYPYTHON.autoStart();
+  $scope.defaultServer = MYPYTHON.defaultServerId();
 
   $scope.save = function (){
-    ipythonHandler.all($scope.configurations);
-    ipythonHandler.autoStart($scope.autoStart);
+    MYPYTHON.all($scope.configurations);
+    MYPYTHON.autoStart($scope.autoStart);
     window.location.hash = '/';
   };
 
   $scope.resetConf = function (){
-    ipythonHandler.reset();
-    $scope.conf = _.extend({}, ipythonHandler.get('defaultSrv'));
+    MYPYTHON.reset();
+    $scope.conf = _.extend({}, MYPYTHON.get('defaultSrv'));
   };
 
   $scope.addServer = function (){
     //extend configurations with new default config
-    ipythonHandler.newServer(function(conf) {
+    MYPYTHON.newServer(function(conf) {
       $scope.configurations.push(conf);
       console.log($scope.configurations);
       $scope.$apply();
@@ -196,8 +197,8 @@ function EditIpythonConfig($scope, nwService, Page) {
   };
 
   $scope.setAsDefault = function(id){
-      $scope.defaultServer = ipythonHandler.defaultServerId(id);
-      $scope.configurations = ipythonHandler.servers();
+      $scope.defaultServer = MYPYTHON.defaultServerId(id);
+      $scope.configurations = MYPYTHON.servers();
   };
 }
 
@@ -214,7 +215,7 @@ function NodeWebkitService($rootScope)  {
       //TODO: confirm before exit
       //TODO: not sure what happens with multiple nwWins. might need to check if we are closing main nwWin only
       console.log('Closing down');
-      ipythonHandler.cleanUp();
+      MYPYTHON.cleanUp();
       nwWin.close(true); //have to explicitly close!
     });
 
@@ -310,20 +311,20 @@ function NodeWebkitService($rootScope)  {
     }
 
     this.startIpython = function () {
-      if (!ipythonHandler.isRunning()) {
-        ipythonHandler.start();
+      if (!MYPYTHON.isRunning()) {
+        MYPYTHON.start();
       }
       window.location.hash = '/';
     };
 
     this.stopIpython = function () {
-      ipythonHandler.stop();
+      MYPYTHON.stop();
       window.location.hash = '/';
       console.log('stopping');
     };
 
     this.connect = function () {
-      connect(ipythonHandler.runningServer(ipythonHandler.defaultServerId()));
+      connect(MYPYTHON.runningServer(MYPYTHON.defaultServerId()));
     };
 
     //TODO conditionally enable/disable menus
@@ -354,7 +355,7 @@ function NodeWebkitService($rootScope)  {
                 click: function(){
                   //gui.Window.open('config')
                   //window.location.hash = '/config';
-                  $('#ipython-frame').attr('src', ipythonHandler.runningServer(ipythonHandler.defaultServerId()).url);
+                  $('#ipython-frame').attr('src', MYPYTHON.runningServer(MYPYTHON.defaultServerId()).url);
                 }
               }]}
      ]
@@ -368,3 +369,17 @@ function NodeWebkitService($rootScope)  {
     $rootScope.$on("connectLocal", this.connect);
 
 }
+
+
+
+
+  // function localServers() {
+  //   var srv_list = getServerConf();
+  //     return _.where(srv_list, {type: 'local'});
+  // }
+
+  // function remoteServers() {
+  //   var srv_list = getServerConf();
+  //     return _.where(srv_list, {type: 'remote'});
+  // }
+
