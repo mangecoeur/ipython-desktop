@@ -14,7 +14,7 @@ if (isLinux32)
 if (isLinux64)
     os = "linux64";
 
-var nwVer = '0.9.2';
+var nwVer = '0.10.4';
 
 var nwExec = "";
 
@@ -24,6 +24,8 @@ else
     nwExec = "cd cache/" + os + "/" + nwVer + " && open -n -a node-webkit ../../../src";
 
 
+
+//nw --remote-debugging-port=9222
 console.log("OS: " + os);
 
 module.exports = function(grunt) {

@@ -8,7 +8,8 @@
     "name": "Jon Chambers",
     "url": "https://mangecoeur.github.com"
   },
-  "node-remote": ["<local>","127.0.1"],
+  "node-remote": "localhost:9000",
+
   "no-edit-menu": false,
   "window": {
     "toolbar": true,
