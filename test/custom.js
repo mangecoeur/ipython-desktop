@@ -1,8 +1,9 @@
-console.log(process.mainModule.exports.requireNode);
+//console.log("loaded");
 
-var gui = require('nw.gui');
+//console.log(process.mainModule.exports.requireNode);
+//var gui = require('nw.gui');
 
-console.log(gui);
+//console.log(gui);
 
 
 

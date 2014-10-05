@@ -1,21 +1,31 @@
+exports.setConsole = function (cns) {
+  console = cns;
+  logMy("balls2");
+}
+var winston = require('winston');
+
+function logMy(msg) {
+  winston.log('info', msg);
+  //console.log(msg);
+}
 try {
 
 
-exports.requireNode = require;
+//exports.requireNode = require;
 exports.processes = {};
-
 
 /**
  * service to handle ipython server configuration and persistance
  * @return angular service
  */
-function init() {
+(function () {
   var path = require('path');
 
   var _ = require('underscore');
   var fs = require('fs');
   var shell = require('shelljs');
   var shortId = require('shortid');
+  var child_process = require('child_process');
 
 
   //TODO: can probably define functions as property of parent function and return "this"
@@ -25,20 +35,15 @@ function init() {
   exports.saveServer = saveServer;
   exports.deleteServer = deleteServer;
   exports.reset = resetDefaultConf;
-  exports.defaultServerId = defaultServerId;
+  exports.defaultId = defaultServerId;
   exports.autoStart = autoStart;//autoStart;
 
-  exports.start= startServer;
-  exports.stop= stopServer;
+  exports.startServer = startServer;
+  exports.stop = stopServer;
   exports.isRunning= isRunning;
   exports.cleanUp= cleanUp;
-  var runningServers = {};
-  exports.runningServers = runningServers;
-
   exports.runningServer = runningServer;
-  function runningServer(id){
-    return runningServers[id];
-  }
+
 
 
   // --- Init
@@ -47,6 +52,9 @@ function init() {
   var SERVER_CONF_DIR = path.join(BASE_CONF_DIR, "servers");
   var DEFAULT_SERVER = null;//'defaultSrv';  
   var AUTO_START = false;
+  var runningServers = {};
+
+
   //create the config path
   shell.mkdir('-p', SERVER_CONF_DIR);
 
@@ -57,6 +65,10 @@ function init() {
   //TODO - put this also in user conf dir
   if (!DEFAULT_SERVER) {
     resetDefaultConf();
+  }
+
+  function runningServer(id){
+    return runningServers[id];
   }
 
   function defaultServerId(value){ 
@@ -95,22 +107,22 @@ function init() {
     fs.writeFile(confFileName, JSON.stringify(config, null, 4)); 
     fs.writeFile(confFileName, JSON.stringify(config, null, 4), function(err) {
         if(err) {
-          console.log(err);
+          logMy(err);
         } else {
-          console.log("JSON saved to " + confFileName);
+          logMy("JSON saved to " + confFileName);
         }
     }); 
   }
 
   //have to use async because of using exec. kinda a pain and pointless.
-  function newServer(callback) {
+  function newServer() {
     ipython_bin_loc = detectDefaultIpython();
     defaultConf = {
                     'id': shortId(),
                     'ipython': ipython_bin_loc,
                     'type': 'local',
                     };
-    callback(defaultConf);
+    return defaultConf;
   }
 
   function getServer(id) {
@@ -120,7 +132,8 @@ function init() {
   function deleteServer(id, cb){
     var config = getServer(id);
     var confFileName = path.join(SERVER_CONF_DIR, config.id + ".json");
-    shell.rm(confFileName);
+    shell.rm('-f', confFileName); //delete with f, means ignore if not there
+    cb(id);
   }
 
 
@@ -140,13 +153,13 @@ function init() {
         profile_dir = path.join(profile_dir, "profile_" + config.ipyProfile);
       }
     }
-    console.log(profile_dir);
+    logMy(profile_dir);
 
     return profile_dir;
 
     // child_process.exec(cmd_profile, function(err, stout, sterr) {
     //   if (err !== null) {
-    //     console.log('problem locating profile: ' + error);
+    //     logMy('problem locating profile: ' + error);
     //     return; // skip the rest
     //   }
 
@@ -187,20 +200,21 @@ function init() {
     var ipython_bin
     try {
      ipython_bin = shell.which('ipython');
-     console.log(ipython_bin);
-    } catch(err) {
+     logMy(ipython_bin);
+    } 
+    catch(err) {
       ipython_bin = "/usr/bin/ipython";
     }
 
-//FIXME get which working
+    //FIXME get which working
     if (!ipython_bin || ipython_bin === '') {
 
       ipython_bin ='/Users/jonathanchambers/anaconda/bin/ipython';
       //ipython_bin = "/usr/bin/ipython";
-      console.log("could not find default ipython");
+      logMy("could not find default ipython");
 
     }
-     console.log(ipython_bin);
+    logMy(ipython_bin);
 
     return ipython_bin;
   }
@@ -232,12 +246,10 @@ function init() {
   //start an ipython server with the given id
   function startServer(id, onStartCb, onStopCb) {
     if (id === undefined) {
-      id = serverConfig.defaultServerId();
+      id = defaultServerId();
 
     }
-    var cnf = serverConfig.get(id);
-
-    global.serverStatus = "serverStarting";
+    var cnf = getServer(id);
 
     if (cnf.type == 'local') {
       //handle ipython command args
@@ -252,8 +264,13 @@ function init() {
       }
       var ipython = child_process.spawn(cnf.ipython, argList);
       
-      //Note: upgrade this to handle multi server
-      
+      //---------------------------
+      //FIXME!!!! SOME BUG IN CHILD PROCESS PID REPORTS A PID 1 TOO SMALL
+      //logMy("INCREMENT PID BY 1 - FIX THIS SHIT!!");
+      //logMy(ipython.pid);
+      ipython.pid += 1;
+
+      //----------------------------  
       
       var newRemoteServer = {
         'id': cnf.id,
@@ -265,40 +282,37 @@ function init() {
       };
 
       runningServers[cnf.id] = newRemoteServer;
-      
-      //Below is more UI/connect stuff... maybe better to just return the new process and let ui handle it
-      
-      //Don't wait for the server to be ready to broadcast that we triggered it to start
-      // - that way we can change the UI accordingly straight away
+
       ipython.stdout.on('data', function (data) {
-         log(data.toString());
+        logMy(data.toString());
       });
 
       //connect to the stderr stream. Use it to know when ipython has actually started.
       ipython.stderr.on('data', function (data) {
         //TODO: could parse some of the messages for start/stop status
-        log('stderr: ' + data);
+        //logMy('stderr: ' + data);
 
         //The first time we get something from stderror we know the server has started
-        //so then try to connect to it.
-        //TODO: do this properly with events, with a state tracker that knows how to trigger or not events depends on last received
-        // if (global.serverStatus === "serverStarting") {
-        //   connect(global.runningServer);
-        // }
-        onStartCb(newRemoteServer);
+        //Then try to get the running server info from its file        
+        if (!newRemoteServer.url) {
+          getRunningServerInfo(newRemoteServer, function(srv_info){
+            newRemoteServer.url = srv_info.url;
+            if (_.isFunction(onStartCb)){
+              onStartCb(newRemoteServer);
+            }
+          });
+        }
       });
 
       //Broadcast server closed on process terminate
       ipython.on('close', function (code) {
-        log('child process exited with code ' + code);
-
-        //TODO: replace with callback
-        //global.serverStatus = null;
-        //$rootScope.$broadcast("serverStopped", id);
-        onStopCb(newRemoteServer)
+        logMy('child process exited with code ' + code);
+        // if (_.isFunction(onStopCb)){
+        //   onStopCb(newRemoteServer)
+        // }
       });
 
-      return newRemoteServer;
+      //return newRemoteServer;
     }
     else if (cnf.type == 'remote') {
       runningServers[cnf.id] = {
@@ -308,49 +322,94 @@ function init() {
         'url': cnf.ipython,
         'type': 'remote'
       };
-      onStartCb(runningServers[cnf.id]);
-      return runningServers[cnf.id];
+      if (_.isFunction(onStartCb)){
+        onStartCb(runningServers[cnf.id]);
+
+      }
+      //return runningServers[cnf.id];
     }
+  }
+
+  function getRunningServerInfo(ipyServer, doneCb) {
+    var srv_json_path = path.join(ipyServer.conf.ipythonConfDir, 
+                                  "security", "nbserver-" + (ipyServer.process.pid)  + ".json");
+    var srv_info;
+    var retryCount = 0;
+    var maxRetry = 40;
+    //Reads the server info from the ipython conf dir
+    function readSrv(){
+      fs.readFile(srv_json_path, function(err, data) {
+        if (err && retryCount < maxRetry) {
+          retryCount += 1;
+
+          //retry readSrv until it succeeds or give up after about 8s
+          setTimeout(readSrv, 200);
+        }
+        else if(err && retryCount >= maxRetry) {
+          throw err; //TODO nice UI to say error in loading profile
+        }
+        else {
+          srv_info = JSON.parse(data);
+          //Set the server's url based on info parsed from iPy's info file
+          //ipyServer.url = srv_info.url;
+          //logMy(ipyServer.id + ' has been started at:' + ipyServer.url);
+          if (srv_info && _.isFunction(doneCb)) {
+            doneCb(srv_info)
+          }
+        }
+      });
+    }
+    readSrv();
   }
   
   //Stop the ipython server with the given internal id.
   function stopServer(id, cb) {
     if (id === undefined) {
-      id = serverConfig.defaultServerId();
+      id = defaultServerId();
     }
-    global.serverStatus = 'stopping';
-    if(runningServers[id] !== null) {        
-      if (runningServers[id].process !== undefined && runningServers[id].process.kill !== undefined) {
-        runningServers.process.kill();
+    var srv = runningServers[id];
+    if (srv.process) {
+      shell.exec('kill ' + (srv.process.pid), {async: false});
+    }
+
+    //srv.process.kill('SIGINT');
+
+
+    if(srv) {
+      if (srv.process && srv.process.kill !== undefined) {
+        srv.process.kill();
       }
               
-      delete runningServers[id];
+      //delete runningServers[id];
 
       //TODO: correctly handle remote case
       //TODO handle this with callback
-      //$rootScope.$broadcast("serverStopping", id);
-      log(serverConfig.get(id).id + ' has been shut down');
-      cb();
+      logMy(id + ' has been shut down');
+      
+      if(_.isFunction(cb)) cb();
     }
   }
 
   function isRunning(id) {
-    return runningServers[id] === null ? false : true;
+    if(runningServers[id]) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
   function cleanUp(){
-    //TODO: run this like a garbage collect, nuke leftovers...
-    console.log("Cleaning up"); 
+    //TODO: run this like a garbage collect, nuke leftovers, possibly run regularly.
+    //logMy("Cleaning up"); 
     for (var id in runningServers) {
-      var srv = runningServers[id];
-      stopServer(srv);
+      stopServer(id);
     }
     runningServers = {};
 
   }
-}
-init();
+})();
 
 } catch (err){
-  console.log(err.toString());
+  logMy(err.toString());
 }

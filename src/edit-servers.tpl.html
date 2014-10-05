@@ -20,7 +20,8 @@
     <div class="row" ng-repeat="conf in configurations">
         <div class="col-sm-12 col-md-12 col-lg-12" ng-class="{'alert alert-success': conf.isDefault}">
           <form id="form-edit-{{conf.id}}" class="form-group form-group-sm">
-           <!--  <label>Name</label>
+          <label>{{conf.id}}</label>
+           <!--  <label>{{conf.id}}</label>
             <input type="text" name="name" ng-model="conf.name"  class="form-control input-sm">    -->       
             <div ng-show="conf.type == 'local'">
               <label>IPython executable</label>
@@ -46,6 +47,8 @@
 <!--             <button class="btn btn-warning pull-right" ng-click="resetConf()">Reset defaults</button>
  -->
           </form>
+          <div><button class="btn btn-sm btn-danger" ng-click="deleteServer(conf.id)"><span class="glyphicon glyphicon-trash"></span>Delete</button>
+
           <div ng-hide="conf.isDefault"><button class="btn btn-sm pull-right" ng-click="setAsDefault(conf.id)">Set as default</button>
             <br >
             <br>
