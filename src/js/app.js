@@ -27,19 +27,26 @@
 //behaviour - do best to kill all own spawed processes. store pid of spawned servers to file. try to kill on shutdown
 //thru process kill, then erase pid from running. but if on startup finds leftover pids, tries to force kill before starting.
 var _ = require('underscore');
-var gui = require('nw.gui');
-// var shell = require('nw.gui').Shell;
-var thisWindow = gui.Window.get();
-
 $ = angular.element; //so we don't need jquery
-// // bit awkward, want to track if the server is starting up or
-// // shutting down and act differently while waiting for that to finish
-// global.gui = gui;
+
+var remote = require('remote');
 
 
-//process.mainModule.init();
-var MYPYTHON = process.mainModule.exports
-MYPYTHON.setConsole(console);
+
+// In web page.
+var ipc = require('ipc');
+console.log(ipc.sendSync('synchronous-message', 'ping')); // prints "pong"
+
+ipc.on('asynchronous-reply', function(arg) {
+  console.log(arg); // prints "pong"
+});
+ipc.send('asynchronous-message', 'ping');
+
+
+
+
+
+
 //init();
 /* App Module */
 angular.module('ipython', ['ngRoute'])
@@ -58,7 +65,6 @@ angular.module('ipython', ['ngRoute'])
              'http://127.0.0.1**'
         ]);
       })
-  //.service('nwService', ['$rootScope', '$timeout', NodeWebkitService])
   .service('nwService', NodeWebkitService)
   //.factory('serverConfig', ServerConfigService)
   //.factory('ipythonProc', ['$rootScope', 'serverConfig', IpythonProcService])
@@ -86,7 +92,6 @@ function PageService() {
       }
    };
 }     
-//  "node-remote": ["<local>","127.0.0.1","127.0.0.1:9000"],
 
 // helper functions
 function log(message) {
@@ -102,7 +107,7 @@ function log(message) {
 //------
 //Main UI page!
 function StartPage($scope, $timeout, nwService, Page, $rootScope) {
-  //$scope.isRunning = MYPYTHON.isRunning(MYPYTHON.defaultId());
+
   $scope.status = 'stopped';
 
   //reload the ipython page until it is ready
@@ -138,6 +143,7 @@ function StartPage($scope, $timeout, nwService, Page, $rootScope) {
     nwService.stopIpython();
   };
 
+  //TODO: replace with Remote
   //register callbacks
   $scope.$on("serverStarting", function(evt, id) {
     var title = "IPython Notebook";
