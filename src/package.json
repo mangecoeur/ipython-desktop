@@ -1,5 +1,8 @@
 {
   "name": "ipython-desktop",
   "version": "0.2.0",
-  "main": "main.js"
+  "main": "main.js",
+  "dependencies": {
+    "lodash": "^2.4.1"
+  }
 }

@@ -1,4 +1,11 @@
-// --- Init
+var _ = require('lodash');
+
+var path = require('path');
+var fs = require('fs');
+var shell = require('shelljs');
+var child_process = require('child_process');
+
+
 var HOME_DIR = process.env[(process.platform == 'win32') ? ' ' : 'HOME'];
 var BASE_CONF_DIR = path.join(HOME_DIR, ".ipython-desktop");
 var SERVER_CONF_DIR = path.join(BASE_CONF_DIR, "servers");
@@ -18,7 +25,8 @@ exports.saveServer = saveServer;
 exports.deleteServer = deleteServer;
 exports.reset = resetDefaultConf;
 exports.defaultId = defaultServerId;
-exports.autoStart = autoStart;//autoStart;
+exports.autoStart = autoStart;
+
 
 function setUp(){
   //create the config path
@@ -40,11 +48,11 @@ function preferences(val){
 }
 
 function savePreferences(conf) {
-  fs.writeFile(path.join("BASE_CONF_DIR", 'preferences.json'), JSON.stringify(conf, null, 4), function(err) {
+  fs.writeFile(path.join(BASE_CONF_DIR, 'preferences.json'), JSON.stringify(conf, null, 4), function(err) {
       if(err) {
         console.log(err);
       } else {
-        console.log("JSON saved");
+        console.log("preferences saved");
       }
   }); 
 }
@@ -52,13 +60,12 @@ function savePreferences(conf) {
 function getSystemConfig() {
   try 
   {
-    var conf = JSON.parse(fs.readFileSync(path.join("BASE_CONF_DIR", 'preferences.json')));
-
-    if (!conf.defaultServerId){
+    var conf = JSON.parse(fs.readFileSync(path.join(BASE_CONF_DIR, 'preferences.json')));
+    if (conf.defaultServerId === undefined){
       conf.defaultServerId = _DEFAULT_CONF.defaultServerId;
       savePreferences(conf);
     }
-    if (!conf.autoStart){
+    if (conf.autoStart === undefined){
       conf.autoStart = _DEFAULT_CONF.autoStart;
       savePreferences(conf);
     }
@@ -76,7 +83,6 @@ function getSystemConfig() {
 
 function defaultServerId(value){ 
   var sysConf = getSystemConfig();
-
   if (value !== undefined) {
     sysConf.defaultServerId = value;
     savePreferences(sysConf);
@@ -160,8 +166,6 @@ function profileConfDir(config){
       profile_dir = path.join(profile_dir, "profile_" + config.ipyProfile);
     }
   }
-  console.log(profile_dir);
-
   return profile_dir;
 
   // child_process.exec(cmd_profile, function(err, stout, sterr) {
@@ -181,7 +185,6 @@ function detectDefaultIpython(callback){
   var ipython_bin
   try {
    ipython_bin = shell.which('ipython');
-   console.log(ipython_bin);
   } 
   catch(err) {
     ipython_bin = "/usr/bin/ipython";

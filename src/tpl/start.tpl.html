@@ -11,16 +11,18 @@
 	  <h1>Welcome to Ipython Desktop</h1>
 	  <p>...</p>
 	  
-	  <button class="btn btn-success btn-lg start" ng-click="startIpython()" ng-hide="isRunning">Start Server</button>
+	  <button class="btn btn-success btn-lg start" ng-click="startIpython()">Start Server</button>
 	  <button class="btn btn-danger btn-lg shutdown" ng-click="stopIpython()" ng-show="isRunning">Shutdown</button>
-	  <a class="btn btn-lg" href="#/config" ng-hide="isRunning">Configure</a>
+	  <a class="btn btn-lg" href="#/config">Configure</a>
 
 	</div>
 </div>
 
 <!-- ng-show="status == 'running'" -->
-<iframe 
+<iframe ng-show="status == 'running'"
    		id="ipython-frame"
+   		name="ipython-disable-x-frame-options"
+   		sandbox='none'
    		class="container"
         style="min-height: 200px; height: 100%; border: 0"
         src="about:blank">

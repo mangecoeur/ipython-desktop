@@ -26,35 +26,20 @@
 //
 //behaviour - do best to kill all own spawed processes. store pid of spawned servers to file. try to kill on shutdown
 //thru process kill, then erase pid from running. but if on startup finds leftover pids, tries to force kill before starting.
-var _ = require('underscore');
+var _ = require('lodash');
+var remote = require('remote');
+var prefs = remote.require('./ipyd-preferences.js')
+var ipc = require('ipc');
+
 $ = angular.element; //so we don't need jquery
 
-var remote = require('remote');
-
-
-
-// In web page.
-var ipc = require('ipc');
-console.log(ipc.sendSync('synchronous-message', 'ping')); // prints "pong"
-
-ipc.on('asynchronous-reply', function(arg) {
-  console.log(arg); // prints "pong"
-});
-ipc.send('asynchronous-message', 'ping');
-
-
-
-
-
-
-//init();
 /* App Module */
 angular.module('ipython', ['ngRoute'])
     .config(
       function($routeProvider, $sceDelegateProvider) {
         $routeProvider
-            .when('/',    {templateUrl: 'start.tpl.html', controller: StartPage})
-            .when('/config',    {templateUrl: 'edit-servers.tpl.html', controller: EditIpythonConfig})
+            .when('/',    {templateUrl: 'tpl/start.tpl.html', controller: StartPage})
+            .when('/config',    {templateUrl: 'tpl/edit-servers.tpl.html', controller: EditIpythonConfig})
 
             .otherwise({redirectTo: '/'});
         
@@ -65,7 +50,7 @@ angular.module('ipython', ['ngRoute'])
              'http://127.0.0.1**'
         ]);
       })
-  .service('nwService', NodeWebkitService)
+  .service('ipyServers', IpyServerService)
   //.factory('serverConfig', ServerConfigService)
   //.factory('ipythonProc', ['$rootScope', 'serverConfig', IpythonProcService])
 .factory('Page', PageService);
@@ -106,24 +91,21 @@ function log(message) {
 
 //------
 //Main UI page!
-function StartPage($scope, $timeout, nwService, Page, $rootScope) {
+function StartPage($scope, $timeout, Page, $rootScope, ipyServers) {
 
   $scope.status = 'stopped';
 
   //reload the ipython page until it is ready
-  //
-  function refreshServerView(serverId) {
-    var srvId = serverId;
-    var srv = MYPYTHON.runningServer(srvId)
-
+  //expect status = 'waiting'
+  //TODO: dont like the way status is changed in a bunch of places...
+  function refreshServerView(server) {
     $timeout(updateUrl, 200);
     function updateUrl(){
-      $('#ipython-frame').attr('src', srv.url);
+      $('#ipython-frame').attr('src', server.url);
 
       $scope.$apply();
       //try to update the iframe as long as the server is running but the document is not loaded
-      var isRunning = MYPYTHON.isRunning(srvId)
-      if (isRunning && srv.type === 'local' && $('#ipython-frame', frames['ipython-frame'].document).length === 0){
+      if (server.type === 'local' && $('#ipython-frame', frames['ipython-frame'].document).length === 0){
         $timeout(updateUrl, 500);
       } else {
         $scope.status = 'running';
@@ -131,61 +113,56 @@ function StartPage($scope, $timeout, nwService, Page, $rootScope) {
     }
   }
 
-
-  $scope.startIpython = function() {
-    $scope.status = 'waiting';
-
-    nwService.startIpython();
-  }
-  
-  $scope.stopIpython = function() {
-    $scope.$apply();
-    nwService.stopIpython();
-  };
-
-  //TODO: replace with Remote
   //register callbacks
-  $scope.$on("serverStarting", function(evt, id) {
-    var title = "IPython Notebook";
-    if (MYPYTHON.runningServer(id).ipyProfile) {
-      title += " - " + MYPYTHON.runningServer(id).ipyProfile;
-    }
-    Page.setTitle(title);
-  });
-
-  $scope.$on("serverRunning", function(evt, id, srv) {
+  ipc.on('server-started', function(srv) {
     var title = "IPython Notebook";
     if (srv.conf.ipyProfile) {
       title += " - " + srv.conf.ipyProfile.ipyProfile;
     }
     Page.setTitle(title);
 
-    refreshServerView(srv.id);
+    refreshServerView(srv);
+  });
+
+  ipc.on('server-stopped', function(code) {
+    $scope.status = 'stopped';
+    Page.setTitle("IPython");
+    $scope.$apply();
+  });
+
+
+  $scope.startIpython = function() {
+    ipyServers.startIpython();
+  }
+  
+  $scope.stopIpython = function() {
+    ipyServers.stopIpython();
+  };
+
+  $scope.$on("serverStarting", function(evt, id) {
+    $scope.status = 'waiting';
+    Page.setTitle("IPython");
+    $scope.$apply();
   });
 
   $scope.$on("serverStopping", function(evt, id) {
+    $scope.status = 'waiting';
     $('#ipython-frame').attr('src', 'about:blank');
-
     var frame = document.getElementById("ipython-frame"),
     frameDoc = frame.contentDocument || frame.contentWindow.document;
     frameDoc.removeChild(frameDoc.documentElement);
-    $scope.status = 'waiting';
     $scope.$apply();
   });
 
-  $scope.$on("serverStopped", function(evt, id) {
-    Page.setTitle("IPython");
-    $scope.status = 'stopped';
-    $scope.$apply();
-  });
+
 
   //Start the server if autostart is enabled
-  if (MYPYTHON.autoStart()) {
-    nwService.startIpython();
+  if (prefs.autoStart()) {
+    //nwService.startIpython();
   }
 
   if ($scope.status == 'running' && $('#ipython-main-app', frames['ipython-frame'].document).length === 0) {
-    refreshServerView(MYPYTHON.defaultId());
+    refreshServerView(prefs.defaultId());
   }
 }
 
@@ -193,194 +170,69 @@ function StartPage($scope, $timeout, nwService, Page, $rootScope) {
  * Edit the Ipython config. For now, can only change the single default
  * Ipython server config. In the future, can add multiple configurations
  */
-function EditIpythonConfig($scope, nwService, Page) {
+function EditIpythonConfig($scope, Page) {
   Page.setTitle("IPython Desktop preferences");
-  $scope.configurations = MYPYTHON.servers();
-  $scope.autoStart = MYPYTHON.autoStart();
-  $scope.defaultServer = MYPYTHON.defaultId();
+  $scope.configurations = prefs.servers();
+  $scope.autoStart = prefs.autoStart();
+  $scope.defaultServer = prefs.defaultId();
 
   $scope.save = function (){
     //set server to the value of the configurations
-    MYPYTHON.servers($scope.configurations);
-    MYPYTHON.autoStart($scope.autoStart);
+    prefs.servers($scope.configurations);
+    prefs.autoStart($scope.autoStart);
     window.location.hash = '/';
   };
 
   $scope.resetConf = function (){
-    MYPYTHON.reset();
+    prefs.reset();
     $scope.configurations = MYPYTHON.servers();
 
   };
 
   $scope.addServer = function (){
-    var conf = MYPYTHON.newServer() 
+    var conf = prefs.newServer() 
     $scope.configurations.push(conf);
-    MYPYTHON.servers($scope.configurations);
+    prefs.servers($scope.configurations);
     console.log($scope.configurations);
     
   };
 
   $scope.deleteServer = function (id){
-    MYPYTHON.deleteServer(id, function(id){
+    prefs.deleteServer(id, function(id){
       console.log(id);
-      $scope.configurations = MYPYTHON.servers();
+      $scope.configurations = prefs.servers();
     });
   };
 
   $scope.setAsDefault = function(id){
-      $scope.defaultServer = MYPYTHON.defaultId(id);
-      $scope.configurations = MYPYTHON.servers();
+      $scope.defaultServer = prefs.defaultId(id);
+      $scope.configurations = prefs.servers();
   };
 }
 
 
-
-//FIXME this is a mess, use nice way to create object where we can refer to own methods
-function NodeWebkitService($rootScope)  {
-
-  // Expose gui and main window
-  var gui = this.gui = require("nw.gui");
-  var thisWindow = this.thisWindow = gui.Window.get();
-
-  thisWindow.on('close', function() {
-    //TODO: confirm before exit
-    //TODO: not sure what happens with multiple thisWindows. might need to check if we are closing main thisWindow only
-    console.log('Closing down');
-    MYPYTHON.cleanUp();
-    thisWindow.close(true); //have to explicitly close!
-  });
-
-
-  function createMenuItems(menu, items) {
-
-      _.each(items, function(i) {
-        //console.log("Creating item", i.label);
-
-        // Shortcut to integrate menu with Angular event system when click represents an eventName
-        if(_.isString(i.click)) {
-            i.click = (function(menu, $rootScope, eventName) { 
-              return function() { 
-                $rootScope.$broadcast(eventName, menu, this);
-              };
-            })(menu, $rootScope, i.click);
-        }
-
-        // Create a sub-menu if items are provided
-        if(i.items) {
-            i.submenu = new gui.Menu();
-            createMenuItems(i.submenu, i.items);
-        }
-
-        // Append the menu item to the provided menu
-        //console.log("appending item %s to menu", i.label);
-        menu.append(new gui.MenuItem(i));
-      });
-  }
-
-  function createMenu(menuStructure) {
-      // Create the top menu
-      var menu = new gui.Menu(menuStructure);
-
-      // Create sub-menu items if they're provided
-      if(menuStructure && menuStructure.items) {
-          //console.log("Creating %d menu items for menu", menuStructure.items.length);
-          createMenuItems(menu, menuStructure.items);
-      }
-
-      if(menu.type === 'menubar') {
-          thisWindow.menu = menu;
-          thisWindow.menu.createMacBuiltin("IPython Desktop");
-      }
-
-      return menu;
-  }
-
-  this.startIpython = function () {
-    var id = MYPYTHON.defaultId();
-    thisWindow.serverId = id;
-    if (!MYPYTHON.isRunning(id)) {
-      MYPYTHON.startServer(id, function(srv) {
-        $rootScope.$broadcast("serverRunning", srv.id, srv);
-      },
-      function (srv) {
-        //$rootScope.$broadcast("serverStopped", srv.id);
-      });
+// Service wrapper for mostly server related stuff in main.js
+function IpyServerService($rootScope) {
+  this.startIpython = function (serverId) {
+    if (serverId === undefined) {
+      serverId = prefs.defaultId();
     }
+
+    $rootScope.$broadcast("serverStarting", serverId);
+
+    ipc.send('start-server', serverId);
     window.location.hash = '/';
   };
 
-  this.stopIpython = function (evt) {
-    var id = thisWindow.serverId;
-    if (id === undefined) {
-      id = MYPYTHON.defaultId();
+  this.stopIpython = function (serverId) {
+    if (serverId === undefined) {
+      serverId = prefs.defaultId();
     }
-    console.log('stopping');
 
-    $rootScope.$broadcast("serverStopping", id);
-    //console.log(MYPYTHON.runningServer(id));
-    //MYPYTHON.runningServer(id).process.kill();
-    MYPYTHON.stop(id, function(){
-       $rootScope.$broadcast("serverStopped", id);
-    });
+    $rootScope.$broadcast("serverStopping", serverId);
+
+    ipc.send('stop-server', serverId);
+
     window.location.hash = '/';
   };
-
-
-  //TODO conditionally enable/disable menus
-  var menus = {
-   type: "menubar",
-   items:[{
-       label: "Server",
-       items:[{label: "Start",
-                click: "startIpython"
-              },
-              {label: "Stop",
-                click: "stopIpython"
-              },
-              // {label: "Connect",
-              //   click: "connectLocal"
-              // },
-              {label: "Configure",
-                click: function(){
-                  //gui.Window.open('config')
-                  window.location.hash = '/config';
-                }
-              }
-          ]
-        },
-   {
-     label: "View",
-     items:[{label: "Refresh Server page",
-              click: function(){
-                //gui.Window.open('config')
-                //window.location.hash = '/config';
-                if (MYPYTHON.runningServer(MYPYTHON.defaultId())){
-                  $('#ipython-frame').attr('src', MYPYTHON.runningServer(MYPYTHON.defaultId()).url);
-                }
-              }
-            }]}
-   ]
-  };
-  
-  createMenu(menus);
-  
-  //Register callbacks for menu button events
-  $rootScope.$on("startIpython", this.startIpython);
-  $rootScope.$on("stopIpython", this.stopIpython);
-  $rootScope.$on("connectLocal", this.connect);
-
 }
-
-
-
-
-  // function localServers() {
-  //   var srv_list = getServerConf();
-  //     return _.where(srv_list, {type: 'local'});
-  // }
-
-  // function remoteServers() {
-  //   var srv_list = getServerConf();
-  //     return _.where(srv_list, {type: 'remote'});
-  // }
-
