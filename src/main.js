@@ -10,16 +10,22 @@ var child_process = require('child_process');
 var prefs = require('./ipyd-preferences.js');
 var winston = require('winston');
 
-var BrowserWindow = require('browser-window');  // Module to create native browser window.
-var Menu = require('menu');
-
-
 // Report crashes to our server.
 require('crash-reporter').start();
+
+
+var BrowserWindow = require('browser-window');  // Module to create native browser window.
+var Menu = require('menu');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the javascript object is GCed.
 var mainWindow = null;
+var runningServers = {};
+
+function runningServer(id){
+  return runningServers[id];
+}
+
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {
@@ -46,17 +52,36 @@ app.on('ready', function() {
 });
 
 
-ipc.on('start-server', function(event, serverId) {
+ipc.on('server.start', function(event, serverId) {
   if (!isRunning(serverId)) {
     startServer(serverId, event.sender)
+  }
+  else if (isRunning(serverId)) {
+    var srv = _.pick(runningServer(serverId), 'id', 'name', 'conf', 'url', 'type')
+    event.sender.send('server-started', srv); //don't bother with process
   }
   //todo: else send did not start
 });
 
 
-ipc.on('stop-server', function(event, serverId) {
+ipc.on('server.stop', function(event, serverId) {
   stopServer(serverId, event.sender);
 });
+
+ipc.on('server.status', function(event, serverId) {
+  var result;
+  if (serverId !== undefined) {
+    result = runningServer(serverId)
+    result = _.pick(result, 'id', 'name', 'conf', 'url', 'type')
+  }
+  else {
+    result = _.map(runningServers, 
+      function(srvId, srv) {
+        return _.pick(srv, 'id', 'name', 'conf', 'url', 'type');
+      })
+  }
+  event.sender.send('server.status', result)
+})
 
 setUpMenus();
 
@@ -234,14 +259,6 @@ function logMy(msg) {
   //console.log(msg);
 }
 
-processes = {};
-
-var runningServers = {};
-
-function runningServer(id){
-  return runningServers[id];
-}
-
 
 /**
  * [startServer description]
@@ -342,35 +359,33 @@ function startServer(id, client) {
 function getRunningServerInfo(ipyServer, doneCb) {
   var srv_json_path = path.join(ipyServer.conf.ipythonConfDir, 
                                 "security", "nbserver-" + (ipyServer.process.pid)  + ".json");
-  var srv_info;
+  var srv_info = null;
   var retryCount = 0;
   var maxRetry = 40;
   
-  //TODO: somehow ensure that callback is only called once...
-  //Reads the server info from the ipython conf dir
-  function readSrv(){
-    fs.readFile(srv_json_path, function(err, data) {
-      if (err && retryCount < maxRetry) {
-        retryCount += 1;
-        //retry readSrv until it succeeds or give up after about 8s
-        setTimeout(readSrv, 200);
-      }
-      else if(err && retryCount >= maxRetry) {
-        throw err; //TODO nice UI to say error in loading profile
-      }
-      else {
-        srv_info = JSON.parse(data);
-        //Set the server's url based on info parsed from iPy's info file
-        //ipyServer.url = srv_info.url;
-        //logMy(ipyServer.id + ' has been started at:' + ipyServer.url);
-        if (srv_info && _.isFunction(doneCb)) {
-          doneCb(srv_info)
-          return;
-        }
-      }
-    });
+  var errResult = null;
+
+  //Kind of hack to re-fetch server info at reasonable rate without
+  //dealing with async issues that were causes doneCb to by called multiple times.
+  var doRead = _.throttle(function(){
+    try {
+      srv_info = JSON.parse(fs.readFileSync(srv_json_path))
+
+    }
+    catch (err){
+      //do nothing
+      errResult = err;
+      //Wait
+    }
+  }, 200);
+
+  while (srv_info == null && retryCount < maxRetry) {
+   doRead();
   }
-  readSrv();
+
+  if (srv_info != null) {
+    doneCb(srv_info);
+  }
 }
 
 //Stop the ipython server with the given internal id.

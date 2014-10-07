@@ -92,8 +92,25 @@ function log(message) {
 //------
 //Main UI page!
 function StartPage($scope, $timeout, Page, $rootScope, ipyServers) {
+  $scope.startIpython = function() {
+    ipyServers.startIpython();
+  }
+  
+  $scope.stopIpython = function() {
+    ipyServers.stopIpython();
+  };
 
   $scope.status = 'stopped';
+
+  function mangleIPythonUI() {
+    $("#notebook_list div div a").click(function(){ 
+      $(this).attr('href')
+      var BrowserWindow = remote.require('browser-window');
+      var win = new BrowserWindow({ width: 800, height: 600});
+      win.loadUrl($(this).attr('href'));
+     });
+  }
+
 
   //reload the ipython page until it is ready
   //expect status = 'waiting'
@@ -109,9 +126,16 @@ function StartPage($scope, $timeout, Page, $rootScope, ipyServers) {
         $timeout(updateUrl, 500);
       } else {
         $scope.status = 'running';
+
+        mangleIPythonUI()
       }
     }
   }
+
+  $scope.$on("serverStarting", function(evt, id) {
+    $scope.status = 'waiting';
+    Page.setTitle("IPython");
+  });
 
   //register callbacks
   ipc.on('server-started', function(srv) {
@@ -120,6 +144,13 @@ function StartPage($scope, $timeout, Page, $rootScope, ipyServers) {
       title += " - " + srv.conf.ipyProfile.ipyProfile;
     }
     Page.setTitle(title);
+
+    // var BrowserWindow = remote.require('browser-window');
+    // var win = new BrowserWindow({ width: 800, height: 600});
+    // win.loadUrl(srv.url);
+    // win.on('did-finish-load', function(){
+    //   win.webContents.executeJavaScript("console.log('yo')")
+    // });
 
     refreshServerView(srv);
   });
@@ -130,20 +161,6 @@ function StartPage($scope, $timeout, Page, $rootScope, ipyServers) {
     $scope.$apply();
   });
 
-
-  $scope.startIpython = function() {
-    ipyServers.startIpython();
-  }
-  
-  $scope.stopIpython = function() {
-    ipyServers.stopIpython();
-  };
-
-  $scope.$on("serverStarting", function(evt, id) {
-    $scope.status = 'waiting';
-    Page.setTitle("IPython");
-    //$scope.$apply();
-  });
 
   $scope.$on("serverStopping", function(evt, id) {
     $scope.status = 'waiting';
@@ -158,7 +175,6 @@ function StartPage($scope, $timeout, Page, $rootScope, ipyServers) {
 
   //Start the server if autostart is enabled
   if (prefs.autoStart()) {
-    //nwService.startIpython();
   }
 
   if ($scope.status == 'running' && $('#ipython-main-app', frames['ipython-frame'].document).length === 0) {
@@ -220,7 +236,7 @@ function IpyServerService($rootScope) {
 
     $rootScope.$broadcast("serverStarting", serverId);
 
-    ipc.send('start-server', serverId);
+    ipc.send('server.start', serverId);
     window.location.hash = '/';
   };
 
@@ -231,8 +247,10 @@ function IpyServerService($rootScope) {
 
     $rootScope.$broadcast("serverStopping", serverId);
 
-    ipc.send('stop-server', serverId);
+    ipc.send('server.stop', serverId);
 
     window.location.hash = '/';
   };
+
+
 }
