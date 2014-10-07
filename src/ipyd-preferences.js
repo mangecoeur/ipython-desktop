@@ -61,15 +61,14 @@ function getSystemConfig() {
   try 
   {
     var conf = JSON.parse(fs.readFileSync(path.join(BASE_CONF_DIR, 'preferences.json')));
-    if (conf.defaultServerId === undefined){
-      conf.defaultServerId = _DEFAULT_CONF.defaultServerId;
-      savePreferences(conf);
-    }
-    if (conf.autoStart === undefined){
-      conf.autoStart = _DEFAULT_CONF.autoStart;
-      savePreferences(conf);
-    }
-
+    // if (conf.defaultServerId === undefined){
+    //   conf.defaultServerId = _DEFAULT_CONF.defaultServerId;
+    //   savePreferences(conf);
+    // }
+    // if (conf.autoStart === undefined){
+    //   conf.autoStart = _DEFAULT_CONF.autoStart;
+    //   savePreferences(conf);
+    // }
     return conf;
     
   } catch(e) {
@@ -105,6 +104,8 @@ function autoStart(value) {
 //TODO - use user folder to save config file instead of localstorage
 //TODO: maybe have one file per configuration
 function saveServer(config){
+    console.log(config);
+
   if (config.ipyProfile) {
     config.ipyProfile = config.ipyProfile.trim();        
   }
@@ -116,6 +117,7 @@ function saveServer(config){
   //avoids having to run the search when we are waiting for the server to start.
   config.ipythonConfDir = profileConfDir(config);
   //Ignore any extra fields, such as isDefault
+
   config = _.pick(config, "id", "ipython", "type", "ipyProfile", "ipythonConfDir");
   var confFileName = path.join(SERVER_CONF_DIR, config.id + ".json");
 
@@ -210,12 +212,13 @@ function resetDefaultConf(){
                       'name': 'IPython Default',
                       'ipython': ipython_bin_loc,
                       'type': 'local',
+                      'ipyProfile': ''
                       };
     saveServer(defaultConf);
 }
 
 function servers(configList) {
-    if (configList !== undefined) {
+    if (configList !== undefined) { 
       _.each(configList, saveServer);
     }
     return getServerConfList();
@@ -224,6 +227,18 @@ function servers(configList) {
 //read all server configs from the config directory
 //append them to list.
 function getServerConfList() {
+
+  //so we fill in empty vars, otherwise seems to cause issues in angulagr where it doesn't add them to to object
+  var confTemplate = {
+                      'id': null,
+                      'name': null,
+                      'ipython': null,
+                      'type': null,
+                      "ipythonConfDir": null,
+                      'ipyProfile': null,
+                      'isDefault': false
+                      };
+
   try {
     var files = fs.readdirSync(SERVER_CONF_DIR);
     var confList = [];
@@ -237,7 +252,7 @@ function getServerConfList() {
         if (conf.id == defaultServerId()) {
           conf.isDefault = true;
         }
-        confList.push(conf);
+        confList.push(_.defaults(conf, confTemplate));
       }
     }
     return confList;

@@ -116,7 +116,7 @@ function StartPage($scope, $timeout, Page, $rootScope, ipyServers) {
   //register callbacks
   ipc.on('server-started', function(srv) {
     var title = "IPython Notebook";
-    if (srv.conf.ipyProfile) {
+    if (!_.isEmpty(srv.conf.ipyProfile)) {
       title += " - " + srv.conf.ipyProfile.ipyProfile;
     }
     Page.setTitle(title);
@@ -142,7 +142,7 @@ function StartPage($scope, $timeout, Page, $rootScope, ipyServers) {
   $scope.$on("serverStarting", function(evt, id) {
     $scope.status = 'waiting';
     Page.setTitle("IPython");
-    $scope.$apply();
+    //$scope.$apply();
   });
 
   $scope.$on("serverStopping", function(evt, id) {

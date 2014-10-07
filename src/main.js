@@ -31,7 +31,7 @@ app.on('window-all-closed', function() {
 // initialization and ready for creating browser windows.
 app.on('ready', function() {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 800, height: 600});
+  mainWindow = new BrowserWindow({width: 800, height: 900});
 
   // and load the index.html of the app.
   mainWindow.loadUrl('file://' + __dirname + '/index.html');
@@ -303,7 +303,7 @@ function startServer(id, client) {
         getRunningServerInfo(srv, function(srv_info){
           srv.url = srv_info.url;
 
-        logMy('server running at ' + srv.url);
+          logMy('server running at ' + srv.url);
 
           //TODO: send the info to the window associated with this server
           //currently just sends to mainwindow
@@ -346,12 +346,12 @@ function getRunningServerInfo(ipyServer, doneCb) {
   var retryCount = 0;
   var maxRetry = 40;
   
+  //TODO: somehow ensure that callback is only called once...
   //Reads the server info from the ipython conf dir
   function readSrv(){
     fs.readFile(srv_json_path, function(err, data) {
       if (err && retryCount < maxRetry) {
         retryCount += 1;
-
         //retry readSrv until it succeeds or give up after about 8s
         setTimeout(readSrv, 200);
       }
@@ -365,6 +365,7 @@ function getRunningServerInfo(ipyServer, doneCb) {
         //logMy(ipyServer.id + ' has been started at:' + ipyServer.url);
         if (srv_info && _.isFunction(doneCb)) {
           doneCb(srv_info)
+          return;
         }
       }
     });
