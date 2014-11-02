@@ -1,90 +1,63 @@
-var isWin = /^win/.test(process.platform);
-var isMac = /^darwin/.test(process.platform);
-var isLinux32 = /^linux/.test(process.platform);
-var isLinux64 = /^linux64/.test(process.platform);
-
-var os = "unknown";
-
-if (isWin)
-    os = "win";
-if (isMac)
-    os = "mac";
-if (isLinux32)
-    os = "linux32";
-if (isLinux64)
-    os = "linux64";
-
-var nwVer = '0.10.5';
-
-var nwExec = "";
-
-if (!isMac)
-    nwExec = "cd cache/" + os + "/" + nwVer + " && nw ../../../src";
-else
-    nwExec = "cd cache/" + os + "/" + nwVer + " && open -n -a node-webkit ../../../src";
-
-
-
-//nw --remote-debugging-port=9222
-console.log("OS: " + os);
-
 module.exports = function(grunt) {
+  require('load-grunt-tasks')(grunt);
+  
+  var fs   = require('fs')
+    , path = require('path')
+    , dir  = 'binaries';
 
-    grunt.initConfig({
-        pkg: grunt.file.readJSON('./package.json'),
-        less: {
-            './src/css/app.css': ['./src/css/app.less']
-        },
-        nodewebkit: {
-            options: {
-                version: nwVer,
-                build_dir: './',
-                mac: isMac,
-                win: isWin,
-                linux32: isLinux32,
-                linux64: isLinux64,
-                keep_nw: false,
-                zip: false,
-                mac_icns:'./src/images/ipython-desktop.icns'
-            },
-            src: ['./src/**/*']
-        },
-        clean: ["./releases/**/*"],
-        shell: {
-            install: {
-                command: function() {
-                    return 'bower cache clean && bower install && cd src && npm install';
-                },
-                options: {
-                    stdout: true,
-                    stderr: true,
-                    stdin: true
-                }
-            },
-            run: {
-                command: function() {
-                    return nwExec;
-                },
-                options: {
-                    stdout: true,
-                    stderr: true,
-                    stdin: true
-                }
+  grunt.initConfig({
+    'download-atom-shell': {
+      version: '0.13.3',
+      outputDir: dir
+    },
+    'shell': {
+      'mac': {
+        command: dir + '/Atom.app/Contents/MacOS/Atom app'
+      },
+      'linux': {
+        command: 'chmod +x ' + dir + '/atom && ' + dir + '/atom app'
+      },
+      'win': {
+        command: dir + '\\atom.exe app'
+      }
+    }
+  });
 
-            }
-        }
+  grunt.registerTask('default', [
+    'install',
+    'run'
+  ]);
+  
+  grunt.registerTask('init', 'initialize project', function() {
+    var cwd     = process.cwd()
+      , appPath = path.join(cwd, 'app')
+      , gitPath = path.join(cwd, '.git')
 
+    if (grunt.file.exists(appPath))
+      return;
+    
+    fs.readdirSync(cwd).forEach(function(file) {
+      if (file.charAt(0) !== '_') return;
+      
+      var src = path.join(cwd, file);
+      var dst = path.join(appPath, file.slice(1))
+      grunt.file.copy(src, dst);
+      grunt.file.delete(src)
     });
-
-    grunt.loadNpmTasks('grunt-contrib-less');
-    grunt.loadNpmTasks('grunt-node-webkit-builder');
-    grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-shell');
-
-    grunt.registerTask('default', ['less', 'shell:run']);
-    grunt.registerTask('run', ['default']);
-    grunt.registerTask('install', ['shell:install', 'nodewebkit']);
-    grunt.registerTask('build', ['less', 'nodewebkit']);
-
-
-};
+    grunt.file.delete(gitPath);
+  })
+  
+  grunt.registerTask('install', [
+    'init',
+    'download-atom-shell'
+  ]);
+  
+  grunt.registerTask('run', function() {
+    if (process.platform === 'darwin')
+      grunt.task.run('shell:mac');
+    else if (process.platform === 'win32')
+      grunt.task.run('shell:win')
+    else
+      grunt.task.run('shell:linux')
+  });
+}
