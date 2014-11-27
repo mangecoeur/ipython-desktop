@@ -1,29 +1,61 @@
+<!--<div class="row">-->
+	<!--<div class="col-md-12">-->
+	<!--<div class="btn-group" role="group" aria-label="...">-->
+		<!--<button class="btn btn-default" ng-click="reloadIPython()">Reload</button>-->
+		<!--<button class="btn btn-default" ng-click="requestStatus()">Status</button>-->
+
+		<!--<div class="btn-group" role="group">-->
+		  <!--<button class="btn btn-default dropdown-toggle" type="button" id="connect-srv" data-toggle="dropdown" aria-expanded="true">-->
+			<!--Connect-->
+			<!--<span class="caret"></span>-->
+		  <!--</button>-->
+		  <!--<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">-->
+			<!--<li role="presentation" ng-repeat="srv in servers"><button class="btn btn-default" ng-click="connectToIPython(srv)" href="#">Connect to {{srv.url}}</button></li>-->
+		  <!--</ul>-->
+		<!--</div>-->
+	<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+
+
 <div class="jumbotron" ng-show="status == 'waiting'">
 	<div class="container" >
 		<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Loading...
 		<br>
-		<div class="pull-right"><button class="btn btn-default btn-md shutdown" ng-click="stopIpython()" ng-show="isRunning"><span class="glyphicon glyphicon-remove"></span>&nbsp; Cancel</button></div>
+		<div class="pull-right">
+			<button class="btn btn-default btn-md shutdown" ng-click="stopIPython()" ng-show="isRunning">
+				<span class="glyphicon glyphicon-remove"></span>&nbsp; Cancel
+			</button>
+		</div>
 	</div>
 </div>
 
-<div class="jumbotron" ng-show="status == 'stopped'">
+<div ng-show="status == 'stopped'">
 	<div class="container" >
-	  <h1>Welcome to Ipython Desktop</h1>
+	  <h1>Welcome to IPython Desktop</h1>
 	  <p>...</p>
 	  
-	  <button class="btn btn-success btn-lg start" ng-click="startIpython()">Start Server</button>
-	  <button class="btn btn-danger btn-lg shutdown" ng-click="stopIpython()" ng-show="isRunning">Shutdown</button>
+	  <button class="btn btn-success btn-lg start" ng-click="startIPython()">Start Server</button>
+	  <button class="btn btn-danger btn-lg shutdown" ng-click="stopIPython()" ng-show="isRunning">Shutdown</button>
 	  <a class="btn btn-lg" href="#/config">Configure</a>
 
 	</div>
 </div>
 
-<!-- ng-show="status == 'running'" -->
-<iframe ng-show="status == 'running'"
+	<webview
    		id="ipython-frame"
-   		name="ipython-disable-x-frame-options"
-   		sandbox='none'
    		class="container"
-        style="min-height: 200px; height: 100%; border: 0"
-        src="about:blank">
-</iframe>
+        src="about:blank"
+		minheight="400"
+		style="min-height: 400px; height: 100%; border: 1px black"
+        >
+	</webview>
+
+
+	<!--<webview-->
+   		<!--id="ipython-notebook-frame"-->
+   		<!--class="container"-->
+        <!--style="min-height: 200px; height: 100%; border: 1px black"-->
+        <!--src="about:blank"-->
+		<!--autosize="on>-->
+	<!--</webview>-->

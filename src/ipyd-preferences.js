@@ -1,9 +1,11 @@
-var _ = require('lodash');
-
+//Nodejs builtins
 var path = require('path');
 var fs = require('fs');
-var shell = require('shelljs');
 var child_process = require('child_process');
+
+//Third party modules
+var _ = require('lodash');
+var shell = require('shelljs');
 
 
 var HOME_DIR = process.env[(process.platform == 'win32') ? ' ' : 'HOME'];
@@ -13,11 +15,13 @@ var SERVER_CONF_DIR = path.join(BASE_CONF_DIR, "servers");
 var _DEFAULT_CONF = {
   'defaultServerId': 'defaultSrv',
   'autoStart': false
-}
+};
 
+
+//FIXME: bit of a crap way to trigger setup...
 setUp();
 
-exports.preferences = preferences
+exports.preferences = preferences;
 exports.servers = servers;
 exports.getServer = getServer;
 exports.newServer = newServer;
@@ -32,17 +36,17 @@ function setUp(){
   //create the config path
   shell.mkdir('-p', SERVER_CONF_DIR);
 
-  if (servers() === undefined || servers().length == 0) {
+  if (servers() === undefined || servers().length === 0) {
     resetDefaultConf();
   }
 
-  //TODO - put this also in user conf dir
+  //FIXME: will set up default config if none found... this is confusing, fix it
   getSystemConfig();
 }
 
 function preferences(val){
   if (value !== undefined) {
-    savePreferences(val)
+    savePreferences(val);
   }
   return getSystemConfig();
 }
@@ -60,24 +64,13 @@ function savePreferences(conf) {
 function getSystemConfig() {
   try 
   {
-    var conf = JSON.parse(fs.readFileSync(path.join(BASE_CONF_DIR, 'preferences.json')));
-    // if (conf.defaultServerId === undefined){
-    //   conf.defaultServerId = _DEFAULT_CONF.defaultServerId;
-    //   savePreferences(conf);
-    // }
-    // if (conf.autoStart === undefined){
-    //   conf.autoStart = _DEFAULT_CONF.autoStart;
-    //   savePreferences(conf);
-    // }
-    return conf;
+    var conf = JSON.parse(fs.readFileSync(path.join(BASE_CONF_DIR, 'preferences.json')));    return conf;
     
   } catch(e) {
     savePreferences(_DEFAULT_CONF);
     return _DEFAULT_CONF;
   }
 }
-
-
 
 
 function defaultServerId(value){ 
@@ -90,6 +83,7 @@ function defaultServerId(value){
   return sysConf.defaultServerId;
 }
 
+
 function autoStart(value) {
   var sysConf = getSystemConfig();
 
@@ -101,8 +95,7 @@ function autoStart(value) {
   return sysConf.autoStart;
 }
 
-//TODO - use user folder to save config file instead of localstorage
-//TODO: maybe have one file per configuration
+
 function saveServer(config){
     console.log(config);
 
@@ -131,6 +124,7 @@ function saveServer(config){
   }); 
 }
 
+
 function newServer() {
   ipython_bin_loc = detectDefaultIpython();
   defaultConf = {
@@ -141,9 +135,11 @@ function newServer() {
   return defaultConf;
 }
 
+
 function getServer(id) {
   return _.find(getServerConfList(), function(cnf){return cnf.id === id;});
 }
+
 
 function deleteServer(id){
   var config = getServer(id);
@@ -154,7 +150,7 @@ function deleteServer(id){
 
 function profileConfDir(config){
   var cmd_profile = config.ipython + " profile locate";
-  var profile_dir
+  var profile_dir;
   if(config.ipyProfile){
     cmd_profile = cmd_profile + " " + config.ipyProfile;
   }
@@ -181,10 +177,11 @@ function profileConfDir(config){
   // }
 }
 
+
 //Try to figure out the default IPython using "which" - FIXME - NO WINDOWS SUPPORT
 //calls fn handleExecName(path of ipython bin) when found
 function detectDefaultIpython(callback){
-  var ipython_bin
+  var ipython_bin;
   try {
    ipython_bin = shell.which('ipython');
   } 
@@ -195,8 +192,8 @@ function detectDefaultIpython(callback){
   //FIXME get which working
   if (!ipython_bin || ipython_bin === '') {
 
-    ipython_bin ='/Users/jonathanchambers/anaconda/bin/ipython';
-    //ipython_bin = "/usr/bin/ipython";
+    //ipython_bin ='/Users/jonathanchambers/anaconda/bin/ipython';
+    ipython_bin = "/usr/bin/ipython";
     console.log("could not find default ipython");
 
   }
@@ -204,6 +201,7 @@ function detectDefaultIpython(callback){
 
   return ipython_bin;
 }
+
 
 function resetDefaultConf(){
   var ipython_bin_loc = detectDefaultIpython();
@@ -217,6 +215,7 @@ function resetDefaultConf(){
     saveServer(defaultConf);
 }
 
+
 function servers(configList) {
     if (configList !== undefined) { 
       _.each(configList, saveServer);
@@ -224,11 +223,12 @@ function servers(configList) {
     return getServerConfList();
 }
 
+
 //read all server configs from the config directory
 //append them to list.
 function getServerConfList() {
 
-  //so we fill in empty vars, otherwise seems to cause issues in angulagr where it doesn't add them to to object
+  //fill in empty vars, otherwise seems to cause issues in angular where it doesn't add them to to object
   var confTemplate = {
                       'id': null,
                       'name': null,
@@ -261,6 +261,7 @@ function getServerConfList() {
     return undefined;
   }
 }
+
 
 function saveServerConfList(configList) {
   if (configList !== undefined) {
