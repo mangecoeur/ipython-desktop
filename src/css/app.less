@@ -1,4 +1,4 @@
-@import 'bootstrap/bootstrap';
+@import '../lib/bootstrap/less/bootstrap';
 
 // Override any Bootstrap variables here
 html, body {
@@ -64,9 +64,12 @@ body {
 //left:-9999px;  visibility: hidden !important;
 //}
 
+.tab-content {
+  height: 100%;
 
+}
 .tab-content > .tab-pane {
-display:block!important;
+display:block;
 position:absolute;
 top:-9999px;
 left:-9999px;
@@ -78,16 +81,20 @@ left:-9999px;
   position: relative;
   top:auto;
   left:auto;
+  height: 100%;
 }
 
 .container {
   height: 100%;
 }
 
-.tab-frame {
+.full-height{
   height: 100%;
 }
 
-.full-height{
-  height: 100%;
+#ipython-server-tab {
+    height: 100%;
+}
+
+.ipython-notebook-view {
 }

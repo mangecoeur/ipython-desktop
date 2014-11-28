@@ -42,19 +42,17 @@ var prefs = remote.require('./ipyd-preferences.js');
 $ = angular.element; //so we don't need jquery
 
 
+//server status for this window
+var server = {};
+
 //Global ref to webview, hope it doesn't get GCed
 var nbServerView = null;
 
-/* App Module */
-angular.module('ipython', ['ngRoute', 'ui.bootstrap'])
-    .config(
-      function($routeProvider, $sceDelegateProvider) {
-        $routeProvider
-            .when('/ctrl',    {templateUrl: 'tpl/start.tpl.html', controller: StartPage})
-            .when('/config',    {templateUrl: 'tpl/edit-servers.tpl.html', controller: EditIpythonConfig})
 
-            .otherwise({redirectTo: '/ctrl'});
-        
+/* App Module */
+angular.module('ipython', ['ui.bootstrap'])
+    .config(
+      function($sceDelegateProvider) {
         $sceDelegateProvider.resourceUrlWhitelist([
              // Allow same origin resource loads.
              'self',
@@ -64,7 +62,9 @@ angular.module('ipython', ['ngRoute', 'ui.bootstrap'])
         ]);
       })
     .service('ipyServers', IpyServerService)
-    .factory('Page', PageService);
+    .factory('Page', PageService)
+    .controller('StartPage', StartPage)
+    .controller('EditIpythonConfig', EditIpythonConfig);
 
 
  /*
@@ -74,7 +74,6 @@ angular.module('ipython', ['ngRoute', 'ui.bootstrap'])
  */
 function TitleCtrl($scope, Page) {
   $scope.$on("serverReady", function(id) {
-    //console.log(id);
   });
 }
 
@@ -99,16 +98,12 @@ function log(message) {
   console.log(message);
 }
 
-
 //------
 //Main UI page!
-function StartPage($scope, $timeout, Page, $rootScope, ipyServers) {
-  nbServerView = document.getElementById('ipython-frame'); //Webview that will hold the server
-  //var notebookView = document.getElementById('ipython-notebook-frame');
+function StartPage($scope, $timeout, Page, $rootScope, $modal, ipyServers) {
 
-  $scope.connectToIPython = function(srv) {
-    nbServerView.setAttribute('src', srv.url);
-  };
+  //the NB server for this view
+  $scope.server = server;
 
   $scope.startIPython = function() {
     ipyServers.startIpython();
@@ -118,126 +113,214 @@ function StartPage($scope, $timeout, Page, $rootScope, ipyServers) {
     ipyServers.stopIPython();
   };
 
-  $scope.reloadIPython = function () {
-    nbServerView.reload();
-  };
 
   $scope.requestStatus = function () {
     ipyServers.serverStatus();
   };
 
-  $scope.status = 'waiting';
+  $scope.server.status = 'waiting';
 
   $scope.requestStatus();
+
+  //FIXME: hack because with angular it's hard to figure out when things are loaded
+  //TODO: maybe move away from angular magic to simpler jquery-only UI
+  $scope.fixWebView = function(){
+    document.getElementById('ipython-server-tab').appendChild(document.getElementById('ipython-frame'))
+    //$('#ipython-server-tab').append($('#stupid-container'));
+  };
+
+  nbServerView = document.getElementById('ipython-frame'); //Webview that will hold the server
+  //var notebookView = document.getElementById('ipython-notebook-frame');
+
+  $scope.connectToIPython = function(srv) {
+    nbServerView.setAttribute('src', srv.url);
+  };
+
+  $scope.reloadIPython = function () {
+    nbServerView.reload();
+  };
+
+
 
   //-----------------------------
   // register DOM event listeners
   //-----------------------------
   var nbWebViews = $scope.nbWebViews = {};
-  var notebookTabs = $scope.notebookTabs = []
-  nbServerView.addEventListener('new-window', function(e) {
-    //notebookView.setAttribute('src', e.url);
-    //ipc.send('notebook.new.window', e.url);
-    if (e.url.indexOf(".ipynb") >= 0) {
-      var parts = e.url.split('notebooks/');
-      var fname = parts[1];
+  var notebookTabs = $scope.notebookTabs = [];
 
-      if (!nbWebViews[fname]) {
+  //Atom-shell tends to crash if you dont clean up web views
+  function cleanupWebviews(){
+    nbServerView.setAttribute('src', 'about:blank');
+    for (var i in notebookTabs) {
+      var tab = notebookTabs[i];
+      console.log(tab);
 
-        var nbView = document.createElement('webview');
-        nbView.setAttribute('id', 'ipynb' + fname);
-        nbView.setAttribute('src', e.url);
-        nbView.addEventListener('new-window', function(e) {
-            require('shell').openExternal(e.url);
-        });
-
-        //store these, hope to prevent them being GCed if hidden
-        nbWebViews[fname] = nbView;
-        notebookTabs.push({title: fname, url: e.url, active: true, content:nbView});
-
-        $scope.$apply();
-      }
+      var nbView = document.getElementById('ipynb-' + tab.title)
+      nbView.parentNode.removeChild(nbView);
     }
-  });
+    for(var view in nbWebViews){
+      view = null;
+    }
+    nbWebViews = $scope.nbWebViews = {};
+    notebookTabs = $scope.notebookTabs = [];
+  }
+
+  window.onbeforeunload = function(e){
+    cleanupWebviews();
+    return true;
+  }
+
+  var notebookTabsJquery = [];
+
+  function setupServerView(url){
+    nbServerView = document.getElementById('ipython-frame');
+    nbServerView.setAttribute('src', url);
+    nbServerView.addEventListener('new-window', function(e) {
+      //notebookView.setAttribute('src', e.url);
+      //ipc.send('notebook.new.window', e.url);
+      if (e.url.indexOf(".ipynb") >= 0) {
+        var parts = e.url.split('notebooks/');
+        var title = parts[1];
+
+        if (!nbWebViews[title]) {
+
+          var nbView = $('<webview>').attr('src', e.url);
+          nbView.on('new-window', function(e) {
+              require('shell').openExternal(e.url);
+          });
+
+          var nbTabPane = $('<div>')
+              .attr('id', 'ipynb-' + title)
+              .attr('role', 'tabpanel')
+              .addClass('tab-pane')
+              .addClass('')
+              .attr('aria-labelledby', 'ipynb-' + title)
+              .append(nbView);
+
+          var nbTab = $('<li>')
+                  .attr('role', 'presentation')
+                  .append($('<a>')
+                      .attr('role', 'tab')
+                      .attr('data-toggle', 'tab')
+                      .attr('href', '#' + 'ipynb-' + title)
+                      .attr('aria-controls', 'ipynb-' + title)
+                      .text(title)
+          );
+
+          notebookTabsJquery.push({tab: nbTab, tabPane: nbTabPane, title:title});
+
+          $('#nb-tab-content').append(nbTabPane),
+          $('#nb-tab-list').append(nbTab);
+
+          $('#nb-tab-list').find('a').click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+            var id = $(this).attr('aria-controls');
+            $('#nb-tab-content').find('.tab-pane').removeClass('active');
+            $(document.getElementById(id)).addClass('active');
+
+          });
+
+
+
+          //store these, hope to prevent them being GCed if hidden
+          notebookTabs.push({title: title, url: e.url, active: true});
+          $scope.$apply();
+
+          var nbView2 = document.getElementById('ipynb-' + title)
+          nbView2.addEventListener('new-window', function(e) {
+              require('shell').openExternal(e.url);
+          });
+
+          nbWebViews[title] = nbView2;
+        }
+      }
+    });
+  }
+  //-----------------------
+// register ipc event listeners
+//-----------------------
+//TODO: Server started should only get called once, but JS refuses to comply!
+ipc.on('server.started', function(srv) {
+  server.title = "IPython Notebook";
+  if (!_.isEmpty(srv.conf.ipyProfile)) {
+    server.title += " - " + srv.conf.ipyProfile.ipyProfile;
+  }
+
+  Page.setTitle(server.title);
+
+  setupServerView(srv.url);
+  server.status = 'started';
+  $scope.$apply();
+
+});
+
+ipc.on('server.stopped', function(serverId) {
+  $scope.server.status = 'stopped';
+  Page.setTitle("IPython");
+  cleanupWebviews();
+  $scope.$apply();
+});
+
+
+ipc.on('server.status', function(srvlist) {
+  var servers = srvlist;
+  if (srvlist.length > 0) {
+    server.status = 'started';
+    //TODO: assumes only 1 server running. Could be relaxed.
+    if ($('#ipython-frame').attr('src') != srvlist[0].url) {
+        setupServerView(srvlist[0].url);
+    }
+
+  } else {
+    server.status = 'stopped';
+  }
+});
+
 
   //-----------------------
   // register angular event listeners
   //-----------------------
 
-  $scope.$on("serverStarting", function(evt, id) {
-    $scope.status = 'waiting';
+  $rootScope.$on("serverStarting", function(evt, id) {
+    $scope.server.status = 'waiting';
     Page.setTitle("IPython");
   });
 
-  $scope.$on("serverStopping", function(evt, id) {
-    $scope.status = 'waiting';
-    nbServerView.setAttribute('src', 'about:blank');
-    $scope.$apply();
-  });
-
-  //-----------------------
-  // register ipc event listeners
-  //-----------------------
-  //TODO: Server started should only get called once, but JS refuses to comply!
-  ipc.on('server.started', function(srv) {
-    var title = "IPython Notebook";
-    if (!_.isEmpty(srv.conf.ipyProfile)) {
-      title += " - " + srv.conf.ipyProfile.ipyProfile;
-    }
-
-    Page.setTitle(title);
-
-    nbServerView.setAttribute('src', srv.url);
-    $scope.status = 'started';
-    $scope.$apply();
-
-  });
-
-  ipc.on('server.stopped', function(code) {
-    $scope.status = 'stopped';
-    Page.setTitle("IPython");
+  $rootScope.$on("serverStopping", function(evt, id) {
+    $scope.server.status = 'waiting';
     nbServerView.setAttribute('src', 'about:blank');
     $scope.$apply();
   });
 
 
-  ipc.on('server.status', function(srvlist) {
-    $scope.servers = srvlist;
-    if (srvlist.length > 0) {
-      $scope.status = 'started';
-
-      //TODO: assumes only 1 server running. Could be relaxed.
-      if (nbServerView.getAttribute('src') != srvlist[0].url) {
-        nbServerView.setAttribute('src', srvlist[0].url);
-      }
-
-    } else {
-      $scope.status = 'stopped';
-    }
-  });
-
-
-  //reload the ipython page until it is ready
-  //TODO: dont like the way status is changed in a bunch of places...
-  function refreshServerView(server) {
-    $timeout(updateUrl, 200);
-    function updateUrl(){
-      nbServerView.reload('src', server.url);
-
-      $scope.$apply();
-      //try to update the iframe as long as the server is running but the document is not loaded
-      if (server.type === 'local' && nbServerView.document.length === 0){
-        $timeout(updateUrl, 500);
-      } else {
-        $scope.status = 'running';
-      }
-    }
-  }
 
   //Start the server if autostart is enabled
   if (prefs.autoStart()) {
   }
+
+
+  $scope.configure = function () {
+
+    var modalInstance = $modal.open({
+      templateUrl: 'tpl/edit-servers-modal.tpl.html',
+      controller: 'EditIpythonConfig',
+      size: 'lg',
+      resolve: {
+        items: function () {
+          return $scope.items;
+        }
+      }
+    });
+
+    modalInstance.result.then(function (selectedItem) {
+      $scope.selected = selectedItem;
+    }, function () {
+      //$log.info('Modal dismissed at: ' + new Date());
+    });
+  };
 }
+
 
 /**
  * Edit the Ipython config. For now, can only change the single default

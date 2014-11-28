@@ -1,3 +1,5 @@
+//TODO: one parent window per server. Close window->close server
+
 
 //Atom-shell Specific
 var app = require('app');  // Module to control application life.
@@ -169,13 +171,18 @@ var menuTemplate = [
       // {label: "Connect",
       //   click: "connectLocal"
       // },
-      {
-        label: "Configure",
-        click: function(){
-          //gui.Window.open('config')
-          window.location.hash = '/config';
-        }
-      },
+      //{
+      //  label: "Show",
+      //  click: function(){
+      //    mainWindow.location.hash = '/ctrl';
+      //  }
+      //},
+      //{
+      //  label: "Configure",
+      //  click: function(){
+      //    mainWindow.location.hash = '/config';
+      //  }
+      //},
       {
         type: 'separator'
       }
@@ -216,8 +223,8 @@ function runningServer(id){
 }
 
 function logMy(msg) {
-  winston.log('info', msg);
-  //console.log(msg);
+  //winston.log('info', msg);
+  console.log(msg);
 }
 
 function addServerToMenu(server) {
@@ -294,7 +301,6 @@ ipc.on('notebook.new.window', function(event, url) {
     var win = new BrowserWindow({ width: 800, height: 600, 'node-integration':false });
     win.loadUrl(url);
     win.webContents.addEventListener('new-window', function(e) {
-      console.log('here');
       require('shell').openExternal(e.url);
     });
     notebookWindows[e.url] = win;
@@ -351,7 +357,7 @@ function startServer(id, client) {
 
     //connect to the stderr stream. Use it to know when ipythonProc has actually started.
     ipythonProc.stderr.on('data', function (data) {
-      logMy(data);
+      logMy('IPython: ' + data.toString());
 
       //The first time we get something from stderror we know the server has started
       //Then try to get the running server info from its file
@@ -455,6 +461,9 @@ function stopServer(id) {
     //if (srv.process && srv.process.kill !== undefined) {
     //  srv.process.kill();
     //}
+
+    //TODO: get window associated with server - not just mainwindow
+    mainWindow.webContents.send('server.stopped', id);
 
     delete runningServers[id];
 

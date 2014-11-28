@@ -4,19 +4,94 @@
 <head>
     <meta charset="utf-8">
     <title>IPython</title>
-  <link rel="stylesheet" type="text/css" href="css/app.css">
-  <script src="lib/jquery/jquery.min.js"></script>
-  <script src="lib/angular/angular.js"></script>
-  <script src="lib/angular-route/angular-route.js"></script>
-  <script src="lib/angular-bootstrap/ui-bootstrap.min.js"></script>
-  <script src="lib/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-  <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
-  <script src="js/app.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/app.css">
+    <script src="lib/jquery/jquery.min.js"></script>
+    <script src="lib/angular/angular.js"></script>
+    <script src="lib/angular-route/angular-route.js"></script>
+    <script src="lib/angular-bootstrap/ui-bootstrap.min.js"></script>
+    <script src="lib/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="js/app.js"></script>
 </head>
 
 <body >
 
-<div class="container-fluid full-height" ng-view>
+<div class="container-fluid full-height" ng-controller="StartPage">
+    <div class="jumbotron" ng-show="server.status == 'waiting'">
+        <div class="container" >
+            <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Loading...
+            <br>
+            <div class="pull-right">
+                <button class="btn btn-default btn-md shutdown" ng-click="stopIPython()" ng-show="isRunning">
+                    <span class="glyphicon glyphicon-remove"></span>&nbsp; Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div ng-show="server.status == 'stopped'">
+        <div class="container" >
+            <h1>Welcome to IPython Desktop</h1>
+            <p>...</p>
+
+            <button class="btn btn-success btn-lg start" ng-click="startIPython()">Start Server</button>
+            <button class="btn btn-danger btn-lg shutdown" ng-click="stopIPython()" ng-show="isRunning">Shutdown</button>
+            <button class="btn btn-lg btn-default" ng-click="configure()">Configure</button>
+
+        </div>
+    </div>
+
+
+
+    <div role="tabpanel">
+
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist" id="nb-tab-list">
+            <li role="presentation" class="active"><a href="#srv-home" aria-controls="srv-home" role="tab" data-toggle="tab">IPython</a></li>
+            <!-- Notebook tabs -->
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content" id="nb-tab-content">
+            <div role="tabpanel" class="tab-pane active" id="srv-home" aria-labelledby="srv-home-tab">
+                <webview
+                        id="ipython-frame"
+                        src="about:blank"
+                        autosize="on">
+                </webview>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="row full-height" ng-show="server.status == 'started'" >
+        <div class="col-md-12 full-height">
+            <tabset>
+                <tab heading="IPython" >
+
+                    <div id="ipython-server-tab" ></div>
+                </tab>
+                <!---->
+                <tab ng-repeat="tab in notebookTabs" heading="{{tab.title}}" active="tab.active" disabled="tab.disabled">
+                    <webview id="ipynb-{{tab.title}}" class="ipython-notebook-view" src="{{tab.url}}">
+                    </webview>
+                </tab>
+                <tab select="configure()">
+                    <tab-heading>
+                        <i class="glyphicon glyphicon-cog"></i>
+                    </tab-heading>
+                </tab>
+            </tabset>
+        </div>
+    </div>
+
+
+
+</div>
+</div>
+
+
 
 </div> <!-- /container -->
 </body>
