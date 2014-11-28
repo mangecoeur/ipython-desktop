@@ -122,15 +122,7 @@ function StartPage($scope, $timeout, Page, $rootScope, $modal, ipyServers) {
 
   $scope.requestStatus();
 
-  //FIXME: hack because with angular it's hard to figure out when things are loaded
-  //TODO: maybe move away from angular magic to simpler jquery-only UI
-  $scope.fixWebView = function(){
-    document.getElementById('ipython-server-tab').appendChild(document.getElementById('ipython-frame'))
-    //$('#ipython-server-tab').append($('#stupid-container'));
-  };
-
   nbServerView = document.getElementById('ipython-frame'); //Webview that will hold the server
-  //var notebookView = document.getElementById('ipython-notebook-frame');
 
   $scope.connectToIPython = function(srv) {
     nbServerView.setAttribute('src', srv.url);
@@ -145,24 +137,18 @@ function StartPage($scope, $timeout, Page, $rootScope, $modal, ipyServers) {
   //-----------------------------
   // register DOM event listeners
   //-----------------------------
-  var nbWebViews = $scope.nbWebViews = {};
-  var notebookTabs = $scope.notebookTabs = [];
+  var notebookTabs = [];
 
   //Atom-shell tends to crash if you dont clean up web views
   function cleanupWebviews(){
     nbServerView.setAttribute('src', 'about:blank');
-    for (var i in notebookTabs) {
-      var tab = notebookTabs[i];
-      console.log(tab);
 
-      var nbView = document.getElementById('ipynb-' + tab.title)
-      nbView.parentNode.removeChild(nbView);
+    for (var i=0; i<notebookTabs.length; i++) {
+      var v = notebookTabs[i];
+      v.tab.remove();
+      v.tabPane.remove();
     }
-    for(var view in nbWebViews){
-      view = null;
-    }
-    nbWebViews = $scope.nbWebViews = {};
-    notebookTabs = $scope.notebookTabs = [];
+    notebookTabs = [];
   }
 
   window.onbeforeunload = function(e){
@@ -170,8 +156,12 @@ function StartPage($scope, $timeout, Page, $rootScope, $modal, ipyServers) {
     return true;
   }
 
-  var notebookTabsJquery = [];
 
+  /**
+   * setup the server webviews. Uses jquery directly to avoid messy interactions
+   * with angularjs magic
+   * @param url
+   */
   function setupServerView(url){
     nbServerView = document.getElementById('ipython-frame');
     nbServerView.setAttribute('src', url);
@@ -182,20 +172,26 @@ function StartPage($scope, $timeout, Page, $rootScope, $modal, ipyServers) {
         var parts = e.url.split('notebooks/');
         var title = parts[1];
 
-        if (!nbWebViews[title]) {
+        if (!_.findWhere(notebookTabs, {'title': title})) {
 
-          var nbView = $('<webview>').attr('src', e.url);
-          nbView.on('new-window', function(e) {
-              require('shell').openExternal(e.url);
+          //TODO: use templating to make this simpler
+          var nbView = document.createElement('webview');
+          nbView.setAttribute('src', e.url);
+          //use raw dom because errors with jquery...
+          nbView.addEventListener('new-window', function(ev) {
+              require('shell').openExternal(ev.url);
           });
 
+
+          //var tpl = _.template('<div role="tabpanel" aria-labelledby="ipynb-<%=title>" id="ipynb-<%=title>" class="tab-pane"></div>')
+          //tpl({'title': title})
           var nbTabPane = $('<div>')
               .attr('id', 'ipynb-' + title)
               .attr('role', 'tabpanel')
               .addClass('tab-pane')
               .addClass('')
               .attr('aria-labelledby', 'ipynb-' + title)
-              .append(nbView);
+              .append($(nbView));
 
           var nbTab = $('<li>')
                   .attr('role', 'presentation')
@@ -207,32 +203,23 @@ function StartPage($scope, $timeout, Page, $rootScope, $modal, ipyServers) {
                       .text(title)
           );
 
-          notebookTabsJquery.push({tab: nbTab, tabPane: nbTabPane, title:title});
+          notebookTabs.push({'tab': nbTab, tabPane: nbTabPane, title:title, url: e.url});
 
-          $('#nb-tab-content').append(nbTabPane),
-          $('#nb-tab-list').append(nbTab);
+          $('#nb-tab-content').append(nbTabPane);
+          var tabList = $('#nb-tab-list');
+          tabList.append(nbTab);
 
-          $('#nb-tab-list').find('a').click(function (e) {
+          //(Re)Register handler for the tab change
+          tabList.find('a').click(function (e) {
             e.preventDefault();
             $(this).tab('show');
             var id = $(this).attr('aria-controls');
             $('#nb-tab-content').find('.tab-pane').removeClass('active');
             $(document.getElementById(id)).addClass('active');
-
+            document.title = $(this).text();
           });
 
-
-
-          //store these, hope to prevent them being GCed if hidden
-          notebookTabs.push({title: title, url: e.url, active: true});
           $scope.$apply();
-
-          var nbView2 = document.getElementById('ipynb-' + title)
-          nbView2.addEventListener('new-window', function(e) {
-              require('shell').openExternal(e.url);
-          });
-
-          nbWebViews[title] = nbView2;
         }
       }
     });

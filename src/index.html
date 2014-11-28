@@ -41,12 +41,11 @@
         </div>
     </div>
 
-
-
-    <div role="tabpanel">
+    <div role="tabpanel" class="full-height" >
 
         <!-- Nav tabs -->
-        <ul class="nav nav-tabs" role="tablist" id="nb-tab-list">
+        <!-- IMPORTANT - Webview goes crazy if you hide it wrong, so just hide the tab panel-->
+        <ul class="nav nav-tabs" role="tablist" id="nb-tab-list" ng-show="server.status == 'started'">
             <li role="presentation" class="active"><a href="#srv-home" aria-controls="srv-home" role="tab" data-toggle="tab">IPython</a></li>
             <!-- Notebook tabs -->
         </ul>
@@ -61,32 +60,7 @@
                 </webview>
             </div>
         </div>
-
     </div>
-
-
-    <div class="row full-height" ng-show="server.status == 'started'" >
-        <div class="col-md-12 full-height">
-            <tabset>
-                <tab heading="IPython" >
-
-                    <div id="ipython-server-tab" ></div>
-                </tab>
-                <!---->
-                <tab ng-repeat="tab in notebookTabs" heading="{{tab.title}}" active="tab.active" disabled="tab.disabled">
-                    <webview id="ipynb-{{tab.title}}" class="ipython-notebook-view" src="{{tab.url}}">
-                    </webview>
-                </tab>
-                <tab select="configure()">
-                    <tab-heading>
-                        <i class="glyphicon glyphicon-cog"></i>
-                    </tab-heading>
-                </tab>
-            </tabset>
-        </div>
-    </div>
-
-
 
 </div>
 </div>
