@@ -41,8 +41,12 @@ var prefs = remote.require('./ipyd-preferences.js');
 
 $ = angular.element; //so we don't need jquery
 
+
+//Global ref to webview, hope it doesn't get GCed
+var nbServerView = null;
+
 /* App Module */
-angular.module('ipython', ['ngRoute'])
+angular.module('ipython', ['ngRoute', 'ui.bootstrap'])
     .config(
       function($routeProvider, $sceDelegateProvider) {
         $routeProvider
@@ -55,7 +59,8 @@ angular.module('ipython', ['ngRoute'])
              // Allow same origin resource loads.
              'self',
              // Allow loading from our assets domain.  Notice the difference between * and **.
-             'http://127.0.0.1**'
+             'http://127.0.0.1**',
+            'http://localhost**'
         ]);
       })
     .service('ipyServers', IpyServerService)
@@ -98,7 +103,7 @@ function log(message) {
 //------
 //Main UI page!
 function StartPage($scope, $timeout, Page, $rootScope, ipyServers) {
-  var nbServerView = document.getElementById('ipython-frame'); //Webview that will hold the server
+  nbServerView = document.getElementById('ipython-frame'); //Webview that will hold the server
   //var notebookView = document.getElementById('ipython-notebook-frame');
 
   $scope.connectToIPython = function(srv) {
@@ -125,37 +130,35 @@ function StartPage($scope, $timeout, Page, $rootScope, ipyServers) {
 
   $scope.requestStatus();
 
-
   //-----------------------------
   // register DOM event listeners
   //-----------------------------
-  var serverWindows = {};
-  var notebookWindows = {};
-
+  var nbWebViews = $scope.nbWebViews = {};
+  var notebookTabs = $scope.notebookTabs = []
   nbServerView.addEventListener('new-window', function(e) {
     //notebookView.setAttribute('src', e.url);
+    //ipc.send('notebook.new.window', e.url);
+    if (e.url.indexOf(".ipynb") >= 0) {
+      var parts = e.url.split('notebooks/');
+      var fname = parts[1];
 
-    var win = new BrowserWindow({ width: 800, height: 600, 'node-integration':false });
-    win.loadUrl(e.url);
-    win.addEventListener('new-window', function(e) {
-      console.log('here');
-      require('shell').openExternal(e.url);
-    });
-    notebookWindows[e.url] = win;
+      if (!nbWebViews[fname]) {
+
+        var nbView = document.createElement('webview');
+        nbView.setAttribute('id', 'ipynb' + fname);
+        nbView.setAttribute('src', e.url);
+        nbView.addEventListener('new-window', function(e) {
+            require('shell').openExternal(e.url);
+        });
+
+        //store these, hope to prevent them being GCed if hidden
+        nbWebViews[fname] = nbView;
+        notebookTabs.push({title: fname, url: e.url, active: true, content:nbView});
+
+        $scope.$apply();
+      }
+    }
   });
-  //TODO: need a list of notebook views, not just one...
-  //notebookView.addEventListener('new-window', function(e) {
-  //  console.log(e);
-  //  require('shell').openExternal(e.url);
-  //});
-
-  // notebookView.addEventListener('did-frame-finish-load')
-  // notebookView.addEventListener('did-fail-load', function() {
-  //   if ($scope.status == 'waiting') {
-  //     notebookView.reload();
-  //   }
-  // })
-
 
   //-----------------------
   // register angular event listeners
@@ -196,6 +199,7 @@ function StartPage($scope, $timeout, Page, $rootScope, ipyServers) {
     nbServerView.setAttribute('src', 'about:blank');
     $scope.$apply();
   });
+
 
   ipc.on('server.status', function(srvlist) {
     $scope.servers = srvlist;

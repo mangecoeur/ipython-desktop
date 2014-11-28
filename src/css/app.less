@@ -15,6 +15,8 @@ body {
   }
 }
 
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
 .page-header {
 
   img {
@@ -24,9 +26,6 @@ body {
   }
 }
 
-.test_padding {
-  padding: 30px;
-  }
 .glyphicon-refresh-animate {
     -animation: spin 1.5s infinite linear;
     -webkit-animation: spin2 1.5s infinite linear;
@@ -43,9 +42,52 @@ body {
 }
 
 .ng-hide {
-/* this is just another form of hiding an element */
+  /* this is just another form of hiding an element */
+  display:block!important;
+  position:absolute;
+  top:-9999px;
+  left:-9999px;
+}
+//
+//.hide {
+//  display:block!important;
+//  position:absolute;
+//  top:-9999px;
+//  left:-9999px;
+//}
+//
+//
+//.hidden {
+//display:block!important;
+//position:absolute;
+//top:-9999px;
+//left:-9999px;  visibility: hidden !important;
+//}
+
+
+.tab-content > .tab-pane {
 display:block!important;
 position:absolute;
 top:-9999px;
 left:-9999px;
+}
+
+
+.tab-content > .active {
+  display: block;
+  position: relative;
+  top:auto;
+  left:auto;
+}
+
+.container {
+  height: 100%;
+}
+
+.tab-frame {
+  height: 100%;
+}
+
+.full-height{
+  height: 100%;
 }

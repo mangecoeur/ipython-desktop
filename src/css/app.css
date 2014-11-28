@@ -5963,13 +5963,16 @@ body {
 .navbar-brand img {
   height: 25px;
 }
+.nav,
+.pagination,
+.carousel,
+.panel-title a {
+  cursor: pointer;
+}
 .page-header img {
   display: block;
   margin: auto;
   width: 400px;
-}
-.test_padding {
-  padding: 30px;
 }
 .glyphicon-refresh-animate {
   -animation: spin 1.5s infinite linear;
@@ -5997,4 +6000,25 @@ body {
   position: absolute;
   top: -9999px;
   left: -9999px;
+}
+.tab-content > .tab-pane {
+  display: block!important;
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+}
+.tab-content > .active {
+  display: block;
+  position: relative;
+  top: auto;
+  left: auto;
+}
+.container {
+  height: 100%;
+}
+.tab-frame {
+  height: 100%;
+}
+.full-height {
+  height: 100%;
 }

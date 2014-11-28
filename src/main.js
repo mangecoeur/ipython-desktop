@@ -35,6 +35,9 @@ require('crash-reporter').start();
 var mainWindow = null;
 //global ref to main menu so we can update it wherever
 var mainMenu = null;
+//holder for all notebook windows (subject to change if we want tabbed UI)
+var notebookWindows = {};
+
 
 //Template to build the app menu
 var menuTemplate = [
@@ -223,7 +226,6 @@ function addServerToMenu(server) {
 
   }})
   srvMenu.append(srvItem);
-
 }
 
 
@@ -288,6 +290,15 @@ ipc.on('server.status', function(event, serverId) {
   event.sender.send('server.status', result);
 });
 
+ipc.on('notebook.new.window', function(event, url) {
+    var win = new BrowserWindow({ width: 800, height: 600, 'node-integration':false });
+    win.loadUrl(url);
+    win.webContents.addEventListener('new-window', function(e) {
+      console.log('here');
+      require('shell').openExternal(e.url);
+    });
+    notebookWindows[e.url] = win;
+})
 
 /**
  * [startServer description]
@@ -340,7 +351,7 @@ function startServer(id, client) {
 
     //connect to the stderr stream. Use it to know when ipythonProc has actually started.
     ipythonProc.stderr.on('data', function (data) {
-      logMy('IPython stderr: ' + data);
+      logMy(data);
 
       //The first time we get something from stderror we know the server has started
       //Then try to get the running server info from its file
