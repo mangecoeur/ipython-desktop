@@ -5,7 +5,10 @@ data
 .idea
 releases/
 cache/
-
+/build/atom-shell/
+/build/node-modules/
+/build/atom-shell/*
+/build/node-modules/*
 /cache
 /releases
 

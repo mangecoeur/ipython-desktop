@@ -231,7 +231,8 @@ function addServerToMenu(server) {
   var srvMenu = _.findWhere(mainMenu.items, {'label':'Server'});
   var srvItem = new MenuItem({label: server.url, click: function(){
 
-  }})
+  }});
+  
   srvMenu.append(srvItem);
 }
 
@@ -265,6 +266,9 @@ app.on('ready', function() {
   });
 });
 
+//-----------------------------------------------------------------------
+// Register IPC event listeners
+// 
 
 ipc.on('server.start', function(event, serverId) {
   if (!isRunning(serverId)) {
@@ -424,7 +428,7 @@ function getRunningServerInfo(ipyServer) {
     }
   };
 
-  //Hack to retry Synchronously with wait (because to hell with callbacks!)
+  //Hack to retry Synchronously with wait (because fuck callbacks!)
   var now = moment().millisecond();
   while (srv_info === null && retryCount < maxRetry) {
     var newnow = moment().millisecond();

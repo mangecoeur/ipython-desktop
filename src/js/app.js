@@ -165,64 +165,70 @@ function StartPage($scope, $timeout, Page, $rootScope, $modal, ipyServers) {
   function setupServerView(url){
     nbServerView = document.getElementById('ipython-frame');
     nbServerView.setAttribute('src', url);
-    nbServerView.addEventListener('new-window', function(e) {
-      //notebookView.setAttribute('src', e.url);
-      //ipc.send('notebook.new.window', e.url);
-      if (e.url.indexOf(".ipynb") >= 0) {
-        var parts = e.url.split('notebooks/');
-        var title = parts[1];
+    
+    // nbServerView.addEventListener('new-window', function(e) {
+    //   //notebookView.setAttribute('src', e.url);
+    //   //ipc.send('notebook.new.window', e.url);
+    //   if (e.url.indexOf(".ipynb") >= 0) {
+    //     var parts = e.url.split('notebooks/');
+    //     var title = parts[1];
 
-        if (!_.findWhere(notebookTabs, {'title': title})) {
+    //     if (!_.findWhere(notebookTabs, {'title': title})) {
 
-          //TODO: use templating to make this simpler
-          var nbView = document.createElement('webview');
-          nbView.setAttribute('src', e.url);
-          //use raw dom because errors with jquery...
-          nbView.addEventListener('new-window', function(ev) {
-              require('shell').openExternal(ev.url);
-          });
+    //       //TODO:maybe create new windows? -> send IPC to have main.js create+manage?
+    //       //TODO: use templating to make this simpler
+    //       var nbView = document.createElement('webview');
+    //       nbView.setAttribute('nodeintegration', '');
+    //       nbView.setAttribute('src', e.url);
+    //       nbView.setAttribute('preload', 'preload.js');
+    //       nbView.setAttribute('id', 'ipynb-' + title);
+
+    //       //use raw dom because errors with jquery...
+    //       nbView.addEventListener('new-window', function(ev) {
+    //           require('shell').openExternal(ev.url);
+    //       });
 
 
-          //var tpl = _.template('<div role="tabpanel" aria-labelledby="ipynb-<%=title>" id="ipynb-<%=title>" class="tab-pane"></div>')
-          //tpl({'title': title})
-          var nbTabPane = $('<div>')
-              .attr('id', 'ipynb-' + title)
-              .attr('role', 'tabpanel')
-              .addClass('tab-pane')
-              .addClass('')
-              .attr('aria-labelledby', 'ipynb-' + title)
-              .append($(nbView));
+    //       //var tpl = _.template('<div role="tabpanel" aria-labelledby="ipynb-<%=title>" id="ipynb-<%=title>" class="tab-pane"></div>')
+    //       //tpl({'title': title})
+    //       var nbTabPane = $('<div>')
+    //           .attr('id', 'tab-ipynb-' + title)
+    //           .attr('role', 'tabpanel')
+    //           .addClass('tab-pane')
+    //           .addClass('')
+    //           .attr('aria-labelledby', 'tab-ipynb-' + title)
+    //           .append($(nbView));
 
-          var nbTab = $('<li>')
-                  .attr('role', 'presentation')
-                  .append($('<a>')
-                      .attr('role', 'tab')
-                      .attr('data-toggle', 'tab')
-                      .attr('href', '#' + 'ipynb-' + title)
-                      .attr('aria-controls', 'ipynb-' + title)
-                      .text(title)
-          );
+    //       var nbTab = $('<li>')
+    //               .attr('role', 'presentation')
+    //               .append($('<a>')
+    //                   .attr('role', 'tab')
+    //                   .attr('data-toggle', 'tab')
+    //                   .attr('href', '#' + 'tab-ipynb-' + title)
+    //                   .attr('aria-controls', 'tab-ipynb-' + title)
+    //                   .text(title)
+    //       );
 
-          notebookTabs.push({'tab': nbTab, tabPane: nbTabPane, title:title, url: e.url});
+    //       notebookTabs.push({'tab': nbTab, tabPane: nbTabPane, title:title, url: e.url});
 
-          $('#nb-tab-content').append(nbTabPane);
-          var tabList = $('#nb-tab-list');
-          tabList.append(nbTab);
+    //       $('#nb-tab-content').append(nbTabPane);
+    //       var tabList = $('#nb-tab-list');
+    //       tabList.append(nbTab);
 
-          //(Re)Register handler for the tab change
-          tabList.find('a').click(function (e) {
-            e.preventDefault();
-            $(this).tab('show');
-            var id = $(this).attr('aria-controls');
-            $('#nb-tab-content').find('.tab-pane').removeClass('active');
-            $(document.getElementById(id)).addClass('active');
-            document.title = $(this).text();
-          });
+    //       //(Re)Register handler for the tab change
+    //       tabList.find('a').click(function (e) {
+    //         e.preventDefault();
+    //         $(this).tab('show');
+    //         var id = $(this).attr('aria-controls');
+    //         $('#nb-tab-content').find('.tab-pane').removeClass('active');
+    //         $(document.getElementById(id)).addClass('active');
+    //         document.title = $(this).text();
+    //       });
 
-          $scope.$apply();
-        }
-      }
-    });
+    //       $scope.$apply();
+    //     }
+    //   }
+    // });
   }
   //-----------------------
 // register ipc event listeners
