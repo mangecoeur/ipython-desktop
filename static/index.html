@@ -1,0 +1,72 @@
+<!doctype html>
+<html ng-app="ipython" class="no-js" >
+<!-- ng-controller="TitleCtrl" -->
+<head>
+    <meta charset="utf-8">
+    <title>IPython</title>
+    <link rel="stylesheet" type="text/css" href="app.css">
+
+    <script src="components/jquery/dist/jquery.min.js"></script>
+    <script src="components/angular/angular.js"></script>
+    <script src="components/angular-bootstrap/ui-bootstrap.min.js"></script>
+    <script src="components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <!--<script src="components/bootstrap/dist/js/bootstrap.min.js"></script>-->
+    <script src="index.js"></script>
+</head>
+
+<body >
+
+<div class="container-fluid full-height" ng-controller="StartPage">
+    <div class="jumbotron" ng-show="server.status == 'waiting'">
+        <div class="container" >
+            <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Loading...
+            <br>
+            <div class="pull-right">
+                <button class="btn btn-default btn-md shutdown" ng-click="stopIPython()" ng-show="isRunning">
+                    <span class="glyphicon glyphicon-remove"></span>&nbsp; Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div ng-show="server.status == 'stopped'">
+        <div class="container" >
+            <h1>Welcome to IPython Desktop</h1>
+            <p>...</p>
+
+            <button class="btn btn-success btn-lg start" ng-click="startIPython()">Start Server</button>
+            <button class="btn btn-danger btn-lg shutdown" ng-click="stopIPython()" ng-show="isRunning">Shutdown</button>
+            <button class="btn btn-lg btn-default" ng-click="configure()">Configure</button>
+
+        </div>
+    </div>
+
+    <div role="tabpanel" class="full-height" >
+
+        <!-- Nav tabs -->
+        <!-- IMPORTANT - Webview goes crazy if you hide it wrong, so just hide the tab panel-->
+        <ul class="nav nav-tabs" role="tablist" id="nb-tab-list" ng-show="server.status == 'started'">
+            <li role="presentation" class="active"><a href="#srv-home" aria-controls="srv-home" role="tab" data-toggle="tab">IPython</a></li>
+            <!-- Notebook tabs -->
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content" id="nb-tab-content">
+            <div role="tabpanel" class="tab-pane active" id="srv-home" aria-labelledby="srv-home-tab">
+                <webview
+                        id="ipython-frame"
+                        src="about:blank"
+                        preload="./preload.js"
+                        autosize="on"
+                        nodeintegration
+                        >
+                        <!--nodeintegration-->
+
+                </webview>
+            </div>
+        </div>
+    </div>
+
+</div> <!-- /container -->
+</body>
+</html>

@@ -4,7 +4,7 @@ var fs = require('fs');
 var child_process = require('child_process');
 
 //Third party modules
-var _ = require('lodash');
+var _ = require('underscore-plus');
 var shell = require('shelljs');
 
 

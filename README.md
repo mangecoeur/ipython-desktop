@@ -1,100 +1,34 @@
-# IPython Notebook Desktop
+# Atom Shell Starter App
 
-This is a proof of concept desktop interface for the IPython Notebook. 
+atom-shell-starter is a base application that you can use to get started writing your own cross-platform (Win/Mac/Linux) Desktop apps via Atom Shell. This template is extracted from the Atom source code, cleaned up to be more generic, and to be a great starting point for a production app.
 
-## What's new
-The latest revision improves ipython configuration and process handling. It will now try to automatically figure out the location of your ipython install and the url where the server is available when launched.
+### Getting Started
 
-## Concept
-It's well established that IPython is awesome.
+Everything in Atom Shell Starter is configured via the `package.json` file - there are some extra fields that are of interest:
 
-Most IPython users end up using local installs of the IPython notebook in their browser. However this is somewhat clunky, mixing the browser interface and the notebook interface and generally requiring a trip to the command line to get the server running.
+* `name` - The name for your app that will be used in the build tools. Make it something simple.
+* `productName` - The name of your product - your executable will be called this (i.e. "MyApp.app")
 
-The IPython Notebook Desktop wraps the webapp in a more friendly interface, powered by node-webkit. You can configure a notebook to run to power the interface (optionally have it run on startup).
+The default project is called EightOhEight (get it? Cause it's a sample(r)).
 
-What this does **NOT** do is provide you with an IPython installation. This is deliberate, since people have different needs and tastes with regards to their Python installs. Some people want to use the Python bundled with their operating system, others use Python distributions like Canopy or Anaconda. With IPython Desktop the Python distribution and the interface are separate, but you must configure IPython desktop to use your IPython installation.
+Once you've set that up, do:
 
-The IPython Notebook Desktop doesn't aim to make it easier to install a scientific python environment, but should be easy enough to get by itself. It could eventually be a candidate for bundling with existing packages or with IPython itself.
+1. `script/bootstrap` - Run this once per checkout.
+2. `script/build` - Run this whenever you change package.json or change early startup code
+3. `script/run` - Run the app. Use this for running the app in developer mode
 
+Another useful script is `script/grunt`, which will run the local version of Grunt. `script/grunt --help` will tell you the list of available tasks.
 
-## Pretty pictures
-IPython embedded
+### Using JavaScript ES6
 
-![Screenshot1](https://raw.githubusercontent.com/mangecoeur/ipython-desktop/master/assets/Screenshot1.png "Screenshot1")
+JavaScript ES6 / ESNext is available via the 6to5 project for almost all files except for very early in startup. To use it, add `'use 6to5';` to the top of your file. Check out https://6to5.org for more information. 
 
-Start Screen:
+### What's the "browser" vs "renderer" code?
 
-![Screenshot2](https://raw.githubusercontent.com/mangecoeur/ipython-desktop/master/assets/Screenshot2.png "Start screen")
+Atom Shell has (at least) two separate contexts - when your app first starts up, it is running in a DOM-less node.js loop - there are no windows. This is called the *Browser* context. The built-in code proceeds to start up a `BrowserWindow` object, which then creates a *Rendering* context, which is what you are more used to - it's got the Chrome DevTools and a DOM, yet it can *still* use node.js, as well as several Atom Shell APIs that are made available. Check out the [documentation for Atom Shell](https://github.com/atom/atom-shell/tree/master/docs/api) for more about what you can do.
 
-Config Screen:
+Most of your app's code should ideally live in the *Rendering* context, because the Browser context is difficult to debug and test - there is no Chrome DevTools, solely printf-based debugging.
 
-![Screenshot3](https://raw.githubusercontent.com/mangecoeur/ipython-desktop/master/assets/Screenshot3.png "Screenshot3")
+### Why does `$MY_FAVORITE_LIBRARY` not work / do weird stuff?
 
-
-## Get it!
-[App bundle for Mac](https://github.com/mangecoeur/ipython-desktop/raw/master/apps/ipython-desktop.zip)
-
-You also need to have IPython installed. My personal recommendation is the Anaconda python distribution if you are mainly doing science and engineering work.
-
-**Coming sometime - binary bundles for each platform. Contributions welcome**
-
-## Configuration
-
-IPython desktop can either launch the IPython notebook server for you or connect to an existing URL. 
-
-To launch a server you must specify the location of your IPython executable, by default this is pre-filled (using the output of the command `which ipython`). You can optionally specify a Profile to use (which will be used with --profile=...)
-
-
-**IMPORTANT** - you must supply the full path to your IPython install otherwise it will fail to launch the ipython server
-
-**WARNING:** ipython-desktop is by no means idiot proof at the moment. If you don't configure it correctly the page will simply fail to load without explanation. This should improve in future versions.
-
-
-### URL only
-If you set the "remote" option in the config you can simply type in the URL of your IPython server **including `http://` at the front!** handy if you just want a nicer interface for a remote system or just for testing.
-
-
-## Building ipython-desktop
-In theory, the following steps should work (on Mac):
-
-Requirements 
-- Xcode developer tools installed 
-- `node` (nodejs) with `npm`, if you use Homebrew (and you should) just do `brew install node`.
-- `grunt` and `grunt-cli` (`npm install -g grunt grunt-cli` normally you will have to use sudo)
-
-Set up the project
-In the terminal, `cd` into the source folder. Run `npm install`, `grunt nodewebkit`, `grunt install` to set up the dependencies for ipython desktop.
-
-FINALLY you should be able to run `grunt run` and see you shiny new ipython-desktop app, ready to configure.
-
-## Known Issues
-
-- IMPORTANT - you must configure ipython desktop with the FULL PATH of your ipython executable
-- Certain combinations of starting/stopping ipython servers and opening/closing windows might leave orphaned IPython processes (especially if you force quit the app)
-
-## TODO
-- Bundles for all OSes
-- Add fault tolerance e.g. for missing or misconfigured Ipython
-- More user friendly configuration of ipython
-- better integration with ipython notebooks - start/stop events, clean shutdown
-- Integration with Native menus!
-- Try to find the current iPython install using "which iPython" -> Done!
-- Try to auto-config profiles using "ipython profile locate"
-- Get url/port of running ipython using json from profile folder
-
-## Similar Work
-- Canopy: Enthought provide their Canopy desktop interface with IPython notebook integration. However this ties you into the EPD distribution. The IPython Notebook Desktop aims to be a lighter, more versatile solution
-- [IPython notebook](https://github.com/liyanage/ipython-notebook) Works in a similar vein, though is Mac only. It also differs in aim, since it bundles the essentials for scientific python computing. My aim with this project is to allow the interface to work with different Python installs, making it possible to use different python version and different virtual environments.
-- [IPyApp](https://github.com/ptone/IPyApp) Another project that uses node-webkit to wrap IPython notebook, but embeds the full python executable environment in the app.
-
-
-
-## Credits
-IPython desktop is powered by Node Webkit and makes use of the angular-desktop-app template. Icon is [IPython faenza](http://gnome-look.org/content/show.php?content=162145)
-
-## LICENCE
-The policy of this project is to match the licence of the IPython notebook itself - whatever you can do with ipython, you can do with ipython desktop.
-
-For the details, see:
-
-[IPython Licence and copyright](http://ipython.org/ipython-doc/dev/about/license_and_copyright.html)
+Some JavaScript libraries try to detect whether they're in node.js via probing for `module` or `require`, and assume that they aren't in a browser. You might find that you need to patch these libraries to always operate in Browser Mode.

@@ -1,4 +1,5 @@
 {
-  "directory": "src/lib",
-  "json": "bower.json"
+  "directory": "static/components/",
+  "analytics": true,
+  "timeout": 120000
 }
