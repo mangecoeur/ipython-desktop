@@ -38,7 +38,7 @@ class Application
     #Quit when all windows are closed (including for Mac - though this could change)
     app.on 'window-all-closed', ->
       if (process.platform != 'darwin')
-        appShutdown()
+        @appShutdown()
 
 # Opens a new window based on the options provided.
   openWithOptions: (options) ->
@@ -82,22 +82,22 @@ class Application
   handleIPC: () ->
     ipc.on 'server.start', (event, serverId) ->
       if (!isRunning(serverId))
-        startServer(serverId, event.sender)
+        nbservers.startServer(serverId, event.sender)
 
-      else if (isRunning(serverId))
-        srv = _.pick(runningServer(serverId), 'id', 'name', 'conf', 'url', 'type');
+      else if (nbservers.isRunning(serverId))
+        srv = _.pick(nbservers.runningServer(serverId), 'id', 'name', 'conf', 'url', 'type');
         event.sender.send('server.started', srv); #don't bother with process
 
     ipc.on 'server.stop', (event, serverId) ->
-      stopServer(serverId, event.sender);
+      nbservers.stopServer(serverId, event.sender);
 
     ipc.on 'server.status', (event, serverId) ->
       if (serverId != undefined)
-        result = runningServer(serverId)
+        result = nbservers.runningServer(serverId)
         result = _.pick(result, 'id', 'name', 'conf', 'url', 'type')
 
       else
-        result = _.map runningServers, (srv, srvId) =>
+        result = _.map nbservers.runningServers, (srv, srvId) =>
             return _.pick(srv, 'id', 'name', 'conf', 'url', 'type')
 
         event.sender.send('server.status', result)
@@ -111,9 +111,7 @@ class Application
 
 
   appShutdown: ->
-    for id in runningServers
-      stopServer(id)
-    runningServers = {}
+    nbservers.stopAllServers()
     app.quit()
 
 

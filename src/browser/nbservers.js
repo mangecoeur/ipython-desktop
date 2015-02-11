@@ -1,7 +1,3 @@
-//Atom-shell Specific
-var app = require('app');  // Module to control application life.
-var ipc = require('ipc');
-
 //Nodejs builtins
 var path = require('path');
 var child_process = require('child_process');
@@ -13,7 +9,9 @@ var shell = require('shelljs');
 var _ = require('underscore-plus');
 
 //Homemade modules
-var prefs = require('../ipyd-preferences.js');
+var prefs = require('../ipyd_preferences.js');
+
+var runningServers = {};
 
 
 var exports = module.exports = {
@@ -22,10 +20,10 @@ var exports = module.exports = {
     'getRunningServerInfo': getRunningServerInfo,
     'isRunning': isRunning,
     'stopAllServers': stopAllServers,
-    'runningServer': runningServer
+    'runningServer': runningServer,
+    'runningServers': runningServers
 };
 
-var runningServers = {};
 
 function runningServer(id){
   return runningServers[id];
@@ -35,14 +33,6 @@ function logMy(msg) {
   //winston.log('info', msg);
   console.log(msg);
 }
-
-
-// Quit when all windows are closed (including for Mac - though this could change)
-app.on('window-all-closed', function() {
-  //if (process.platform != 'darwin')
-    stopAllServers();
-});
-
 
 /**
  * [startServer description]

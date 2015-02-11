@@ -6,10 +6,14 @@
     <title>IPython</title>
     <link rel="stylesheet" type="text/css" href="app.css">
 
-    <script src="components/jquery/dist/jquery.min.js"></script>
-    <script src="components/angular/angular.js"></script>
-    <script src="components/angular-bootstrap/ui-bootstrap.min.js"></script>
-    <script src="components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+
+    <!--<script src="build/react.js"></script>-->
+    <!--<script src="build/JSXTransformer.js"></script>-->
+    <!---->
+        <!--<script src="components/jquery/dist/jquery.min.js"></script>-->
+        <!--<script src="components/angular/angular.js"></script>-->
+        <!--<script src="components/angular-bootstrap/ui-bootstrap.min.js"></script>-->
+        <!--<script src="components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>-->
     <!--<script src="components/bootstrap/dist/js/bootstrap.min.js"></script>-->
     <script src="index.js"></script>
 </head>
@@ -34,7 +38,8 @@
             <h1>Welcome to IPython Desktop</h1>
             <p>...</p>
 
-            <button class="btn btn-success btn-lg start" ng-click="startIPython()">Start Server</button>
+            <button id="start-ipython-button" class="btn btn-success btn-lg start" ng-click="startIPython()">Start Server</button>
+
             <button class="btn btn-danger btn-lg shutdown" ng-click="stopIPython()" ng-show="isRunning">Shutdown</button>
             <button class="btn btn-lg btn-default" ng-click="configure()">Configure</button>
 
