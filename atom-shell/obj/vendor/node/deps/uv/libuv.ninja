@@ -1,0 +1,109 @@
+defines = -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 $
+    -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_UNLIMITED_SELECT=1 $
+    -DCOMPONENT_BUILD -DGURL_DLL -DSKIA_DLL -DNDEBUG -DUSING_V8_SHARED $
+    -DWEBKIT_DLL -DSK_SUPPORT_LEGACY_GETTOPDEVICE $
+    -DSK_SUPPORT_LEGACY_BITMAP_CONFIG $
+    -DSK_SUPPORT_LEGACY_DEVICE_VIRTUAL_ISOPAQUE $
+    -DSK_SUPPORT_LEGACY_N32_NAME -DSK_SUPPORT_LEGACY_SETCONFIG $
+    -DSK_IGNORE_ETC1_SUPPORT -DSK_IGNORE_GPU_DITHER
+includes = -I../../vendor/node/deps/uv/include -I../../vendor/node/deps/uv/src
+cflags = -isysroot $
+    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk $
+    -fasm-blocks -mpascal-strings -Os -gdwarf-2 -mmacosx-version-min=10.8 $
+    -arch x86_64 -Wall -Wextra -Wno-unused-parameter -Wall -Wextra $
+    -Wno-unused-parameter -Wno-missing-field-initializers $
+    -Wno-parentheses-equality -Wno-unused-function $
+    -Wno-sometimes-uninitialized -Wno-pointer-sign -Wno-string-plus-int $
+    -Wno-unused-variable -Wno-deprecated-declarations -Wno-return-type $
+    -Wno-gnu-folding-constant
+cflags_c = -std=c99 -g --std=gnu89 -pedantic -fcolor-diagnostics
+cflags_cc = -std=c++11 -stdlib=libc++ -fno-rtti -fno-exceptions -g $
+    --std=gnu89 -pedantic -fcolor-diagnostics
+cflags_objc = $cflags_c
+cflags_objcc = $cflags_cc
+
+build obj/vendor/node/deps/uv/src/libuv.fs-poll.o: cc $
+    ../../vendor/node/deps/uv/src/fs-poll.c
+build obj/vendor/node/deps/uv/src/libuv.inet.o: cc $
+    ../../vendor/node/deps/uv/src/inet.c
+build obj/vendor/node/deps/uv/src/libuv.threadpool.o: cc $
+    ../../vendor/node/deps/uv/src/threadpool.c
+build obj/vendor/node/deps/uv/src/libuv.uv-common.o: cc $
+    ../../vendor/node/deps/uv/src/uv-common.c
+build obj/vendor/node/deps/uv/src/libuv.version.o: cc $
+    ../../vendor/node/deps/uv/src/version.c
+build obj/vendor/node/deps/uv/src/unix/libuv.async.o: cc $
+    ../../vendor/node/deps/uv/src/unix/async.c
+build obj/vendor/node/deps/uv/src/unix/libuv.core.o: cc $
+    ../../vendor/node/deps/uv/src/unix/core.c
+build obj/vendor/node/deps/uv/src/unix/libuv.dl.o: cc $
+    ../../vendor/node/deps/uv/src/unix/dl.c
+build obj/vendor/node/deps/uv/src/unix/libuv.fs.o: cc $
+    ../../vendor/node/deps/uv/src/unix/fs.c
+build obj/vendor/node/deps/uv/src/unix/libuv.getaddrinfo.o: cc $
+    ../../vendor/node/deps/uv/src/unix/getaddrinfo.c
+build obj/vendor/node/deps/uv/src/unix/libuv.getnameinfo.o: cc $
+    ../../vendor/node/deps/uv/src/unix/getnameinfo.c
+build obj/vendor/node/deps/uv/src/unix/libuv.loop.o: cc $
+    ../../vendor/node/deps/uv/src/unix/loop.c
+build obj/vendor/node/deps/uv/src/unix/libuv.loop-watcher.o: cc $
+    ../../vendor/node/deps/uv/src/unix/loop-watcher.c
+build obj/vendor/node/deps/uv/src/unix/libuv.pipe.o: cc $
+    ../../vendor/node/deps/uv/src/unix/pipe.c
+build obj/vendor/node/deps/uv/src/unix/libuv.poll.o: cc $
+    ../../vendor/node/deps/uv/src/unix/poll.c
+build obj/vendor/node/deps/uv/src/unix/libuv.process.o: cc $
+    ../../vendor/node/deps/uv/src/unix/process.c
+build obj/vendor/node/deps/uv/src/unix/libuv.signal.o: cc $
+    ../../vendor/node/deps/uv/src/unix/signal.c
+build obj/vendor/node/deps/uv/src/unix/libuv.stream.o: cc $
+    ../../vendor/node/deps/uv/src/unix/stream.c
+build obj/vendor/node/deps/uv/src/unix/libuv.tcp.o: cc $
+    ../../vendor/node/deps/uv/src/unix/tcp.c
+build obj/vendor/node/deps/uv/src/unix/libuv.thread.o: cc $
+    ../../vendor/node/deps/uv/src/unix/thread.c
+build obj/vendor/node/deps/uv/src/unix/libuv.timer.o: cc $
+    ../../vendor/node/deps/uv/src/unix/timer.c
+build obj/vendor/node/deps/uv/src/unix/libuv.tty.o: cc $
+    ../../vendor/node/deps/uv/src/unix/tty.c
+build obj/vendor/node/deps/uv/src/unix/libuv.udp.o: cc $
+    ../../vendor/node/deps/uv/src/unix/udp.c
+build obj/vendor/node/deps/uv/src/unix/libuv.proctitle.o: cc $
+    ../../vendor/node/deps/uv/src/unix/proctitle.c
+build obj/vendor/node/deps/uv/src/unix/libuv.darwin.o: cc $
+    ../../vendor/node/deps/uv/src/unix/darwin.c
+build obj/vendor/node/deps/uv/src/unix/libuv.fsevents.o: cc $
+    ../../vendor/node/deps/uv/src/unix/fsevents.c
+build obj/vendor/node/deps/uv/src/unix/libuv.darwin-proctitle.o: cc $
+    ../../vendor/node/deps/uv/src/unix/darwin-proctitle.c
+build obj/vendor/node/deps/uv/src/unix/libuv.kqueue.o: cc $
+    ../../vendor/node/deps/uv/src/unix/kqueue.c
+
+build libuv.a: alink obj/vendor/node/deps/uv/src/libuv.fs-poll.o $
+    obj/vendor/node/deps/uv/src/libuv.inet.o $
+    obj/vendor/node/deps/uv/src/libuv.threadpool.o $
+    obj/vendor/node/deps/uv/src/libuv.uv-common.o $
+    obj/vendor/node/deps/uv/src/libuv.version.o $
+    obj/vendor/node/deps/uv/src/unix/libuv.async.o $
+    obj/vendor/node/deps/uv/src/unix/libuv.core.o $
+    obj/vendor/node/deps/uv/src/unix/libuv.dl.o $
+    obj/vendor/node/deps/uv/src/unix/libuv.fs.o $
+    obj/vendor/node/deps/uv/src/unix/libuv.getaddrinfo.o $
+    obj/vendor/node/deps/uv/src/unix/libuv.getnameinfo.o $
+    obj/vendor/node/deps/uv/src/unix/libuv.loop.o $
+    obj/vendor/node/deps/uv/src/unix/libuv.loop-watcher.o $
+    obj/vendor/node/deps/uv/src/unix/libuv.pipe.o $
+    obj/vendor/node/deps/uv/src/unix/libuv.poll.o $
+    obj/vendor/node/deps/uv/src/unix/libuv.process.o $
+    obj/vendor/node/deps/uv/src/unix/libuv.signal.o $
+    obj/vendor/node/deps/uv/src/unix/libuv.stream.o $
+    obj/vendor/node/deps/uv/src/unix/libuv.tcp.o $
+    obj/vendor/node/deps/uv/src/unix/libuv.thread.o $
+    obj/vendor/node/deps/uv/src/unix/libuv.timer.o $
+    obj/vendor/node/deps/uv/src/unix/libuv.tty.o $
+    obj/vendor/node/deps/uv/src/unix/libuv.udp.o $
+    obj/vendor/node/deps/uv/src/unix/libuv.proctitle.o $
+    obj/vendor/node/deps/uv/src/unix/libuv.darwin.o $
+    obj/vendor/node/deps/uv/src/unix/libuv.fsevents.o $
+    obj/vendor/node/deps/uv/src/unix/libuv.darwin-proctitle.o $
+    obj/vendor/node/deps/uv/src/unix/libuv.kqueue.o

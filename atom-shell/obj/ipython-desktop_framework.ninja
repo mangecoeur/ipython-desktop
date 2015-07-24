@@ -1,0 +1,182 @@
+build obj/ipython-desktop_framework.actions_depends.stamp: stamp $
+    libipython-desktop_lib.a gen/atom_natives.h libbrightray.a $
+    libnode_lib.a gen/node_natives.h libcares.a libopenssl.a libzlib.a $
+    libhttp_parser.a libuv.a libbreakpad.a libbreakpad_utilities.a
+
+build obj/ipython-desktop_framework.compile_depends.stamp: stamp $
+    gen/atom_natives.h gen/atom_natives.h gen/node_natives.h $
+    gen/node_natives.h
+
+build $
+    IPythonDesktop$ Framework.framework/Versions/A/Libraries/ffmpegsumo.so: $
+    copy $
+    ../../vendor/brightray/vendor/download/libchromiumcontent/Release/ffmpegsumo.so $
+    || obj/ipython-desktop_framework.actions_depends.stamp
+build $
+    IPythonDesktop$ Framework.framework/Versions/A/Libraries/libchromiumcontent.dylib: $
+    copy $
+    ../../vendor/brightray/vendor/download/libchromiumcontent/Release/libchromiumcontent.dylib $
+    || obj/ipython-desktop_framework.actions_depends.stamp
+build IPythonDesktop$ Framework.framework/Versions/A/Resources/Inspector: $
+    copy Inspector || obj/ipython-desktop_framework.actions_depends.stamp
+build $
+    IPythonDesktop$ Framework.framework/Versions/A/Resources/crash_report_sender.app: $
+    copy crash_report_sender.app || $
+    obj/ipython-desktop_framework.actions_depends.stamp
+build obj/ipython-desktop_framework.actions_rules_copies.stamp: stamp $
+    IPythonDesktop$ Framework.framework/Versions/A/Libraries/ffmpegsumo.so $
+    IPythonDesktop$ Framework.framework/Versions/A/Libraries/libchromiumcontent.dylib $
+    IPythonDesktop$ Framework.framework/Versions/A/Resources/Inspector $
+    IPythonDesktop$ Framework.framework/Versions/A/Resources/crash_report_sender.app
+
+build $
+    IPythonDesktop$ Framework.framework/Versions/A/Resources/MainMenu.nib: $
+    mac_tool ../../atom/common/resources/mac/MainMenu.xib
+  mactool_cmd = copy-bundle-resource
+build $
+    IPythonDesktop$ Framework.framework/Versions/A/Resources/content_shell.pak: $
+    mac_tool $
+    ../../vendor/brightray/vendor/download/libchromiumcontent/Release/content_shell.pak
+  mactool_cmd = copy-bundle-resource
+build IPythonDesktop$ Framework.framework/Versions/A/Resources/icudtl.dat: $
+    mac_tool $
+    ../../vendor/brightray/vendor/download/libchromiumcontent/Release/icudtl.dat
+  mactool_cmd = copy-bundle-resource
+build IPythonDesktop$ Framework.framework/Versions/A/Resources/Info.plist: $
+    copy_infoplist ../../atom/common/resources/mac/Info.plist
+  env = export ALWAYS_SEARCH_USER_PATHS=NO; export ARCHS=x86_64; export $
+      BUILT_PRODUCTS_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export CC=/usr/bin/clang; export CLANG_CXX_LANGUAGE_STANDARD=c++11; $
+      export CLANG_CXX_LIBRARY=libc++; export COMBINE_HIDPI_IMAGES=YES; $
+      export CONFIGURATION=Release; export $
+      CONTENTS_FOLDER_PATH="IPythonDesktop Framework.framework/Versions/A"; $
+      export COPY_PHASE_STRIP=NO; export $
+      DEBUG_INFORMATION_FORMAT=dwarf-with-dsym; export $
+      DYLIB_INSTALL_NAME_BASE=/Library/Frameworks; export $
+      EXECUTABLE_NAME="IPythonDesktop Framework"; export $
+      EXECUTABLE_PATH="IPythonDesktop $
+      Framework.framework/Versions/A/IPythonDesktop Framework"; export $
+      FULL_PRODUCT_NAME="IPythonDesktop Framework.framework"; export $
+      GCC_C_LANGUAGE_STANDARD=c99; export GCC_ENABLE_CPP_EXCEPTIONS=NO; $
+      export GCC_ENABLE_CPP_RTTI=NO; export GCC_OPTIMIZATION_LEVEL=0; $
+      export GCC_TREAT_WARNINGS_AS_ERRORS=YES; export $
+      INFOPLIST_FILE=atom/common/resources/mac/Info.plist; export $
+      INFOPLIST_PATH="IPythonDesktop $
+      Framework.framework/Versions/A/Resources/Info.plist"; export $
+      LDPLUSPLUS=/usr/bin/clang++; export $
+      LD_DYLIB_INSTALL_NAME="@rpath/IPythonDesktop $
+      Framework.framework/IPythonDesktop Framework"; export $
+      LD_RUNPATH_SEARCH_PATHS=@loader_path/Libraries; export $
+      LIBRARY_SEARCH_PATHS=vendor/brightray/vendor/download/libchromiumcontent/Release; $
+      export MACH_O_TYPE=mh_dylib; export MACOSX_DEPLOYMENT_TARGET=10.8; $
+      export OTHER_CFLAGS=-fcolor-diagnostics; export OTHER_LDFLAGS="-ObjC $
+      -stdlib=libc++"; export PRODUCT_NAME="IPythonDesktop Framework"; $
+      export PRODUCT_TYPE=com.apple.product-type.framework; export $
+      RUN_CLANG_STATIC_ANALYZER=YES; export $
+      SDKROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk; $
+      export $
+      SRCROOT=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release/../../; $
+      export SOURCE_ROOT="$${SRCROOT}"; export $
+      TARGET_BUILD_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export TEMP_DIR="$${TMPDIR}"; export $
+      UNLOCALIZED_RESOURCES_FOLDER_PATH="IPythonDesktop $
+      Framework.framework/Versions/A/Resources"; export USE_HEADER_MAP=NO; $
+      export WARNING_CFLAGS="-Wall -Wextra -Wno-unused-parameter $
+      -Wno-missing-field-initializers"; export WRAPPER_NAME="IPythonDesktop $
+      Framework.framework";
+  keys = '{"DTXcode": "0611", "BuildMachineOSBuild": "14C109", "DTSDKName": $
+      "macosx", "DTXcodeBuild": "6A2008a", "DTSDKBuild": "14A382"}'
+defines = '-DPRODUCT_NAME="IPythonDesktop"' -DCOMPONENT_BUILD -DGURL_DLL $
+    -DSKIA_DLL -DNDEBUG -DUSING_V8_SHARED -DWEBKIT_DLL $
+    -DSK_SUPPORT_LEGACY_GETTOPDEVICE -DSK_SUPPORT_LEGACY_BITMAP_CONFIG $
+    -DSK_SUPPORT_LEGACY_DEVICE_VIRTUAL_ISOPAQUE $
+    -DSK_SUPPORT_LEGACY_N32_NAME -DSK_SUPPORT_LEGACY_SETCONFIG $
+    -DSK_IGNORE_ETC1_SUPPORT -DSK_IGNORE_GPU_DITHER
+includes = -I../.. -I../../vendor $
+    -I../../vendor/brightray/vendor/download/libchromiumcontent/src $
+    -I../../vendor/brightray $
+    -I../../vendor/brightray/vendor/download/libchromiumcontent/src/skia/config $
+    -I../../vendor/brightray/vendor/download/libchromiumcontent/src/third_party/skia/include/core $
+    -I../../vendor/brightray/vendor/download/libchromiumcontent/src/third_party/icu/source/common $
+    -I../../vendor/brightray/vendor/download/libchromiumcontent/src/third_party/WebKit $
+    -I../../vendor/brightray/vendor/download/libchromiumcontent/Release/gen
+cflags = -isysroot $
+    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk $
+    -fasm-blocks -mpascal-strings -Os -gdwarf-2 -Werror $
+    -mmacosx-version-min=10.8 -arch x86_64 -Wall -Wextra $
+    -Wno-unused-parameter -Wno-missing-field-initializers $
+    -F/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/external_binaries
+cflags_c = -std=c99 -fcolor-diagnostics
+cflags_cc = -std=c++11 -stdlib=libc++ -fno-rtti -fno-exceptions $
+    -fcolor-diagnostics
+cflags_objc = $cflags_c
+cflags_objcc = $cflags_cc
+
+build obj/atom/app/ipython-desktop_framework.atom_library_main.o: objcxx $
+    ../../atom/app/atom_library_main.mm || $
+    obj/ipython-desktop_framework.actions_rules_copies.stamp
+
+ldflags = -Wl,-export_dynamic -ObjC -stdlib=libc++ $
+    -mmacosx-version-min=10.8 -isysroot $
+    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk $
+    -L../../vendor/brightray/vendor/download/libchromiumcontent/Release $
+    -arch x86_64 -L. -install_name @rpath/IPythonDesktop\ $
+    Framework.framework/IPythonDesktop\ Framework $
+    -Wl,-rpath,@loader_path/Libraries $
+    -F/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/external_binaries
+libs = -framework Carbon -framework QuartzCore -framework Squirrel $
+    -framework ReactiveCocoa -framework Mantle $
+    /private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/vendor/brightray/vendor/download/libchromiumcontent/Release/libchromiumcontent.dylib $
+    -framework AppKit -lm
+build $
+    IPythonDesktop$ Framework.framework/Versions/A/IPythonDesktop$ Framework: $
+    solink_notoc obj/atom/app/ipython-desktop_framework.atom_library_main.o $
+    libipython-desktop_lib.a libbrightray.a libnode_lib.a libcares.a $
+    libopenssl.a libzlib.a libhttp_parser.a libuv.a libbreakpad.a $
+    libbreakpad_utilities.a | gen/node_natives.h gen/atom_natives.h
+  ld = $ldxx
+  soname = IPythonDesktop Framework
+  lib = "IPythonDesktop Framework.framework/Versions/A/IPythonDesktop $
+      Framework"
+  link_file_list = IPythonDesktop_Framework.framework.rsp
+build IPythonDesktop$ Framework.framework: package_framework $
+    IPythonDesktop$ Framework.framework/Versions/A/Libraries/ffmpegsumo.so $
+    IPythonDesktop$ Framework.framework/Versions/A/Libraries/libchromiumcontent.dylib $
+    IPythonDesktop$ Framework.framework/Versions/A/Resources/Inspector $
+    IPythonDesktop$ Framework.framework/Versions/A/Resources/crash_report_sender.app $
+    IPythonDesktop$ Framework.framework/Versions/A/Resources/MainMenu.nib $
+    IPythonDesktop$ Framework.framework/Versions/A/Resources/content_shell.pak $
+    IPythonDesktop$ Framework.framework/Versions/A/Resources/icudtl.dat $
+    IPythonDesktop$ Framework.framework/Versions/A/Resources/Info.plist $
+    IPythonDesktop$ Framework.framework/Versions/A/IPythonDesktop$ Framework
+  postbuilds = $ && (export $
+      BUILT_PRODUCTS_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export CONFIGURATION=Release; export $
+      CONTENTS_FOLDER_PATH="IPythonDesktop Framework.framework/Versions/A"; $
+      export DYLIB_INSTALL_NAME_BASE=/Library/Frameworks; export $
+      EXECUTABLE_NAME="IPythonDesktop Framework"; export $
+      EXECUTABLE_PATH="IPythonDesktop $
+      Framework.framework/Versions/A/IPythonDesktop Framework"; export $
+      FULL_PRODUCT_NAME="IPythonDesktop Framework.framework"; export $
+      INFOPLIST_PATH="IPythonDesktop $
+      Framework.framework/Versions/A/Resources/Info.plist"; export $
+      LD_DYLIB_INSTALL_NAME="@rpath/IPythonDesktop $
+      Framework.framework/IPythonDesktop Framework"; export $
+      MACH_O_TYPE=mh_dylib; export PRODUCT_NAME="IPythonDesktop Framework"; $
+      export PRODUCT_TYPE=com.apple.product-type.framework; export $
+      SDKROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk; $
+      export $
+      SRCROOT=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release/../../; $
+      export SOURCE_ROOT="$${SRCROOT}"; export $
+      TARGET_BUILD_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export TEMP_DIR="$${TMPDIR}"; export $
+      UNLOCALIZED_RESOURCES_FOLDER_PATH="IPythonDesktop $
+      Framework.framework/Versions/A/Resources"; export $
+      WRAPPER_NAME="IPythonDesktop Framework.framework"; (cd ../../ && $
+      dsymutil 'out/Release/IPythonDesktop $
+      Framework.framework/Versions/A/IPythonDesktop Framework' -o $
+      out/Release/'IPythonDesktop Framework.framework'.dSYM && $
+      tools/mac/create-framework-subdir-symlinks.sh "IPythonDesktop $
+      Framework" Libraries Frameworks); G=$$?; ((exit $$G) || rm -rf $
+      'IPythonDesktop Framework.framework') && exit $$G)
+  version = A

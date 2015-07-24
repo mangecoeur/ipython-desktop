@@ -1,0 +1,43 @@
+defines = -DHTTP_PARSER_STRICT=1 -DCOMPONENT_BUILD -DGURL_DLL -DSKIA_DLL $
+    -DNDEBUG -DUSING_V8_SHARED -DWEBKIT_DLL $
+    -DSK_SUPPORT_LEGACY_GETTOPDEVICE -DSK_SUPPORT_LEGACY_BITMAP_CONFIG $
+    -DSK_SUPPORT_LEGACY_DEVICE_VIRTUAL_ISOPAQUE $
+    -DSK_SUPPORT_LEGACY_N32_NAME -DSK_SUPPORT_LEGACY_SETCONFIG $
+    -DSK_IGNORE_ETC1_SUPPORT -DSK_IGNORE_GPU_DITHER
+includes = -I../../vendor/node/deps/http_parser
+cflags = -isysroot $
+    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk $
+    -fasm-blocks -mpascal-strings -Os -gdwarf-2 -Werror $
+    -mmacosx-version-min=10.8 -arch x86_64 -Wall -Wextra $
+    -Wno-unused-parameter -Wno-missing-field-initializers
+cflags_c = -std=c99 -fcolor-diagnostics
+cflags_cc = -std=c++11 -stdlib=libc++ -fno-rtti -fno-exceptions $
+    -fcolor-diagnostics
+cflags_objc = $cflags_c
+cflags_objcc = $cflags_cc
+
+build obj/vendor/node/deps/http_parser/test-strict.test.o: cc $
+    ../../vendor/node/deps/http_parser/test.c
+
+ldflags = -Wl,-export_dynamic -stdlib=libc++ -mmacosx-version-min=10.8 $
+    -isysroot $
+    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk $
+    -arch x86_64 -L.
+libs = 
+build test-strict: link obj/vendor/node/deps/http_parser/test-strict.test.o $
+    libhttp_parser_strict.a
+  postbuilds = $ && (export $
+      BUILT_PRODUCTS_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export CONFIGURATION=Release; export EXECUTABLE_NAME=test-strict; $
+      export EXECUTABLE_PATH=test-strict; export $
+      FULL_PRODUCT_NAME=test-strict; export PRODUCT_NAME=test-strict; $
+      export PRODUCT_TYPE=com.apple.product-type.tool; export $
+      SDKROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk; $
+      export $
+      SRCROOT=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release/../../vendor/node/deps/http_parser; $
+      export SOURCE_ROOT="$${SRCROOT}"; export $
+      TARGET_BUILD_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export TEMP_DIR="$${TMPDIR}"; (cd ../../vendor/node/deps/http_parser $
+      && dsymutil ../../../../out/Release/test-strict -o $
+      ../../../../out/Release/test-strict.dSYM); G=$$?; ((exit $$G) || rm $
+      -rf test-strict) && exit $$G)

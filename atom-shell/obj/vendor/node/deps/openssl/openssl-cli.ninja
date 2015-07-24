@@ -1,0 +1,206 @@
+defines = -DL_ENDIAN -DPURIFY -D_REENTRANT -DOPENSSL_NO_HEARTBEATS $
+    '-DENGINESDIR="/dev/null"' -DTERMIOS $
+    '-DOPENSSLDIR="/System/Library/OpenSSL/"' -DMONOLITH -DCOMPONENT_BUILD $
+    -DGURL_DLL -DSKIA_DLL -DNDEBUG -DUSING_V8_SHARED -DWEBKIT_DLL $
+    -DSK_SUPPORT_LEGACY_GETTOPDEVICE -DSK_SUPPORT_LEGACY_BITMAP_CONFIG $
+    -DSK_SUPPORT_LEGACY_DEVICE_VIRTUAL_ISOPAQUE $
+    -DSK_SUPPORT_LEGACY_N32_NAME -DSK_SUPPORT_LEGACY_SETCONFIG $
+    -DSK_IGNORE_ETC1_SUPPORT -DSK_IGNORE_GPU_DITHER
+includes = -I../../vendor/node/deps/openssl $
+    -I../../vendor/node/deps/openssl/openssl $
+    -I../../vendor/node/deps/openssl/openssl/crypto $
+    -I../../vendor/node/deps/openssl/openssl/crypto/asn1 $
+    -I../../vendor/node/deps/openssl/openssl/crypto/evp $
+    -I../../vendor/node/deps/openssl/openssl/crypto/md2 $
+    -I../../vendor/node/deps/openssl/openssl/crypto/modes $
+    -I../../vendor/node/deps/openssl/openssl/crypto/store $
+    -I../../vendor/node/deps/openssl/openssl/include
+cflags = -isysroot $
+    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk $
+    -fasm-blocks -mpascal-strings -Os -gdwarf-2 -mmacosx-version-min=10.8 $
+    -arch x86_64 -Wall -Wextra -Wno-unused-parameter $
+    -Wno-missing-field-initializers -Wno-parentheses-equality $
+    -Wno-unused-function -Wno-sometimes-uninitialized -Wno-pointer-sign $
+    -Wno-string-plus-int -Wno-unused-variable -Wno-deprecated-declarations $
+    -Wno-return-type -Wno-gnu-folding-constant
+cflags_c = -std=c99 -fcolor-diagnostics
+cflags_cc = -std=c++11 -stdlib=libc++ -fno-rtti -fno-exceptions $
+    -fcolor-diagnostics
+cflags_objc = $cflags_c
+cflags_objcc = $cflags_cc
+
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.app_rand.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/app_rand.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.apps.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/apps.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.asn1pars.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/asn1pars.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.ca.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/ca.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.ciphers.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/ciphers.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.cms.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/cms.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.crl.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/crl.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.crl2p7.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/crl2p7.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.dgst.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/dgst.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.dh.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/dh.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.dhparam.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/dhparam.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.dsa.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/dsa.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.dsaparam.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/dsaparam.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.ec.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/ec.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.ecparam.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/ecparam.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.enc.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/enc.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.engine.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/engine.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.errstr.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/errstr.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.gendh.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/gendh.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.gendsa.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/gendsa.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.genpkey.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/genpkey.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.genrsa.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/genrsa.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.nseq.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/nseq.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.ocsp.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/ocsp.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.openssl.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/openssl.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.passwd.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/passwd.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.pkcs12.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/pkcs12.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.pkcs7.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/pkcs7.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.pkcs8.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/pkcs8.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.pkey.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/pkey.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.pkeyparam.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/pkeyparam.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.pkeyutl.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/pkeyutl.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.prime.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/prime.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.rand.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/rand.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.req.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/req.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.rsa.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/rsa.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.rsautl.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/rsautl.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.s_cb.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/s_cb.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.s_client.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/s_client.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.s_server.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/s_server.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.s_socket.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/s_socket.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.s_time.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/s_time.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.sess_id.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/sess_id.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.smime.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/smime.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.speed.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/speed.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.spkac.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/spkac.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.srp.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/srp.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.ts.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/ts.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.verify.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/verify.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.version.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/version.c
+build obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.x509.o: cc $
+    ../../vendor/node/deps/openssl/openssl/apps/x509.c
+
+ldflags = -Wl,-export_dynamic -stdlib=libc++ -mmacosx-version-min=10.8 $
+    -isysroot $
+    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk $
+    -arch x86_64 -L.
+libs = 
+build openssl-cli: link $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.app_rand.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.apps.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.asn1pars.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.ca.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.ciphers.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.cms.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.crl.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.crl2p7.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.dgst.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.dh.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.dhparam.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.dsa.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.dsaparam.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.ec.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.ecparam.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.enc.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.engine.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.errstr.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.gendh.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.gendsa.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.genpkey.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.genrsa.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.nseq.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.ocsp.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.openssl.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.passwd.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.pkcs12.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.pkcs7.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.pkcs8.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.pkey.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.pkeyparam.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.pkeyutl.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.prime.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.rand.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.req.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.rsa.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.rsautl.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.s_cb.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.s_client.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.s_server.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.s_socket.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.s_time.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.sess_id.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.smime.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.speed.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.spkac.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.srp.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.ts.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.verify.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.version.o $
+    obj/vendor/node/deps/openssl/openssl/apps/openssl-cli.x509.o libopenssl.a
+  postbuilds = $ && (export $
+      BUILT_PRODUCTS_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export CONFIGURATION=Release; export EXECUTABLE_NAME=openssl-cli; $
+      export EXECUTABLE_PATH=openssl-cli; export $
+      FULL_PRODUCT_NAME=openssl-cli; export PRODUCT_NAME=openssl-cli; $
+      export PRODUCT_TYPE=com.apple.product-type.tool; export $
+      SDKROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk; $
+      export $
+      SRCROOT=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release/../../vendor/node/deps/openssl; $
+      export SOURCE_ROOT="$${SRCROOT}"; export $
+      TARGET_BUILD_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export TEMP_DIR="$${TMPDIR}"; (cd ../../vendor/node/deps/openssl && $
+      dsymutil ../../../../out/Release/openssl-cli -o $
+      ../../../../out/Release/openssl-cli.dSYM); G=$$?; ((exit $$G) || rm $
+      -rf openssl-cli) && exit $$G)

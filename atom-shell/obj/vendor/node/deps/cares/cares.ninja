@@ -1,0 +1,167 @@
+defines = -D_DARWIN_USE_64_BIT_INODE=1 -D_LARGEFILE_SOURCE $
+    -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DHAVE_CONFIG_H -DCARES_STATICLIB $
+    -DCOMPONENT_BUILD -DGURL_DLL -DSKIA_DLL -DNDEBUG -DUSING_V8_SHARED $
+    -DWEBKIT_DLL -DSK_SUPPORT_LEGACY_GETTOPDEVICE $
+    -DSK_SUPPORT_LEGACY_BITMAP_CONFIG $
+    -DSK_SUPPORT_LEGACY_DEVICE_VIRTUAL_ISOPAQUE $
+    -DSK_SUPPORT_LEGACY_N32_NAME -DSK_SUPPORT_LEGACY_SETCONFIG $
+    -DSK_IGNORE_ETC1_SUPPORT -DSK_IGNORE_GPU_DITHER
+includes = -I../../vendor/node/deps/cares/include $
+    -I../../vendor/node/deps/cares/src $
+    -I../../vendor/node/deps/cares/config/darwin
+cflags = -isysroot $
+    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk $
+    -fasm-blocks -mpascal-strings -Os -gdwarf-2 -mmacosx-version-min=10.8 $
+    -arch x86_64 -Wall -Wextra -Wno-unused-parameter $
+    -Wno-missing-field-initializers -Wno-parentheses-equality $
+    -Wno-unused-function -Wno-sometimes-uninitialized -Wno-pointer-sign $
+    -Wno-string-plus-int -Wno-unused-variable -Wno-deprecated-declarations $
+    -Wno-return-type -Wno-gnu-folding-constant
+cflags_c = -std=c99 -fcolor-diagnostics
+cflags_cc = -std=c++11 -stdlib=libc++ -fno-rtti -fno-exceptions $
+    -fcolor-diagnostics
+cflags_objc = $cflags_c
+cflags_objcc = $cflags_cc
+
+build obj/vendor/node/deps/cares/src/cares.ares_cancel.o: cc $
+    ../../vendor/node/deps/cares/src/ares_cancel.c
+build obj/vendor/node/deps/cares/src/cares.ares__close_sockets.o: cc $
+    ../../vendor/node/deps/cares/src/ares__close_sockets.c
+build obj/vendor/node/deps/cares/src/cares.ares_create_query.o: cc $
+    ../../vendor/node/deps/cares/src/ares_create_query.c
+build obj/vendor/node/deps/cares/src/cares.ares_data.o: cc $
+    ../../vendor/node/deps/cares/src/ares_data.c
+build obj/vendor/node/deps/cares/src/cares.ares_destroy.o: cc $
+    ../../vendor/node/deps/cares/src/ares_destroy.c
+build obj/vendor/node/deps/cares/src/cares.ares_expand_name.o: cc $
+    ../../vendor/node/deps/cares/src/ares_expand_name.c
+build obj/vendor/node/deps/cares/src/cares.ares_expand_string.o: cc $
+    ../../vendor/node/deps/cares/src/ares_expand_string.c
+build obj/vendor/node/deps/cares/src/cares.ares_fds.o: cc $
+    ../../vendor/node/deps/cares/src/ares_fds.c
+build obj/vendor/node/deps/cares/src/cares.ares_free_hostent.o: cc $
+    ../../vendor/node/deps/cares/src/ares_free_hostent.c
+build obj/vendor/node/deps/cares/src/cares.ares_free_string.o: cc $
+    ../../vendor/node/deps/cares/src/ares_free_string.c
+build obj/vendor/node/deps/cares/src/cares.ares_gethostbyaddr.o: cc $
+    ../../vendor/node/deps/cares/src/ares_gethostbyaddr.c
+build obj/vendor/node/deps/cares/src/cares.ares_gethostbyname.o: cc $
+    ../../vendor/node/deps/cares/src/ares_gethostbyname.c
+build obj/vendor/node/deps/cares/src/cares.ares__get_hostent.o: cc $
+    ../../vendor/node/deps/cares/src/ares__get_hostent.c
+build obj/vendor/node/deps/cares/src/cares.ares_getnameinfo.o: cc $
+    ../../vendor/node/deps/cares/src/ares_getnameinfo.c
+build obj/vendor/node/deps/cares/src/cares.ares_getopt.o: cc $
+    ../../vendor/node/deps/cares/src/ares_getopt.c
+build obj/vendor/node/deps/cares/src/cares.ares_getsock.o: cc $
+    ../../vendor/node/deps/cares/src/ares_getsock.c
+build obj/vendor/node/deps/cares/src/cares.ares_init.o: cc $
+    ../../vendor/node/deps/cares/src/ares_init.c
+build obj/vendor/node/deps/cares/src/cares.ares_library_init.o: cc $
+    ../../vendor/node/deps/cares/src/ares_library_init.c
+build obj/vendor/node/deps/cares/src/cares.ares_llist.o: cc $
+    ../../vendor/node/deps/cares/src/ares_llist.c
+build obj/vendor/node/deps/cares/src/cares.ares_mkquery.o: cc $
+    ../../vendor/node/deps/cares/src/ares_mkquery.c
+build obj/vendor/node/deps/cares/src/cares.ares_nowarn.o: cc $
+    ../../vendor/node/deps/cares/src/ares_nowarn.c
+build obj/vendor/node/deps/cares/src/cares.ares_options.o: cc $
+    ../../vendor/node/deps/cares/src/ares_options.c
+build obj/vendor/node/deps/cares/src/cares.ares_parse_aaaa_reply.o: cc $
+    ../../vendor/node/deps/cares/src/ares_parse_aaaa_reply.c
+build obj/vendor/node/deps/cares/src/cares.ares_parse_a_reply.o: cc $
+    ../../vendor/node/deps/cares/src/ares_parse_a_reply.c
+build obj/vendor/node/deps/cares/src/cares.ares_parse_mx_reply.o: cc $
+    ../../vendor/node/deps/cares/src/ares_parse_mx_reply.c
+build obj/vendor/node/deps/cares/src/cares.ares_parse_naptr_reply.o: cc $
+    ../../vendor/node/deps/cares/src/ares_parse_naptr_reply.c
+build obj/vendor/node/deps/cares/src/cares.ares_parse_ns_reply.o: cc $
+    ../../vendor/node/deps/cares/src/ares_parse_ns_reply.c
+build obj/vendor/node/deps/cares/src/cares.ares_parse_ptr_reply.o: cc $
+    ../../vendor/node/deps/cares/src/ares_parse_ptr_reply.c
+build obj/vendor/node/deps/cares/src/cares.ares_parse_soa_reply.o: cc $
+    ../../vendor/node/deps/cares/src/ares_parse_soa_reply.c
+build obj/vendor/node/deps/cares/src/cares.ares_parse_srv_reply.o: cc $
+    ../../vendor/node/deps/cares/src/ares_parse_srv_reply.c
+build obj/vendor/node/deps/cares/src/cares.ares_parse_txt_reply.o: cc $
+    ../../vendor/node/deps/cares/src/ares_parse_txt_reply.c
+build obj/vendor/node/deps/cares/src/cares.ares_process.o: cc $
+    ../../vendor/node/deps/cares/src/ares_process.c
+build obj/vendor/node/deps/cares/src/cares.ares_query.o: cc $
+    ../../vendor/node/deps/cares/src/ares_query.c
+build obj/vendor/node/deps/cares/src/cares.ares__read_line.o: cc $
+    ../../vendor/node/deps/cares/src/ares__read_line.c
+build obj/vendor/node/deps/cares/src/cares.ares_search.o: cc $
+    ../../vendor/node/deps/cares/src/ares_search.c
+build obj/vendor/node/deps/cares/src/cares.ares_send.o: cc $
+    ../../vendor/node/deps/cares/src/ares_send.c
+build obj/vendor/node/deps/cares/src/cares.ares_strcasecmp.o: cc $
+    ../../vendor/node/deps/cares/src/ares_strcasecmp.c
+build obj/vendor/node/deps/cares/src/cares.ares_strdup.o: cc $
+    ../../vendor/node/deps/cares/src/ares_strdup.c
+build obj/vendor/node/deps/cares/src/cares.ares_strerror.o: cc $
+    ../../vendor/node/deps/cares/src/ares_strerror.c
+build obj/vendor/node/deps/cares/src/cares.ares_timeout.o: cc $
+    ../../vendor/node/deps/cares/src/ares_timeout.c
+build obj/vendor/node/deps/cares/src/cares.ares__timeval.o: cc $
+    ../../vendor/node/deps/cares/src/ares__timeval.c
+build obj/vendor/node/deps/cares/src/cares.ares_version.o: cc $
+    ../../vendor/node/deps/cares/src/ares_version.c
+build obj/vendor/node/deps/cares/src/cares.ares_writev.o: cc $
+    ../../vendor/node/deps/cares/src/ares_writev.c
+build obj/vendor/node/deps/cares/src/cares.bitncmp.o: cc $
+    ../../vendor/node/deps/cares/src/bitncmp.c
+build obj/vendor/node/deps/cares/src/cares.inet_net_pton.o: cc $
+    ../../vendor/node/deps/cares/src/inet_net_pton.c
+build obj/vendor/node/deps/cares/src/cares.inet_ntop.o: cc $
+    ../../vendor/node/deps/cares/src/inet_ntop.c
+build obj/vendor/node/deps/cares/src/cares.windows_port.o: cc $
+    ../../vendor/node/deps/cares/src/windows_port.c
+
+build libcares.a: alink obj/vendor/node/deps/cares/src/cares.ares_cancel.o $
+    obj/vendor/node/deps/cares/src/cares.ares__close_sockets.o $
+    obj/vendor/node/deps/cares/src/cares.ares_create_query.o $
+    obj/vendor/node/deps/cares/src/cares.ares_data.o $
+    obj/vendor/node/deps/cares/src/cares.ares_destroy.o $
+    obj/vendor/node/deps/cares/src/cares.ares_expand_name.o $
+    obj/vendor/node/deps/cares/src/cares.ares_expand_string.o $
+    obj/vendor/node/deps/cares/src/cares.ares_fds.o $
+    obj/vendor/node/deps/cares/src/cares.ares_free_hostent.o $
+    obj/vendor/node/deps/cares/src/cares.ares_free_string.o $
+    obj/vendor/node/deps/cares/src/cares.ares_gethostbyaddr.o $
+    obj/vendor/node/deps/cares/src/cares.ares_gethostbyname.o $
+    obj/vendor/node/deps/cares/src/cares.ares__get_hostent.o $
+    obj/vendor/node/deps/cares/src/cares.ares_getnameinfo.o $
+    obj/vendor/node/deps/cares/src/cares.ares_getopt.o $
+    obj/vendor/node/deps/cares/src/cares.ares_getsock.o $
+    obj/vendor/node/deps/cares/src/cares.ares_init.o $
+    obj/vendor/node/deps/cares/src/cares.ares_library_init.o $
+    obj/vendor/node/deps/cares/src/cares.ares_llist.o $
+    obj/vendor/node/deps/cares/src/cares.ares_mkquery.o $
+    obj/vendor/node/deps/cares/src/cares.ares_nowarn.o $
+    obj/vendor/node/deps/cares/src/cares.ares_options.o $
+    obj/vendor/node/deps/cares/src/cares.ares_parse_aaaa_reply.o $
+    obj/vendor/node/deps/cares/src/cares.ares_parse_a_reply.o $
+    obj/vendor/node/deps/cares/src/cares.ares_parse_mx_reply.o $
+    obj/vendor/node/deps/cares/src/cares.ares_parse_naptr_reply.o $
+    obj/vendor/node/deps/cares/src/cares.ares_parse_ns_reply.o $
+    obj/vendor/node/deps/cares/src/cares.ares_parse_ptr_reply.o $
+    obj/vendor/node/deps/cares/src/cares.ares_parse_soa_reply.o $
+    obj/vendor/node/deps/cares/src/cares.ares_parse_srv_reply.o $
+    obj/vendor/node/deps/cares/src/cares.ares_parse_txt_reply.o $
+    obj/vendor/node/deps/cares/src/cares.ares_process.o $
+    obj/vendor/node/deps/cares/src/cares.ares_query.o $
+    obj/vendor/node/deps/cares/src/cares.ares__read_line.o $
+    obj/vendor/node/deps/cares/src/cares.ares_search.o $
+    obj/vendor/node/deps/cares/src/cares.ares_send.o $
+    obj/vendor/node/deps/cares/src/cares.ares_strcasecmp.o $
+    obj/vendor/node/deps/cares/src/cares.ares_strdup.o $
+    obj/vendor/node/deps/cares/src/cares.ares_strerror.o $
+    obj/vendor/node/deps/cares/src/cares.ares_timeout.o $
+    obj/vendor/node/deps/cares/src/cares.ares__timeval.o $
+    obj/vendor/node/deps/cares/src/cares.ares_version.o $
+    obj/vendor/node/deps/cares/src/cares.ares_writev.o $
+    obj/vendor/node/deps/cares/src/cares.bitncmp.o $
+    obj/vendor/node/deps/cares/src/cares.inet_net_pton.o $
+    obj/vendor/node/deps/cares/src/cares.inet_ntop.o $
+    obj/vendor/node/deps/cares/src/cares.windows_port.o

@@ -1,0 +1,111 @@
+defines = -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE $
+    -D_DARWIN_USE_64_BIT_INODE=1 -DCOMPONENT_BUILD -DGURL_DLL -DSKIA_DLL $
+    -DNDEBUG -DUSING_V8_SHARED -DWEBKIT_DLL $
+    -DSK_SUPPORT_LEGACY_GETTOPDEVICE -DSK_SUPPORT_LEGACY_BITMAP_CONFIG $
+    -DSK_SUPPORT_LEGACY_DEVICE_VIRTUAL_ISOPAQUE $
+    -DSK_SUPPORT_LEGACY_N32_NAME -DSK_SUPPORT_LEGACY_SETCONFIG $
+    -DSK_IGNORE_ETC1_SUPPORT -DSK_IGNORE_GPU_DITHER
+includes = -I../../vendor/node/deps/uv/include
+cflags = -isysroot $
+    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk $
+    -fasm-blocks -mpascal-strings -Os -gdwarf-2 -Werror $
+    -mmacosx-version-min=10.8 -arch x86_64 -Wall -Wextra $
+    -Wno-unused-parameter -Wall -Wextra -Wno-unused-parameter $
+    -Wno-missing-field-initializers
+cflags_c = -std=c99 -g --std=gnu89 -pedantic -fcolor-diagnostics
+cflags_cc = -std=c++11 -stdlib=libc++ -fno-rtti -fno-exceptions -g $
+    --std=gnu89 -pedantic -fcolor-diagnostics
+cflags_objc = $cflags_c
+cflags_objcc = $cflags_cc
+
+build obj/vendor/node/deps/uv/test/run-benchmarks.benchmark-async.o: cc $
+    ../../vendor/node/deps/uv/test/benchmark-async.c
+build obj/vendor/node/deps/uv/test/run-benchmarks.benchmark-async-pummel.o: $
+    cc ../../vendor/node/deps/uv/test/benchmark-async-pummel.c
+build obj/vendor/node/deps/uv/test/run-benchmarks.benchmark-fs-stat.o: cc $
+    ../../vendor/node/deps/uv/test/benchmark-fs-stat.c
+build obj/vendor/node/deps/uv/test/run-benchmarks.benchmark-getaddrinfo.o: $
+    cc ../../vendor/node/deps/uv/test/benchmark-getaddrinfo.c
+build obj/vendor/node/deps/uv/test/run-benchmarks.benchmark-loop-count.o: $
+    cc ../../vendor/node/deps/uv/test/benchmark-loop-count.c
+build $
+    obj/vendor/node/deps/uv/test/run-benchmarks.benchmark-million-async.o: $
+    cc ../../vendor/node/deps/uv/test/benchmark-million-async.c
+build $
+    obj/vendor/node/deps/uv/test/run-benchmarks.benchmark-million-timers.o: $
+    cc ../../vendor/node/deps/uv/test/benchmark-million-timers.c
+build obj/vendor/node/deps/uv/test/run-benchmarks.benchmark-multi-accept.o: $
+    cc ../../vendor/node/deps/uv/test/benchmark-multi-accept.c
+build obj/vendor/node/deps/uv/test/run-benchmarks.benchmark-ping-pongs.o: $
+    cc ../../vendor/node/deps/uv/test/benchmark-ping-pongs.c
+build obj/vendor/node/deps/uv/test/run-benchmarks.benchmark-pound.o: cc $
+    ../../vendor/node/deps/uv/test/benchmark-pound.c
+build obj/vendor/node/deps/uv/test/run-benchmarks.benchmark-pump.o: cc $
+    ../../vendor/node/deps/uv/test/benchmark-pump.c
+build obj/vendor/node/deps/uv/test/run-benchmarks.benchmark-sizes.o: cc $
+    ../../vendor/node/deps/uv/test/benchmark-sizes.c
+build obj/vendor/node/deps/uv/test/run-benchmarks.benchmark-spawn.o: cc $
+    ../../vendor/node/deps/uv/test/benchmark-spawn.c
+build obj/vendor/node/deps/uv/test/run-benchmarks.benchmark-thread.o: cc $
+    ../../vendor/node/deps/uv/test/benchmark-thread.c
+build $
+    obj/vendor/node/deps/uv/test/run-benchmarks.benchmark-tcp-write-batch.o: $
+    cc ../../vendor/node/deps/uv/test/benchmark-tcp-write-batch.c
+build obj/vendor/node/deps/uv/test/run-benchmarks.benchmark-udp-pummel.o: $
+    cc ../../vendor/node/deps/uv/test/benchmark-udp-pummel.c
+build obj/vendor/node/deps/uv/test/run-benchmarks.dns-server.o: cc $
+    ../../vendor/node/deps/uv/test/dns-server.c
+build obj/vendor/node/deps/uv/test/run-benchmarks.echo-server.o: cc $
+    ../../vendor/node/deps/uv/test/echo-server.c
+build obj/vendor/node/deps/uv/test/run-benchmarks.blackhole-server.o: cc $
+    ../../vendor/node/deps/uv/test/blackhole-server.c
+build obj/vendor/node/deps/uv/test/run-benchmarks.run-benchmarks.o: cc $
+    ../../vendor/node/deps/uv/test/run-benchmarks.c
+build obj/vendor/node/deps/uv/test/run-benchmarks.runner.o: cc $
+    ../../vendor/node/deps/uv/test/runner.c
+build obj/vendor/node/deps/uv/test/run-benchmarks.runner-unix.o: cc $
+    ../../vendor/node/deps/uv/test/runner-unix.c
+
+ldflags = -Wl,-export_dynamic -stdlib=libc++ -mmacosx-version-min=10.8 $
+    -isysroot $
+    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk $
+    -arch x86_64 -L.
+libs = -lm
+build run-benchmarks: link $
+    obj/vendor/node/deps/uv/test/run-benchmarks.benchmark-async.o $
+    obj/vendor/node/deps/uv/test/run-benchmarks.benchmark-async-pummel.o $
+    obj/vendor/node/deps/uv/test/run-benchmarks.benchmark-fs-stat.o $
+    obj/vendor/node/deps/uv/test/run-benchmarks.benchmark-getaddrinfo.o $
+    obj/vendor/node/deps/uv/test/run-benchmarks.benchmark-loop-count.o $
+    obj/vendor/node/deps/uv/test/run-benchmarks.benchmark-million-async.o $
+    obj/vendor/node/deps/uv/test/run-benchmarks.benchmark-million-timers.o $
+    obj/vendor/node/deps/uv/test/run-benchmarks.benchmark-multi-accept.o $
+    obj/vendor/node/deps/uv/test/run-benchmarks.benchmark-ping-pongs.o $
+    obj/vendor/node/deps/uv/test/run-benchmarks.benchmark-pound.o $
+    obj/vendor/node/deps/uv/test/run-benchmarks.benchmark-pump.o $
+    obj/vendor/node/deps/uv/test/run-benchmarks.benchmark-sizes.o $
+    obj/vendor/node/deps/uv/test/run-benchmarks.benchmark-spawn.o $
+    obj/vendor/node/deps/uv/test/run-benchmarks.benchmark-thread.o $
+    obj/vendor/node/deps/uv/test/run-benchmarks.benchmark-tcp-write-batch.o $
+    obj/vendor/node/deps/uv/test/run-benchmarks.benchmark-udp-pummel.o $
+    obj/vendor/node/deps/uv/test/run-benchmarks.dns-server.o $
+    obj/vendor/node/deps/uv/test/run-benchmarks.echo-server.o $
+    obj/vendor/node/deps/uv/test/run-benchmarks.blackhole-server.o $
+    obj/vendor/node/deps/uv/test/run-benchmarks.run-benchmarks.o $
+    obj/vendor/node/deps/uv/test/run-benchmarks.runner.o $
+    obj/vendor/node/deps/uv/test/run-benchmarks.runner-unix.o libuv.a
+  postbuilds = $ && (export $
+      BUILT_PRODUCTS_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export CONFIGURATION=Release; export EXECUTABLE_NAME=run-benchmarks; $
+      export EXECUTABLE_PATH=run-benchmarks; export $
+      FULL_PRODUCT_NAME=run-benchmarks; export PRODUCT_NAME=run-benchmarks; $
+      export PRODUCT_TYPE=com.apple.product-type.tool; export $
+      SDKROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk; $
+      export $
+      SRCROOT=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release/../../vendor/node/deps/uv; $
+      export SOURCE_ROOT="$${SRCROOT}"; export $
+      TARGET_BUILD_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export TEMP_DIR="$${TMPDIR}"; (cd ../../vendor/node/deps/uv && $
+      dsymutil ../../../../out/Release/run-benchmarks -o $
+      ../../../../out/Release/run-benchmarks.dSYM); G=$$?; ((exit $$G) || $
+      rm -rf run-benchmarks) && exit $$G)

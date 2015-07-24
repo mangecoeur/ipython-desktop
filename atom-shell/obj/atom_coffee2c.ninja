@@ -1,0 +1,21 @@
+rule atom_coffee2c_target_atom_coffee2c_3ad1bbda2647810f8dc7276ded5f2cb4
+  command = cd ../../; export $
+      BUILT_PRODUCTS_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export CONFIGURATION=Release; export PRODUCT_NAME=atom_coffee2c; $
+      export $
+      SDKROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk; $
+      export $
+      SRCROOT=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release/../../; $
+      export SOURCE_ROOT="$${SRCROOT}"; export $
+      TARGET_BUILD_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export TEMP_DIR="$${TMPDIR}";python tools/coffee2c.py $
+      out/Release/gen/atom_natives.h atom/common/lib/asar.coffee $
+      atom/common/lib/asar_init.coffee
+  description = ACTION atom_coffee2c: $
+      atom_coffee2c_3ad1bbda2647810f8dc7276ded5f2cb4
+  restat = 1
+
+build gen/atom_natives.h: $
+    atom_coffee2c_target_atom_coffee2c_3ad1bbda2647810f8dc7276ded5f2cb4 $
+    ../../atom/common/lib/asar.coffee ../../atom/common/lib/asar_init.coffee
+

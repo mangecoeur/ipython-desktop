@@ -1,0 +1,52 @@
+defines = -DCOMPONENT_BUILD -DGURL_DLL -DSKIA_DLL -DNDEBUG $
+    -DUSING_V8_SHARED -DWEBKIT_DLL -DSK_SUPPORT_LEGACY_GETTOPDEVICE $
+    -DSK_SUPPORT_LEGACY_BITMAP_CONFIG $
+    -DSK_SUPPORT_LEGACY_DEVICE_VIRTUAL_ISOPAQUE $
+    -DSK_SUPPORT_LEGACY_N32_NAME -DSK_SUPPORT_LEGACY_SETCONFIG $
+    -DSK_IGNORE_ETC1_SUPPORT -DSK_IGNORE_GPU_DITHER
+includes = -I../../vendor/breakpad/src $
+    -I../../vendor/breakpad/src/client/apple/Framework $
+    -I../../vendor/breakpad/src/common/mac
+cflags = -isysroot $
+    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk $
+    -fasm-blocks -mpascal-strings -Os -gdwarf-2 -Werror $
+    -mmacosx-version-min=10.8 -arch x86_64 -Wall -Wextra $
+    -Wno-unused-parameter -Wno-missing-field-initializers
+cflags_c = -std=c99 -fcolor-diagnostics
+cflags_cc = -std=c++11 -stdlib=libc++ -fno-rtti -fno-exceptions $
+    -fcolor-diagnostics
+cflags_objc = $cflags_c
+cflags_objcc = $cflags_cc
+
+build $
+    obj/vendor/breakpad/src/client/mac/crash_generation/Inspector.Inspector.o: $
+    objcxx ../../vendor/breakpad/src/client/mac/crash_generation/Inspector.mm
+build $
+    obj/vendor/breakpad/src/client/mac/crash_generation/Inspector.InspectorMain.o: $
+    objcxx $
+    ../../vendor/breakpad/src/client/mac/crash_generation/InspectorMain.mm
+
+ldflags = -Wl,-export_dynamic -stdlib=libc++ -mmacosx-version-min=10.8 $
+    -isysroot $
+    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk $
+    -arch x86_64 -L.
+libs = -framework CoreServices -framework Foundation
+build Inspector: link $
+    obj/vendor/breakpad/src/client/mac/crash_generation/Inspector.Inspector.o $
+    obj/vendor/breakpad/src/client/mac/crash_generation/Inspector.InspectorMain.o $
+    libbreakpad_utilities.a
+  ld = $ldxx
+  postbuilds = $ && (export $
+      BUILT_PRODUCTS_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export CONFIGURATION=Release; export EXECUTABLE_NAME=Inspector; $
+      export EXECUTABLE_PATH=Inspector; export FULL_PRODUCT_NAME=Inspector; $
+      export PRODUCT_NAME=Inspector; export $
+      PRODUCT_TYPE=com.apple.product-type.tool; export $
+      SDKROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk; $
+      export $
+      SRCROOT=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release/../../vendor/breakpad; $
+      export SOURCE_ROOT="$${SRCROOT}"; export $
+      TARGET_BUILD_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export TEMP_DIR="$${TMPDIR}"; (cd ../../vendor/breakpad && dsymutil $
+      ../../out/Release/Inspector -o ../../out/Release/Inspector.dSYM); $
+      G=$$?; ((exit $$G) || rm -rf Inspector) && exit $$G)

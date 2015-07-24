@@ -1,6 +1,10 @@
+# PROJECT ON HOLD - Waiting for Jupyter ascending
+
+The IPython project is undergoing heavy development at the moment as it is split into the Jupyter environment for interactive computing with IPython as just one of many supported kernels. As such, developing a desktop wrapped around the project means tracking a rapidly moving target. Therefore, I've decided to wait until things settle down a bit - likely the split will be more or less stabilised for version 4.0 which is planned for release later this year, at which point development of IPython desktop can start up again.
+
 # IPython Notebook Desktop
 
-This is a proof of concept desktop interface for the IPython Notebook. 
+This is a proof of concept desktop interface for the IPython Notebook.
 
 ## What's new
 The latest revision improves ipython configuration and process handling. It will now try to automatically figure out the location of your ipython install and the url where the server is available when launched.
@@ -40,7 +44,7 @@ You also need to have IPython installed. My personal recommendation is the Anaco
 
 ## Configuration
 
-IPython desktop can either launch the IPython notebook server for you or connect to an existing URL. 
+IPython desktop can either launch the IPython notebook server for you or connect to an existing URL.
 
 To launch a server you must specify the location of your IPython executable, by default this is pre-filled (using the output of the command `which ipython`). You can optionally specify a Profile to use (which will be used with --profile=...)
 
@@ -57,8 +61,8 @@ If you set the "remote" option in the config you can simply type in the URL of y
 ## Building ipython-desktop
 In theory, the following steps should work (on Mac):
 
-Requirements 
-- Xcode developer tools installed 
+Requirements
+- Xcode developer tools installed
 - `node` (nodejs) with `npm`, if you use Homebrew (and you should) just do `brew install node`.
 - `grunt` and `grunt-cli` (`npm install -g grunt grunt-cli` normally you will have to use sudo)
 

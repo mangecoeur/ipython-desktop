@@ -1,0 +1,48 @@
+build obj/vendor/breakpad/breakpad.actions_depends.stamp: stamp Inspector $
+    crash_report_sender.app
+
+defines = -DUSE_PROTECTED_ALLOCATIONS=1 -DCOMPONENT_BUILD -DGURL_DLL $
+    -DSKIA_DLL -DNDEBUG -DUSING_V8_SHARED -DWEBKIT_DLL $
+    -DSK_SUPPORT_LEGACY_GETTOPDEVICE -DSK_SUPPORT_LEGACY_BITMAP_CONFIG $
+    -DSK_SUPPORT_LEGACY_DEVICE_VIRTUAL_ISOPAQUE $
+    -DSK_SUPPORT_LEGACY_N32_NAME -DSK_SUPPORT_LEGACY_SETCONFIG $
+    -DSK_IGNORE_ETC1_SUPPORT -DSK_IGNORE_GPU_DITHER
+includes = -I../../vendor/breakpad/src $
+    -I../../vendor/breakpad/src/client/apple/Framework
+cflags = -isysroot $
+    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk $
+    -fasm-blocks -mpascal-strings -Os -gdwarf-2 -Werror $
+    -mmacosx-version-min=10.8 -arch x86_64 -Wall -Wextra $
+    -Wno-unused-parameter -Wno-missing-field-initializers $
+    -Wno-deprecated-declarations -Wno-deprecated-register $
+    -Wno-unused-private-field -Wno-unused-function
+cflags_c = -std=c99 -fcolor-diagnostics
+cflags_cc = -std=c++11 -stdlib=libc++ -fno-rtti -fno-exceptions $
+    -fcolor-diagnostics
+cflags_objc = $cflags_c
+cflags_objcc = $cflags_cc
+
+build $
+    obj/vendor/breakpad/src/client/mac/crash_generation/breakpad.crash_generation_client.o: $
+    cxx $
+    ../../vendor/breakpad/src/client/mac/crash_generation/crash_generation_client.cc
+build $
+    obj/vendor/breakpad/src/client/mac/handler/breakpad.protected_memory_allocator.o: $
+    cxx $
+    ../../vendor/breakpad/src/client/mac/handler/protected_memory_allocator.cc
+build $
+    obj/vendor/breakpad/src/client/mac/handler/breakpad.exception_handler.o: $
+    cxx ../../vendor/breakpad/src/client/mac/handler/exception_handler.cc
+build obj/vendor/breakpad/src/client/mac/Framework/breakpad.Breakpad.o: $
+    objcxx ../../vendor/breakpad/src/client/mac/Framework/Breakpad.mm
+build $
+    obj/vendor/breakpad/src/client/mac/Framework/breakpad.OnDemandServer.o: $
+    objcxx ../../vendor/breakpad/src/client/mac/Framework/OnDemandServer.mm
+
+build libbreakpad.a: alink $
+    obj/vendor/breakpad/src/client/mac/crash_generation/breakpad.crash_generation_client.o $
+    obj/vendor/breakpad/src/client/mac/handler/breakpad.protected_memory_allocator.o $
+    obj/vendor/breakpad/src/client/mac/handler/breakpad.exception_handler.o $
+    obj/vendor/breakpad/src/client/mac/Framework/breakpad.Breakpad.o $
+    obj/vendor/breakpad/src/client/mac/Framework/breakpad.OnDemandServer.o $
+    || obj/vendor/breakpad/breakpad.actions_depends.stamp

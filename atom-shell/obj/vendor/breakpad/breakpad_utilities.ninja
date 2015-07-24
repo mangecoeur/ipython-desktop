@@ -1,0 +1,88 @@
+defines = -DCOMPONENT_BUILD -DGURL_DLL -DSKIA_DLL -DNDEBUG $
+    -DUSING_V8_SHARED -DWEBKIT_DLL -DSK_SUPPORT_LEGACY_GETTOPDEVICE $
+    -DSK_SUPPORT_LEGACY_BITMAP_CONFIG $
+    -DSK_SUPPORT_LEGACY_DEVICE_VIRTUAL_ISOPAQUE $
+    -DSK_SUPPORT_LEGACY_N32_NAME -DSK_SUPPORT_LEGACY_SETCONFIG $
+    -DSK_IGNORE_ETC1_SUPPORT -DSK_IGNORE_GPU_DITHER
+includes = -I../../vendor/breakpad/src
+cflags = -isysroot $
+    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk $
+    -fasm-blocks -mpascal-strings -Os -gdwarf-2 -Werror $
+    -mmacosx-version-min=10.8 -arch x86_64 -Wall -Wextra $
+    -Wno-unused-parameter -Wno-missing-field-initializers $
+    -Wno-deprecated-declarations -Wno-deprecated-register $
+    -Wno-unused-private-field -Wno-unused-function
+cflags_c = -std=c99 -fcolor-diagnostics
+cflags_cc = -std=c++11 -stdlib=libc++ -fno-rtti -fno-exceptions $
+    -fcolor-diagnostics
+cflags_objc = $cflags_c
+cflags_objcc = $cflags_cc
+
+build $
+    obj/vendor/breakpad/src/client/mac/crash_generation/breakpad_utilities.ConfigFile.o: $
+    objcxx ../../vendor/breakpad/src/client/mac/crash_generation/ConfigFile.mm
+build $
+    obj/vendor/breakpad/src/client/mac/handler/breakpad_utilities.breakpad_nlist_64.o: $
+    cxx ../../vendor/breakpad/src/client/mac/handler/breakpad_nlist_64.cc
+build $
+    obj/vendor/breakpad/src/client/mac/handler/breakpad_utilities.dynamic_images.o: $
+    cxx ../../vendor/breakpad/src/client/mac/handler/dynamic_images.cc
+build $
+    obj/vendor/breakpad/src/client/mac/handler/breakpad_utilities.minidump_generator.o: $
+    cxx ../../vendor/breakpad/src/client/mac/handler/minidump_generator.cc
+build $
+    obj/vendor/breakpad/src/client/breakpad_utilities.minidump_file_writer.o: $
+    cxx ../../vendor/breakpad/src/client/minidump_file_writer.cc
+build obj/vendor/breakpad/src/common/breakpad_utilities.convert_UTF.o: cc $
+    ../../vendor/breakpad/src/common/convert_UTF.c
+build obj/vendor/breakpad/src/common/mac/breakpad_utilities.MachIPC.o: $
+    objcxx ../../vendor/breakpad/src/common/mac/MachIPC.mm
+build $
+    obj/vendor/breakpad/src/common/mac/breakpad_utilities.arch_utilities.o: $
+    cxx ../../vendor/breakpad/src/common/mac/arch_utilities.cc
+build $
+    obj/vendor/breakpad/src/common/mac/breakpad_utilities.bootstrap_compat.o: $
+    cxx ../../vendor/breakpad/src/common/mac/bootstrap_compat.cc
+build obj/vendor/breakpad/src/common/mac/breakpad_utilities.file_id.o: cxx $
+    ../../vendor/breakpad/src/common/mac/file_id.cc
+build $
+    obj/vendor/breakpad/src/common/mac/breakpad_utilities.launch_reporter.o: $
+    cxx ../../vendor/breakpad/src/common/mac/launch_reporter.cc
+build obj/vendor/breakpad/src/common/mac/breakpad_utilities.macho_id.o: cxx $
+    ../../vendor/breakpad/src/common/mac/macho_id.cc
+build $
+    obj/vendor/breakpad/src/common/mac/breakpad_utilities.macho_utilities.o: $
+    cxx ../../vendor/breakpad/src/common/mac/macho_utilities.cc
+build obj/vendor/breakpad/src/common/mac/breakpad_utilities.macho_walker.o: $
+    cxx ../../vendor/breakpad/src/common/mac/macho_walker.cc
+build $
+    obj/vendor/breakpad/src/common/mac/breakpad_utilities.string_utilities.o: $
+    cxx ../../vendor/breakpad/src/common/mac/string_utilities.cc
+build obj/vendor/breakpad/src/common/breakpad_utilities.md5.o: cxx $
+    ../../vendor/breakpad/src/common/md5.cc
+build $
+    obj/vendor/breakpad/src/common/breakpad_utilities.simple_string_dictionary.o: $
+    cxx ../../vendor/breakpad/src/common/simple_string_dictionary.cc
+build $
+    obj/vendor/breakpad/src/common/breakpad_utilities.string_conversion.o: $
+    cxx ../../vendor/breakpad/src/common/string_conversion.cc
+
+build libbreakpad_utilities.a: alink $
+    obj/vendor/breakpad/src/client/mac/crash_generation/breakpad_utilities.ConfigFile.o $
+    obj/vendor/breakpad/src/client/mac/handler/breakpad_utilities.breakpad_nlist_64.o $
+    obj/vendor/breakpad/src/client/mac/handler/breakpad_utilities.dynamic_images.o $
+    obj/vendor/breakpad/src/client/mac/handler/breakpad_utilities.minidump_generator.o $
+    obj/vendor/breakpad/src/client/breakpad_utilities.minidump_file_writer.o $
+    obj/vendor/breakpad/src/common/breakpad_utilities.convert_UTF.o $
+    obj/vendor/breakpad/src/common/mac/breakpad_utilities.MachIPC.o $
+    obj/vendor/breakpad/src/common/mac/breakpad_utilities.arch_utilities.o $
+    obj/vendor/breakpad/src/common/mac/breakpad_utilities.bootstrap_compat.o $
+    obj/vendor/breakpad/src/common/mac/breakpad_utilities.file_id.o $
+    obj/vendor/breakpad/src/common/mac/breakpad_utilities.launch_reporter.o $
+    obj/vendor/breakpad/src/common/mac/breakpad_utilities.macho_id.o $
+    obj/vendor/breakpad/src/common/mac/breakpad_utilities.macho_utilities.o $
+    obj/vendor/breakpad/src/common/mac/breakpad_utilities.macho_walker.o $
+    obj/vendor/breakpad/src/common/mac/breakpad_utilities.string_utilities.o $
+    obj/vendor/breakpad/src/common/breakpad_utilities.md5.o $
+    obj/vendor/breakpad/src/common/breakpad_utilities.simple_string_dictionary.o $
+    obj/vendor/breakpad/src/common/breakpad_utilities.string_conversion.o

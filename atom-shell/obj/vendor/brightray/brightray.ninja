@@ -1,0 +1,123 @@
+defines = -DCOMPONENT_BUILD -DGURL_DLL -DSKIA_DLL -DNDEBUG $
+    -DUSING_V8_SHARED -DWEBKIT_DLL -DSK_SUPPORT_LEGACY_GETTOPDEVICE $
+    -DSK_SUPPORT_LEGACY_BITMAP_CONFIG $
+    -DSK_SUPPORT_LEGACY_DEVICE_VIRTUAL_ISOPAQUE $
+    -DSK_SUPPORT_LEGACY_N32_NAME -DSK_SUPPORT_LEGACY_SETCONFIG $
+    -DSK_IGNORE_ETC1_SUPPORT -DSK_IGNORE_GPU_DITHER
+includes = -I../../vendor/brightray $
+    -I../../vendor/brightray/vendor/download/libchromiumcontent/src $
+    -I../../vendor/brightray/vendor/download/libchromiumcontent/src/skia/config $
+    -I../../vendor/brightray/vendor/download/libchromiumcontent/src/third_party/skia/include/core $
+    -I../../vendor/brightray/vendor/download/libchromiumcontent/src/third_party/WebKit $
+    -I../../vendor/brightray/vendor/download/libchromiumcontent/Release/gen
+cflags = -isysroot $
+    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk $
+    -fasm-blocks -mpascal-strings -Os -gdwarf-2 -Werror $
+    -mmacosx-version-min=10.8 -arch x86_64 -Wall -Wextra $
+    -Wno-unused-parameter -Wno-missing-field-initializers -Wall -Wextra $
+    -Wno-unused-parameter -Wno-missing-field-initializers
+cflags_c = -std=c99 -fcolor-diagnostics
+cflags_cc = -std=c++11 -stdlib=libc++ -fno-rtti -fno-exceptions $
+    -fcolor-diagnostics
+cflags_objc = $cflags_c
+cflags_objcc = $cflags_cc
+
+build obj/vendor/brightray/browser/brightray.browser_client.o: cxx $
+    ../../vendor/brightray/browser/browser_client.cc
+build obj/vendor/brightray/browser/brightray.browser_context.o: cxx $
+    ../../vendor/brightray/browser/browser_context.cc
+build obj/vendor/brightray/browser/brightray.browser_main_parts.o: cxx $
+    ../../vendor/brightray/browser/browser_main_parts.cc
+build obj/vendor/brightray/browser/brightray.browser_main_parts_mac.o: $
+    objcxx ../../vendor/brightray/browser/browser_main_parts_mac.mm
+build $
+    obj/vendor/brightray/browser/brightray.default_web_contents_delegate.o: $
+    cxx ../../vendor/brightray/browser/default_web_contents_delegate.cc
+build $
+    obj/vendor/brightray/browser/brightray.default_web_contents_delegate_mac.o: $
+    objcxx ../../vendor/brightray/browser/default_web_contents_delegate_mac.mm
+build $
+    obj/vendor/brightray/browser/brightray.devtools_contents_resizing_strategy.o: $
+    cxx ../../vendor/brightray/browser/devtools_contents_resizing_strategy.cc
+build $
+    obj/vendor/brightray/browser/brightray.devtools_embedder_message_dispatcher.o: $
+    cxx ../../vendor/brightray/browser/devtools_embedder_message_dispatcher.cc
+build obj/vendor/brightray/browser/brightray.devtools_manager_delegate.o: $
+    cxx ../../vendor/brightray/browser/devtools_manager_delegate.cc
+build obj/vendor/brightray/browser/brightray.devtools_ui.o: cxx $
+    ../../vendor/brightray/browser/devtools_ui.cc
+build obj/vendor/brightray/browser/brightray.inspectable_web_contents.o: $
+    cxx ../../vendor/brightray/browser/inspectable_web_contents.cc
+build $
+    obj/vendor/brightray/browser/brightray.inspectable_web_contents_delegate.o: $
+    cxx ../../vendor/brightray/browser/inspectable_web_contents_delegate.cc
+build $
+    obj/vendor/brightray/browser/brightray.inspectable_web_contents_impl.o: $
+    cxx ../../vendor/brightray/browser/inspectable_web_contents_impl.cc
+build $
+    obj/vendor/brightray/browser/brightray.inspectable_web_contents_view_mac.o: $
+    objcxx ../../vendor/brightray/browser/inspectable_web_contents_view_mac.mm
+build obj/vendor/brightray/browser/mac/brightray.bry_application.o: objcxx $
+    ../../vendor/brightray/browser/mac/bry_application.mm
+build $
+    obj/vendor/brightray/browser/mac/brightray.bry_inspectable_web_contents_view.o: $
+    objcxx $
+    ../../vendor/brightray/browser/mac/bry_inspectable_web_contents_view.mm
+build $
+    obj/vendor/brightray/browser/media/brightray.media_capture_devices_dispatcher.o: $
+    cxx $
+    ../../vendor/brightray/browser/media/media_capture_devices_dispatcher.cc
+build $
+    obj/vendor/brightray/browser/media/brightray.media_stream_devices_controller.o: $
+    cxx $
+    ../../vendor/brightray/browser/media/media_stream_devices_controller.cc
+build obj/vendor/brightray/browser/brightray.network_delegate.o: cxx $
+    ../../vendor/brightray/browser/network_delegate.cc
+build obj/vendor/brightray/browser/brightray.notification_presenter_mac.o: $
+    objcxx ../../vendor/brightray/browser/notification_presenter_mac.mm
+build obj/vendor/brightray/browser/brightray.remote_debugging_server.o: cxx $
+    ../../vendor/brightray/browser/remote_debugging_server.cc
+build obj/vendor/brightray/browser/brightray.url_request_context_getter.o: $
+    cxx ../../vendor/brightray/browser/url_request_context_getter.cc
+build obj/vendor/brightray/browser/brightray.web_ui_controller_factory.o: $
+    cxx ../../vendor/brightray/browser/web_ui_controller_factory.cc
+build obj/vendor/brightray/common/brightray.application_info_mac.o: objcxx $
+    ../../vendor/brightray/common/application_info_mac.mm
+build obj/vendor/brightray/common/brightray.content_client.o: cxx $
+    ../../vendor/brightray/common/content_client.cc
+build obj/vendor/brightray/common/mac/brightray.main_application_bundle.o: $
+    objcxx ../../vendor/brightray/common/mac/main_application_bundle.mm
+build obj/vendor/brightray/common/brightray.main_delegate.o: cxx $
+    ../../vendor/brightray/common/main_delegate.cc
+build obj/vendor/brightray/common/brightray.main_delegate_mac.o: objcxx $
+    ../../vendor/brightray/common/main_delegate_mac.mm
+
+build libbrightray.a: alink $
+    obj/vendor/brightray/browser/brightray.browser_client.o $
+    obj/vendor/brightray/browser/brightray.browser_context.o $
+    obj/vendor/brightray/browser/brightray.browser_main_parts.o $
+    obj/vendor/brightray/browser/brightray.browser_main_parts_mac.o $
+    obj/vendor/brightray/browser/brightray.default_web_contents_delegate.o $
+    obj/vendor/brightray/browser/brightray.default_web_contents_delegate_mac.o $
+    obj/vendor/brightray/browser/brightray.devtools_contents_resizing_strategy.o $
+    obj/vendor/brightray/browser/brightray.devtools_embedder_message_dispatcher.o $
+    obj/vendor/brightray/browser/brightray.devtools_manager_delegate.o $
+    obj/vendor/brightray/browser/brightray.devtools_ui.o $
+    obj/vendor/brightray/browser/brightray.inspectable_web_contents.o $
+    obj/vendor/brightray/browser/brightray.inspectable_web_contents_delegate.o $
+    obj/vendor/brightray/browser/brightray.inspectable_web_contents_impl.o $
+    obj/vendor/brightray/browser/brightray.inspectable_web_contents_view_mac.o $
+    obj/vendor/brightray/browser/mac/brightray.bry_application.o $
+    obj/vendor/brightray/browser/mac/brightray.bry_inspectable_web_contents_view.o $
+    obj/vendor/brightray/browser/media/brightray.media_capture_devices_dispatcher.o $
+    obj/vendor/brightray/browser/media/brightray.media_stream_devices_controller.o $
+    obj/vendor/brightray/browser/brightray.network_delegate.o $
+    obj/vendor/brightray/browser/brightray.notification_presenter_mac.o $
+    obj/vendor/brightray/browser/brightray.remote_debugging_server.o $
+    obj/vendor/brightray/browser/brightray.url_request_context_getter.o $
+    obj/vendor/brightray/browser/brightray.web_ui_controller_factory.o $
+    obj/vendor/brightray/common/brightray.application_info_mac.o $
+    obj/vendor/brightray/common/brightray.content_client.o $
+    obj/vendor/brightray/common/mac/brightray.main_application_bundle.o $
+    obj/vendor/brightray/common/brightray.main_delegate.o $
+    obj/vendor/brightray/common/brightray.main_delegate_mac.o

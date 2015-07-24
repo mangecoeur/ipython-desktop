@@ -1,0 +1,138 @@
+defines = '-DNODE_ARCH="x64"' '-DNODE_TAG=""' '-DNODE_V8_OPTIONS=""' $
+    -DNODE_WANT_INTERNALS=1 -DHAVE_OPENSSL=1 -D__POSIX__ $
+    '-DNODE_PLATFORM="darwin"' -DHTTP_PARSER_STRICT=0 -D_LARGEFILE_SOURCE $
+    -D_FILE_OFFSET_BITS=64 -D_DARWIN_USE_64_BIT_INODE=1 -DCOMPONENT_BUILD $
+    -DGURL_DLL -DSKIA_DLL -DNDEBUG -DUSING_V8_SHARED -DWEBKIT_DLL $
+    -DSK_SUPPORT_LEGACY_GETTOPDEVICE -DSK_SUPPORT_LEGACY_BITMAP_CONFIG $
+    -DSK_SUPPORT_LEGACY_DEVICE_VIRTUAL_ISOPAQUE $
+    -DSK_SUPPORT_LEGACY_N32_NAME -DSK_SUPPORT_LEGACY_SETCONFIG $
+    -DSK_IGNORE_ETC1_SUPPORT -DSK_IGNORE_GPU_DITHER
+includes = -I../../vendor/node/src -I../../vendor/node/tools/msvs/genfiles $
+    -I../../vendor/node/deps/uv/src/ares -Igen $
+    -I../../vendor/node/deps/cares/include $
+    -I../../vendor/node/deps/openssl/openssl/include $
+    -I../../vendor/node/deps/zlib -I../../vendor/node/deps/http_parser $
+    -I../../vendor/node/deps/uv/include $
+    -I../../vendor/brightray/vendor/download/libchromiumcontent/src/v8/include
+cflags = -isysroot $
+    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk $
+    -fasm-blocks -mpascal-strings -Os -gdwarf-2 -mmacosx-version-min=10.8 $
+    -arch x86_64 -Wall -Wextra -Wno-unused-parameter $
+    -Wno-missing-field-initializers -Wno-parentheses-equality $
+    -Wno-unused-function -Wno-sometimes-uninitialized -Wno-pointer-sign $
+    -Wno-string-plus-int -Wno-unused-variable -Wno-deprecated-declarations $
+    -Wno-return-type -Wno-gnu-folding-constant
+cflags_c = -std=c99 -fcolor-diagnostics
+cflags_cc = -std=c++11 -stdlib=libc++ -fno-rtti -fno-exceptions $
+    -fcolor-diagnostics
+cflags_objc = $cflags_c
+cflags_objcc = $cflags_cc
+
+build obj/vendor/node/src/node_lib.debug-agent.o: cxx $
+    ../../vendor/node/src/debug-agent.cc || gen/node_natives.h
+build obj/vendor/node/src/node_lib.async-wrap.o: cxx $
+    ../../vendor/node/src/async-wrap.cc || gen/node_natives.h
+build obj/vendor/node/src/node_lib.fs_event_wrap.o: cxx $
+    ../../vendor/node/src/fs_event_wrap.cc || gen/node_natives.h
+build obj/vendor/node/src/node_lib.cares_wrap.o: cxx $
+    ../../vendor/node/src/cares_wrap.cc || gen/node_natives.h
+build obj/vendor/node/src/node_lib.handle_wrap.o: cxx $
+    ../../vendor/node/src/handle_wrap.cc || gen/node_natives.h
+build obj/vendor/node/src/node_lib.node.o: cxx $
+    ../../vendor/node/src/node.cc || gen/node_natives.h
+build obj/vendor/node/src/node_lib.node_buffer.o: cxx $
+    ../../vendor/node/src/node_buffer.cc || gen/node_natives.h
+build obj/vendor/node/src/node_lib.node_constants.o: cxx $
+    ../../vendor/node/src/node_constants.cc || gen/node_natives.h
+build obj/vendor/node/src/node_lib.node_contextify.o: cxx $
+    ../../vendor/node/src/node_contextify.cc || gen/node_natives.h
+build obj/vendor/node/src/node_lib.node_file.o: cxx $
+    ../../vendor/node/src/node_file.cc || gen/node_natives.h
+build obj/vendor/node/src/node_lib.node_http_parser.o: cxx $
+    ../../vendor/node/src/node_http_parser.cc || gen/node_natives.h
+build obj/vendor/node/src/node_lib.node_javascript.o: cxx $
+    ../../vendor/node/src/node_javascript.cc || gen/node_natives.h
+build obj/vendor/node/src/node_lib.node_os.o: cxx $
+    ../../vendor/node/src/node_os.cc || gen/node_natives.h
+build obj/vendor/node/src/node_lib.node_v8.o: cxx $
+    ../../vendor/node/src/node_v8.cc || gen/node_natives.h
+build obj/vendor/node/src/node_lib.node_v8_platform.o: cxx $
+    ../../vendor/node/src/node_v8_platform.cc || gen/node_natives.h
+build obj/vendor/node/src/node_lib.node_stat_watcher.o: cxx $
+    ../../vendor/node/src/node_stat_watcher.cc || gen/node_natives.h
+build obj/vendor/node/src/node_lib.node_watchdog.o: cxx $
+    ../../vendor/node/src/node_watchdog.cc || gen/node_natives.h
+build obj/vendor/node/src/node_lib.node_zlib.o: cxx $
+    ../../vendor/node/src/node_zlib.cc || gen/node_natives.h
+build obj/vendor/node/src/node_lib.node_i18n.o: cxx $
+    ../../vendor/node/src/node_i18n.cc || gen/node_natives.h
+build obj/vendor/node/src/node_lib.pipe_wrap.o: cxx $
+    ../../vendor/node/src/pipe_wrap.cc || gen/node_natives.h
+build obj/vendor/node/src/node_lib.signal_wrap.o: cxx $
+    ../../vendor/node/src/signal_wrap.cc || gen/node_natives.h
+build obj/vendor/node/src/node_lib.smalloc.o: cxx $
+    ../../vendor/node/src/smalloc.cc || gen/node_natives.h
+build obj/vendor/node/src/node_lib.spawn_sync.o: cxx $
+    ../../vendor/node/src/spawn_sync.cc || gen/node_natives.h
+build obj/vendor/node/src/node_lib.string_bytes.o: cxx $
+    ../../vendor/node/src/string_bytes.cc || gen/node_natives.h
+build obj/vendor/node/src/node_lib.stream_wrap.o: cxx $
+    ../../vendor/node/src/stream_wrap.cc || gen/node_natives.h
+build obj/vendor/node/src/node_lib.tcp_wrap.o: cxx $
+    ../../vendor/node/src/tcp_wrap.cc || gen/node_natives.h
+build obj/vendor/node/src/node_lib.timer_wrap.o: cxx $
+    ../../vendor/node/src/timer_wrap.cc || gen/node_natives.h
+build obj/vendor/node/src/node_lib.tty_wrap.o: cxx $
+    ../../vendor/node/src/tty_wrap.cc || gen/node_natives.h
+build obj/vendor/node/src/node_lib.process_wrap.o: cxx $
+    ../../vendor/node/src/process_wrap.cc || gen/node_natives.h
+build obj/vendor/node/src/node_lib.udp_wrap.o: cxx $
+    ../../vendor/node/src/udp_wrap.cc || gen/node_natives.h
+build obj/vendor/node/src/node_lib.uv.o: cxx ../../vendor/node/src/uv.cc || $
+    gen/node_natives.h
+build obj/vendor/node/src/node_lib.util.o: cxx $
+    ../../vendor/node/src/util.cc || gen/node_natives.h
+build obj/vendor/node/src/node_lib.node_crypto.o: cxx $
+    ../../vendor/node/src/node_crypto.cc || gen/node_natives.h
+build obj/vendor/node/src/node_lib.node_crypto_bio.o: cxx $
+    ../../vendor/node/src/node_crypto_bio.cc || gen/node_natives.h
+build obj/vendor/node/src/node_lib.node_crypto_clienthello.o: cxx $
+    ../../vendor/node/src/node_crypto_clienthello.cc || gen/node_natives.h
+build obj/vendor/node/src/node_lib.tls_wrap.o: cxx $
+    ../../vendor/node/src/tls_wrap.cc || gen/node_natives.h
+
+build libnode_lib.a: alink obj/vendor/node/src/node_lib.debug-agent.o $
+    obj/vendor/node/src/node_lib.async-wrap.o $
+    obj/vendor/node/src/node_lib.fs_event_wrap.o $
+    obj/vendor/node/src/node_lib.cares_wrap.o $
+    obj/vendor/node/src/node_lib.handle_wrap.o $
+    obj/vendor/node/src/node_lib.node.o $
+    obj/vendor/node/src/node_lib.node_buffer.o $
+    obj/vendor/node/src/node_lib.node_constants.o $
+    obj/vendor/node/src/node_lib.node_contextify.o $
+    obj/vendor/node/src/node_lib.node_file.o $
+    obj/vendor/node/src/node_lib.node_http_parser.o $
+    obj/vendor/node/src/node_lib.node_javascript.o $
+    obj/vendor/node/src/node_lib.node_os.o $
+    obj/vendor/node/src/node_lib.node_v8.o $
+    obj/vendor/node/src/node_lib.node_v8_platform.o $
+    obj/vendor/node/src/node_lib.node_stat_watcher.o $
+    obj/vendor/node/src/node_lib.node_watchdog.o $
+    obj/vendor/node/src/node_lib.node_zlib.o $
+    obj/vendor/node/src/node_lib.node_i18n.o $
+    obj/vendor/node/src/node_lib.pipe_wrap.o $
+    obj/vendor/node/src/node_lib.signal_wrap.o $
+    obj/vendor/node/src/node_lib.smalloc.o $
+    obj/vendor/node/src/node_lib.spawn_sync.o $
+    obj/vendor/node/src/node_lib.string_bytes.o $
+    obj/vendor/node/src/node_lib.stream_wrap.o $
+    obj/vendor/node/src/node_lib.tcp_wrap.o $
+    obj/vendor/node/src/node_lib.timer_wrap.o $
+    obj/vendor/node/src/node_lib.tty_wrap.o $
+    obj/vendor/node/src/node_lib.process_wrap.o $
+    obj/vendor/node/src/node_lib.udp_wrap.o $
+    obj/vendor/node/src/node_lib.uv.o obj/vendor/node/src/node_lib.util.o $
+    obj/vendor/node/src/node_lib.node_crypto.o $
+    obj/vendor/node/src/node_lib.node_crypto_bio.o $
+    obj/vendor/node/src/node_lib.node_crypto_clienthello.o $
+    obj/vendor/node/src/node_lib.tls_wrap.o || gen/node_natives.h

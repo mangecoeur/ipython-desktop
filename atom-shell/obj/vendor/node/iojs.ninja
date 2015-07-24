@@ -1,0 +1,57 @@
+build obj/vendor/node/iojs.actions_depends.stamp: stamp libnode_lib.a $
+    gen/node_natives.h libcares.a libopenssl.a libzlib.a libhttp_parser.a $
+    libuv.a
+
+build obj/vendor/node/iojs.compile_depends.stamp: stamp gen/node_natives.h $
+    gen/node_natives.h
+
+defines = -DNODE_WANT_INTERNALS=1 -DHTTP_PARSER_STRICT=0 $
+    -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_DARWIN_USE_64_BIT_INODE=1 $
+    -DCOMPONENT_BUILD -DGURL_DLL -DSKIA_DLL -DNDEBUG -DUSING_V8_SHARED $
+    -DWEBKIT_DLL -DSK_SUPPORT_LEGACY_GETTOPDEVICE $
+    -DSK_SUPPORT_LEGACY_BITMAP_CONFIG $
+    -DSK_SUPPORT_LEGACY_DEVICE_VIRTUAL_ISOPAQUE $
+    -DSK_SUPPORT_LEGACY_N32_NAME -DSK_SUPPORT_LEGACY_SETCONFIG $
+    -DSK_IGNORE_ETC1_SUPPORT -DSK_IGNORE_GPU_DITHER
+includes = -I../../vendor/node/src -I../../vendor/node/deps/uv/src/ares $
+    -I../../vendor/node/deps/debugger-agent/include $
+    -I../../vendor/node/deps/zlib -I../../vendor/node/deps/http_parser $
+    -I../../vendor/node/deps/uv/include
+cflags = -isysroot $
+    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk $
+    -fasm-blocks -mpascal-strings -Os -gdwarf-2 -Werror $
+    -mmacosx-version-min=10.8 -arch x86_64 -Wall -Wextra $
+    -Wno-unused-parameter -Wno-missing-field-initializers
+cflags_c = -std=c99 -fcolor-diagnostics
+cflags_cc = -std=c++11 -stdlib=libc++ -fno-rtti -fno-exceptions $
+    -fcolor-diagnostics
+cflags_objc = $cflags_c
+cflags_objcc = $cflags_cc
+
+build obj/vendor/node/src/iojs.node_main.o: cxx $
+    ../../vendor/node/src/node_main.cc || $
+    obj/vendor/node/iojs.compile_depends.stamp
+
+ldflags = -Wl,-export_dynamic -stdlib=libc++ -mmacosx-version-min=10.8 $
+    -isysroot $
+    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk $
+    -arch x86_64 -L.
+libs = -lm
+build iojs: link obj/vendor/node/src/iojs.node_main.o libnode_lib.a $
+    libcares.a libopenssl.a libzlib.a libhttp_parser.a libuv.a | $
+    gen/node_natives.h
+  ld = $ldxx
+  postbuilds = $ && (export $
+      BUILT_PRODUCTS_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export CONFIGURATION=Release; export EXECUTABLE_NAME=iojs; export $
+      EXECUTABLE_PATH=iojs; export FULL_PRODUCT_NAME=iojs; export $
+      PRODUCT_NAME=iojs; export PRODUCT_TYPE=com.apple.product-type.tool; $
+      export $
+      SDKROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk; $
+      export $
+      SRCROOT=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release/../../vendor/node; $
+      export SOURCE_ROOT="$${SRCROOT}"; export $
+      TARGET_BUILD_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export TEMP_DIR="$${TMPDIR}"; (cd ../../vendor/node && dsymutil $
+      ../../out/Release/iojs -o ../../out/Release/iojs.dSYM); G=$$?; ((exit $
+      $$G) || rm -rf iojs) && exit $$G)

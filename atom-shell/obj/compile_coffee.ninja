@@ -1,0 +1,366 @@
+rule compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89
+  command = cd ../../; export $
+      BUILT_PRODUCTS_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export CONFIGURATION=Release; export PRODUCT_NAME=compile_coffee; $
+      export $
+      SDKROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk; $
+      export $
+      SRCROOT=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release/../../; $
+      export SOURCE_ROOT="$${SRCROOT}"; export $
+      TARGET_BUILD_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export TEMP_DIR="$${TMPDIR}";python tools/compile-coffee.py $
+      "${source}" $
+      "out/Release/IPythonDesktop.app/Contents/Resources/${dirname}/${root}.js"
+  description = RULE compile_coffee: $
+      coffee_e42ad8b794496e05f38fce7e796ecf89 ${source}
+  restat = 1
+
+build IPythonDesktop.app/Contents/Resources/atom/browser/api/lib/app.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/browser/api/lib/app.coffee | ../../tools/compile-coffee.py
+  source = atom/browser/api/lib/app.coffee
+  dirname = atom/browser/api/lib
+  root = app
+build $
+    IPythonDesktop.app/Contents/Resources/atom/browser/api/lib/atom-delegate.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/browser/api/lib/atom-delegate.coffee | $
+    ../../tools/compile-coffee.py
+  source = atom/browser/api/lib/atom-delegate.coffee
+  dirname = atom/browser/api/lib
+  root = atom-delegate
+build $
+    IPythonDesktop.app/Contents/Resources/atom/browser/api/lib/auto-updater.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/browser/api/lib/auto-updater.coffee | $
+    ../../tools/compile-coffee.py
+  source = atom/browser/api/lib/auto-updater.coffee
+  dirname = atom/browser/api/lib
+  root = auto-updater
+build $
+    IPythonDesktop.app/Contents/Resources/atom/browser/api/lib/browser-window.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/browser/api/lib/browser-window.coffee | $
+    ../../tools/compile-coffee.py
+  source = atom/browser/api/lib/browser-window.coffee
+  dirname = atom/browser/api/lib
+  root = browser-window
+build $
+    IPythonDesktop.app/Contents/Resources/atom/browser/api/lib/content-tracing.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/browser/api/lib/content-tracing.coffee | $
+    ../../tools/compile-coffee.py
+  source = atom/browser/api/lib/content-tracing.coffee
+  dirname = atom/browser/api/lib
+  root = content-tracing
+build IPythonDesktop.app/Contents/Resources/atom/browser/api/lib/dialog.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/browser/api/lib/dialog.coffee | ../../tools/compile-coffee.py
+  source = atom/browser/api/lib/dialog.coffee
+  dirname = atom/browser/api/lib
+  root = dialog
+build $
+    IPythonDesktop.app/Contents/Resources/atom/browser/api/lib/global-shortcut.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/browser/api/lib/global-shortcut.coffee | $
+    ../../tools/compile-coffee.py
+  source = atom/browser/api/lib/global-shortcut.coffee
+  dirname = atom/browser/api/lib
+  root = global-shortcut
+build IPythonDesktop.app/Contents/Resources/atom/browser/api/lib/ipc.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/browser/api/lib/ipc.coffee | ../../tools/compile-coffee.py
+  source = atom/browser/api/lib/ipc.coffee
+  dirname = atom/browser/api/lib
+  root = ipc
+build IPythonDesktop.app/Contents/Resources/atom/browser/api/lib/menu.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/browser/api/lib/menu.coffee | ../../tools/compile-coffee.py
+  source = atom/browser/api/lib/menu.coffee
+  dirname = atom/browser/api/lib
+  root = menu
+build $
+    IPythonDesktop.app/Contents/Resources/atom/browser/api/lib/menu-item.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/browser/api/lib/menu-item.coffee | $
+    ../../tools/compile-coffee.py
+  source = atom/browser/api/lib/menu-item.coffee
+  dirname = atom/browser/api/lib
+  root = menu-item
+build $
+    IPythonDesktop.app/Contents/Resources/atom/browser/api/lib/power-monitor.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/browser/api/lib/power-monitor.coffee | $
+    ../../tools/compile-coffee.py
+  source = atom/browser/api/lib/power-monitor.coffee
+  dirname = atom/browser/api/lib
+  root = power-monitor
+build $
+    IPythonDesktop.app/Contents/Resources/atom/browser/api/lib/protocol.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/browser/api/lib/protocol.coffee | ../../tools/compile-coffee.py
+  source = atom/browser/api/lib/protocol.coffee
+  dirname = atom/browser/api/lib
+  root = protocol
+build IPythonDesktop.app/Contents/Resources/atom/browser/api/lib/screen.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/browser/api/lib/screen.coffee | ../../tools/compile-coffee.py
+  source = atom/browser/api/lib/screen.coffee
+  dirname = atom/browser/api/lib
+  root = screen
+build IPythonDesktop.app/Contents/Resources/atom/browser/api/lib/tray.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/browser/api/lib/tray.coffee | ../../tools/compile-coffee.py
+  source = atom/browser/api/lib/tray.coffee
+  dirname = atom/browser/api/lib
+  root = tray
+build $
+    IPythonDesktop.app/Contents/Resources/atom/browser/api/lib/web-contents.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/browser/api/lib/web-contents.coffee | $
+    ../../tools/compile-coffee.py
+  source = atom/browser/api/lib/web-contents.coffee
+  dirname = atom/browser/api/lib
+  root = web-contents
+build $
+    IPythonDesktop.app/Contents/Resources/atom/browser/lib/chrome-extension.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/browser/lib/chrome-extension.coffee | $
+    ../../tools/compile-coffee.py
+  source = atom/browser/lib/chrome-extension.coffee
+  dirname = atom/browser/lib
+  root = chrome-extension
+build $
+    IPythonDesktop.app/Contents/Resources/atom/browser/lib/guest-view-manager.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/browser/lib/guest-view-manager.coffee | $
+    ../../tools/compile-coffee.py
+  source = atom/browser/lib/guest-view-manager.coffee
+  dirname = atom/browser/lib
+  root = guest-view-manager
+build $
+    IPythonDesktop.app/Contents/Resources/atom/browser/lib/guest-window-manager.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/browser/lib/guest-window-manager.coffee | $
+    ../../tools/compile-coffee.py
+  source = atom/browser/lib/guest-window-manager.coffee
+  dirname = atom/browser/lib
+  root = guest-window-manager
+build IPythonDesktop.app/Contents/Resources/atom/browser/lib/init.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/browser/lib/init.coffee | ../../tools/compile-coffee.py
+  source = atom/browser/lib/init.coffee
+  dirname = atom/browser/lib
+  root = init
+build $
+    IPythonDesktop.app/Contents/Resources/atom/browser/lib/objects-registry.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/browser/lib/objects-registry.coffee | $
+    ../../tools/compile-coffee.py
+  source = atom/browser/lib/objects-registry.coffee
+  dirname = atom/browser/lib
+  root = objects-registry
+build IPythonDesktop.app/Contents/Resources/atom/browser/lib/rpc-server.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/browser/lib/rpc-server.coffee | ../../tools/compile-coffee.py
+  source = atom/browser/lib/rpc-server.coffee
+  dirname = atom/browser/lib
+  root = rpc-server
+build $
+    IPythonDesktop.app/Contents/Resources/atom/common/api/lib/callbacks-registry.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/common/api/lib/callbacks-registry.coffee | $
+    ../../tools/compile-coffee.py
+  source = atom/common/api/lib/callbacks-registry.coffee
+  dirname = atom/common/api/lib
+  root = callbacks-registry
+build $
+    IPythonDesktop.app/Contents/Resources/atom/common/api/lib/clipboard.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/common/api/lib/clipboard.coffee | ../../tools/compile-coffee.py
+  source = atom/common/api/lib/clipboard.coffee
+  dirname = atom/common/api/lib
+  root = clipboard
+build $
+    IPythonDesktop.app/Contents/Resources/atom/common/api/lib/crash-reporter.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/common/api/lib/crash-reporter.coffee | $
+    ../../tools/compile-coffee.py
+  source = atom/common/api/lib/crash-reporter.coffee
+  dirname = atom/common/api/lib
+  root = crash-reporter
+build $
+    IPythonDesktop.app/Contents/Resources/atom/common/api/lib/id-weak-map.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/common/api/lib/id-weak-map.coffee | $
+    ../../tools/compile-coffee.py
+  source = atom/common/api/lib/id-weak-map.coffee
+  dirname = atom/common/api/lib
+  root = id-weak-map
+build $
+    IPythonDesktop.app/Contents/Resources/atom/common/api/lib/original-fs.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/common/api/lib/original-fs.coffee | $
+    ../../tools/compile-coffee.py
+  source = atom/common/api/lib/original-fs.coffee
+  dirname = atom/common/api/lib
+  root = original-fs
+build IPythonDesktop.app/Contents/Resources/atom/common/api/lib/shell.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/common/api/lib/shell.coffee | ../../tools/compile-coffee.py
+  source = atom/common/api/lib/shell.coffee
+  dirname = atom/common/api/lib
+  root = shell
+build IPythonDesktop.app/Contents/Resources/atom/common/lib/init.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/common/lib/init.coffee | ../../tools/compile-coffee.py
+  source = atom/common/lib/init.coffee
+  dirname = atom/common/lib
+  root = init
+build $
+    IPythonDesktop.app/Contents/Resources/atom/renderer/lib/chrome-api.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/renderer/lib/chrome-api.coffee | ../../tools/compile-coffee.py
+  source = atom/renderer/lib/chrome-api.coffee
+  dirname = atom/renderer/lib
+  root = chrome-api
+build IPythonDesktop.app/Contents/Resources/atom/renderer/lib/init.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/renderer/lib/init.coffee | ../../tools/compile-coffee.py
+  source = atom/renderer/lib/init.coffee
+  dirname = atom/renderer/lib
+  root = init
+build IPythonDesktop.app/Contents/Resources/atom/renderer/lib/inspector.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/renderer/lib/inspector.coffee | ../../tools/compile-coffee.py
+  source = atom/renderer/lib/inspector.coffee
+  dirname = atom/renderer/lib
+  root = inspector
+build IPythonDesktop.app/Contents/Resources/atom/renderer/lib/override.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/renderer/lib/override.coffee | ../../tools/compile-coffee.py
+  source = atom/renderer/lib/override.coffee
+  dirname = atom/renderer/lib
+  root = override
+build $
+    IPythonDesktop.app/Contents/Resources/atom/renderer/lib/web-view/guest-view-internal.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/renderer/lib/web-view/guest-view-internal.coffee | $
+    ../../tools/compile-coffee.py
+  source = atom/renderer/lib/web-view/guest-view-internal.coffee
+  dirname = atom/renderer/lib/web-view
+  root = guest-view-internal
+build $
+    IPythonDesktop.app/Contents/Resources/atom/renderer/lib/web-view/web-view.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/renderer/lib/web-view/web-view.coffee | $
+    ../../tools/compile-coffee.py
+  source = atom/renderer/lib/web-view/web-view.coffee
+  dirname = atom/renderer/lib/web-view
+  root = web-view
+build $
+    IPythonDesktop.app/Contents/Resources/atom/renderer/lib/web-view/web-view-attributes.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/renderer/lib/web-view/web-view-attributes.coffee | $
+    ../../tools/compile-coffee.py
+  source = atom/renderer/lib/web-view/web-view-attributes.coffee
+  dirname = atom/renderer/lib/web-view
+  root = web-view-attributes
+build $
+    IPythonDesktop.app/Contents/Resources/atom/renderer/lib/web-view/web-view-constants.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/renderer/lib/web-view/web-view-constants.coffee | $
+    ../../tools/compile-coffee.py
+  source = atom/renderer/lib/web-view/web-view-constants.coffee
+  dirname = atom/renderer/lib/web-view
+  root = web-view-constants
+build IPythonDesktop.app/Contents/Resources/atom/renderer/api/lib/ipc.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/renderer/api/lib/ipc.coffee | ../../tools/compile-coffee.py
+  source = atom/renderer/api/lib/ipc.coffee
+  dirname = atom/renderer/api/lib
+  root = ipc
+build $
+    IPythonDesktop.app/Contents/Resources/atom/renderer/api/lib/remote.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/renderer/api/lib/remote.coffee | ../../tools/compile-coffee.py
+  source = atom/renderer/api/lib/remote.coffee
+  dirname = atom/renderer/api/lib
+  root = remote
+build $
+    IPythonDesktop.app/Contents/Resources/atom/renderer/api/lib/screen.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/renderer/api/lib/screen.coffee | ../../tools/compile-coffee.py
+  source = atom/renderer/api/lib/screen.coffee
+  dirname = atom/renderer/api/lib
+  root = screen
+build $
+    IPythonDesktop.app/Contents/Resources/atom/renderer/api/lib/web-frame.js: $
+    compile_coffee_target_coffee_e42ad8b794496e05f38fce7e796ecf89 $
+    ../../atom/renderer/api/lib/web-frame.coffee | $
+    ../../tools/compile-coffee.py
+  source = atom/renderer/api/lib/web-frame.coffee
+  dirname = atom/renderer/api/lib
+  root = web-frame
+build obj/compile_coffee.actions_rules_copies.stamp: stamp $
+    IPythonDesktop.app/Contents/Resources/atom/browser/api/lib/app.js $
+    IPythonDesktop.app/Contents/Resources/atom/browser/api/lib/atom-delegate.js $
+    IPythonDesktop.app/Contents/Resources/atom/browser/api/lib/auto-updater.js $
+    IPythonDesktop.app/Contents/Resources/atom/browser/api/lib/browser-window.js $
+    IPythonDesktop.app/Contents/Resources/atom/browser/api/lib/content-tracing.js $
+    IPythonDesktop.app/Contents/Resources/atom/browser/api/lib/dialog.js $
+    IPythonDesktop.app/Contents/Resources/atom/browser/api/lib/global-shortcut.js $
+    IPythonDesktop.app/Contents/Resources/atom/browser/api/lib/ipc.js $
+    IPythonDesktop.app/Contents/Resources/atom/browser/api/lib/menu.js $
+    IPythonDesktop.app/Contents/Resources/atom/browser/api/lib/menu-item.js $
+    IPythonDesktop.app/Contents/Resources/atom/browser/api/lib/power-monitor.js $
+    IPythonDesktop.app/Contents/Resources/atom/browser/api/lib/protocol.js $
+    IPythonDesktop.app/Contents/Resources/atom/browser/api/lib/screen.js $
+    IPythonDesktop.app/Contents/Resources/atom/browser/api/lib/tray.js $
+    IPythonDesktop.app/Contents/Resources/atom/browser/api/lib/web-contents.js $
+    IPythonDesktop.app/Contents/Resources/atom/browser/lib/chrome-extension.js $
+    IPythonDesktop.app/Contents/Resources/atom/browser/lib/guest-view-manager.js $
+    IPythonDesktop.app/Contents/Resources/atom/browser/lib/guest-window-manager.js $
+    IPythonDesktop.app/Contents/Resources/atom/browser/lib/init.js $
+    IPythonDesktop.app/Contents/Resources/atom/browser/lib/objects-registry.js $
+    IPythonDesktop.app/Contents/Resources/atom/browser/lib/rpc-server.js $
+    IPythonDesktop.app/Contents/Resources/atom/common/api/lib/callbacks-registry.js $
+    IPythonDesktop.app/Contents/Resources/atom/common/api/lib/clipboard.js $
+    IPythonDesktop.app/Contents/Resources/atom/common/api/lib/crash-reporter.js $
+    IPythonDesktop.app/Contents/Resources/atom/common/api/lib/id-weak-map.js $
+    IPythonDesktop.app/Contents/Resources/atom/common/api/lib/original-fs.js $
+    IPythonDesktop.app/Contents/Resources/atom/common/api/lib/shell.js $
+    IPythonDesktop.app/Contents/Resources/atom/common/lib/init.js $
+    IPythonDesktop.app/Contents/Resources/atom/renderer/lib/chrome-api.js $
+    IPythonDesktop.app/Contents/Resources/atom/renderer/lib/init.js $
+    IPythonDesktop.app/Contents/Resources/atom/renderer/lib/inspector.js $
+    IPythonDesktop.app/Contents/Resources/atom/renderer/lib/override.js $
+    IPythonDesktop.app/Contents/Resources/atom/renderer/lib/web-view/guest-view-internal.js $
+    IPythonDesktop.app/Contents/Resources/atom/renderer/lib/web-view/web-view.js $
+    IPythonDesktop.app/Contents/Resources/atom/renderer/lib/web-view/web-view-attributes.js $
+    IPythonDesktop.app/Contents/Resources/atom/renderer/lib/web-view/web-view-constants.js $
+    IPythonDesktop.app/Contents/Resources/atom/renderer/api/lib/ipc.js $
+    IPythonDesktop.app/Contents/Resources/atom/renderer/api/lib/remote.js $
+    IPythonDesktop.app/Contents/Resources/atom/renderer/api/lib/screen.js $
+    IPythonDesktop.app/Contents/Resources/atom/renderer/api/lib/web-frame.js
+
+defines = -DCOMPONENT_BUILD -DGURL_DLL -DSKIA_DLL -DNDEBUG $
+    -DUSING_V8_SHARED -DWEBKIT_DLL -DSK_SUPPORT_LEGACY_GETTOPDEVICE $
+    -DSK_SUPPORT_LEGACY_BITMAP_CONFIG $
+    -DSK_SUPPORT_LEGACY_DEVICE_VIRTUAL_ISOPAQUE $
+    -DSK_SUPPORT_LEGACY_N32_NAME -DSK_SUPPORT_LEGACY_SETCONFIG $
+    -DSK_IGNORE_ETC1_SUPPORT -DSK_IGNORE_GPU_DITHER
+includes = 
+cflags = -isysroot $
+    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk $
+    -fasm-blocks -mpascal-strings -Os -gdwarf-2 -Werror $
+    -mmacosx-version-min=10.8 -arch x86_64 -Wall -Wextra $
+    -Wno-unused-parameter -Wno-missing-field-initializers $
+    -F/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/external_binaries
+cflags_c = -std=c99 -fcolor-diagnostics
+cflags_cc = -std=c++11 -stdlib=libc++ -fno-rtti -fno-exceptions $
+    -fcolor-diagnostics
+cflags_objc = $cflags_c
+cflags_objcc = $cflags_cc
+
+

@@ -1,0 +1,402 @@
+defines = -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE $
+    -D_DARWIN_USE_64_BIT_INODE=1 -DCOMPONENT_BUILD -DGURL_DLL -DSKIA_DLL $
+    -DNDEBUG -DUSING_V8_SHARED -DWEBKIT_DLL $
+    -DSK_SUPPORT_LEGACY_GETTOPDEVICE -DSK_SUPPORT_LEGACY_BITMAP_CONFIG $
+    -DSK_SUPPORT_LEGACY_DEVICE_VIRTUAL_ISOPAQUE $
+    -DSK_SUPPORT_LEGACY_N32_NAME -DSK_SUPPORT_LEGACY_SETCONFIG $
+    -DSK_IGNORE_ETC1_SUPPORT -DSK_IGNORE_GPU_DITHER
+includes = -I../../vendor/node/deps/uv/include
+cflags = -isysroot $
+    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk $
+    -fasm-blocks -mpascal-strings -Os -gdwarf-2 -Werror $
+    -mmacosx-version-min=10.8 -arch x86_64 -Wall -Wextra $
+    -Wno-unused-parameter -Wall -Wextra -Wno-unused-parameter $
+    -Wno-missing-field-initializers
+cflags_c = -std=c99 -g --std=gnu89 -pedantic -fcolor-diagnostics
+cflags_cc = -std=c++11 -stdlib=libc++ -fno-rtti -fno-exceptions -g $
+    --std=gnu89 -pedantic -fcolor-diagnostics
+cflags_objc = $cflags_c
+cflags_objcc = $cflags_cc
+
+build obj/vendor/node/deps/uv/test/run-tests.blackhole-server.o: cc $
+    ../../vendor/node/deps/uv/test/blackhole-server.c
+build obj/vendor/node/deps/uv/test/run-tests.echo-server.o: cc $
+    ../../vendor/node/deps/uv/test/echo-server.c
+build obj/vendor/node/deps/uv/test/run-tests.run-tests.o: cc $
+    ../../vendor/node/deps/uv/test/run-tests.c
+build obj/vendor/node/deps/uv/test/run-tests.runner.o: cc $
+    ../../vendor/node/deps/uv/test/runner.c
+build obj/vendor/node/deps/uv/test/run-tests.test-get-loadavg.o: cc $
+    ../../vendor/node/deps/uv/test/test-get-loadavg.c
+build obj/vendor/node/deps/uv/test/run-tests.test-active.o: cc $
+    ../../vendor/node/deps/uv/test/test-active.c
+build obj/vendor/node/deps/uv/test/run-tests.test-async.o: cc $
+    ../../vendor/node/deps/uv/test/test-async.c
+build obj/vendor/node/deps/uv/test/run-tests.test-async-null-cb.o: cc $
+    ../../vendor/node/deps/uv/test/test-async-null-cb.c
+build obj/vendor/node/deps/uv/test/run-tests.test-callback-stack.o: cc $
+    ../../vendor/node/deps/uv/test/test-callback-stack.c
+build obj/vendor/node/deps/uv/test/run-tests.test-callback-order.o: cc $
+    ../../vendor/node/deps/uv/test/test-callback-order.c
+build obj/vendor/node/deps/uv/test/run-tests.test-close-fd.o: cc $
+    ../../vendor/node/deps/uv/test/test-close-fd.c
+build obj/vendor/node/deps/uv/test/run-tests.test-close-order.o: cc $
+    ../../vendor/node/deps/uv/test/test-close-order.c
+build obj/vendor/node/deps/uv/test/run-tests.test-connection-fail.o: cc $
+    ../../vendor/node/deps/uv/test/test-connection-fail.c
+build obj/vendor/node/deps/uv/test/run-tests.test-cwd-and-chdir.o: cc $
+    ../../vendor/node/deps/uv/test/test-cwd-and-chdir.c
+build obj/vendor/node/deps/uv/test/run-tests.test-default-loop-close.o: cc $
+    ../../vendor/node/deps/uv/test/test-default-loop-close.c
+build obj/vendor/node/deps/uv/test/run-tests.test-delayed-accept.o: cc $
+    ../../vendor/node/deps/uv/test/test-delayed-accept.c
+build obj/vendor/node/deps/uv/test/run-tests.test-error.o: cc $
+    ../../vendor/node/deps/uv/test/test-error.c
+build obj/vendor/node/deps/uv/test/run-tests.test-embed.o: cc $
+    ../../vendor/node/deps/uv/test/test-embed.c
+build obj/vendor/node/deps/uv/test/run-tests.test-emfile.o: cc $
+    ../../vendor/node/deps/uv/test/test-emfile.c
+build obj/vendor/node/deps/uv/test/run-tests.test-fail-always.o: cc $
+    ../../vendor/node/deps/uv/test/test-fail-always.c
+build obj/vendor/node/deps/uv/test/run-tests.test-fs.o: cc $
+    ../../vendor/node/deps/uv/test/test-fs.c
+build obj/vendor/node/deps/uv/test/run-tests.test-fs-event.o: cc $
+    ../../vendor/node/deps/uv/test/test-fs-event.c
+build obj/vendor/node/deps/uv/test/run-tests.test-get-currentexe.o: cc $
+    ../../vendor/node/deps/uv/test/test-get-currentexe.c
+build obj/vendor/node/deps/uv/test/run-tests.test-get-memory.o: cc $
+    ../../vendor/node/deps/uv/test/test-get-memory.c
+build obj/vendor/node/deps/uv/test/run-tests.test-getaddrinfo.o: cc $
+    ../../vendor/node/deps/uv/test/test-getaddrinfo.c
+build obj/vendor/node/deps/uv/test/run-tests.test-getnameinfo.o: cc $
+    ../../vendor/node/deps/uv/test/test-getnameinfo.c
+build obj/vendor/node/deps/uv/test/run-tests.test-getsockname.o: cc $
+    ../../vendor/node/deps/uv/test/test-getsockname.c
+build obj/vendor/node/deps/uv/test/run-tests.test-handle-fileno.o: cc $
+    ../../vendor/node/deps/uv/test/test-handle-fileno.c
+build obj/vendor/node/deps/uv/test/run-tests.test-hrtime.o: cc $
+    ../../vendor/node/deps/uv/test/test-hrtime.c
+build obj/vendor/node/deps/uv/test/run-tests.test-idle.o: cc $
+    ../../vendor/node/deps/uv/test/test-idle.c
+build obj/vendor/node/deps/uv/test/run-tests.test-ip6-addr.o: cc $
+    ../../vendor/node/deps/uv/test/test-ip6-addr.c
+build obj/vendor/node/deps/uv/test/run-tests.test-ipc.o: cc $
+    ../../vendor/node/deps/uv/test/test-ipc.c
+build obj/vendor/node/deps/uv/test/run-tests.test-ipc-send-recv.o: cc $
+    ../../vendor/node/deps/uv/test/test-ipc-send-recv.c
+build obj/vendor/node/deps/uv/test/run-tests.test-loop-handles.o: cc $
+    ../../vendor/node/deps/uv/test/test-loop-handles.c
+build obj/vendor/node/deps/uv/test/run-tests.test-loop-alive.o: cc $
+    ../../vendor/node/deps/uv/test/test-loop-alive.c
+build obj/vendor/node/deps/uv/test/run-tests.test-loop-close.o: cc $
+    ../../vendor/node/deps/uv/test/test-loop-close.c
+build obj/vendor/node/deps/uv/test/run-tests.test-loop-stop.o: cc $
+    ../../vendor/node/deps/uv/test/test-loop-stop.c
+build obj/vendor/node/deps/uv/test/run-tests.test-loop-time.o: cc $
+    ../../vendor/node/deps/uv/test/test-loop-time.c
+build obj/vendor/node/deps/uv/test/run-tests.test-loop-configure.o: cc $
+    ../../vendor/node/deps/uv/test/test-loop-configure.c
+build obj/vendor/node/deps/uv/test/run-tests.test-walk-handles.o: cc $
+    ../../vendor/node/deps/uv/test/test-walk-handles.c
+build obj/vendor/node/deps/uv/test/run-tests.test-watcher-cross-stop.o: cc $
+    ../../vendor/node/deps/uv/test/test-watcher-cross-stop.c
+build obj/vendor/node/deps/uv/test/run-tests.test-multiple-listen.o: cc $
+    ../../vendor/node/deps/uv/test/test-multiple-listen.c
+build obj/vendor/node/deps/uv/test/run-tests.test-osx-select.o: cc $
+    ../../vendor/node/deps/uv/test/test-osx-select.c
+build obj/vendor/node/deps/uv/test/run-tests.test-pass-always.o: cc $
+    ../../vendor/node/deps/uv/test/test-pass-always.c
+build obj/vendor/node/deps/uv/test/run-tests.test-ping-pong.o: cc $
+    ../../vendor/node/deps/uv/test/test-ping-pong.c
+build obj/vendor/node/deps/uv/test/run-tests.test-pipe-bind-error.o: cc $
+    ../../vendor/node/deps/uv/test/test-pipe-bind-error.c
+build obj/vendor/node/deps/uv/test/run-tests.test-pipe-connect-error.o: cc $
+    ../../vendor/node/deps/uv/test/test-pipe-connect-error.c
+build obj/vendor/node/deps/uv/test/run-tests.test-pipe-getsockname.o: cc $
+    ../../vendor/node/deps/uv/test/test-pipe-getsockname.c
+build obj/vendor/node/deps/uv/test/run-tests.test-pipe-sendmsg.o: cc $
+    ../../vendor/node/deps/uv/test/test-pipe-sendmsg.c
+build obj/vendor/node/deps/uv/test/run-tests.test-pipe-server-close.o: cc $
+    ../../vendor/node/deps/uv/test/test-pipe-server-close.c
+build $
+    obj/vendor/node/deps/uv/test/run-tests.test-pipe-close-stdout-read-stdin.o: $
+    cc ../../vendor/node/deps/uv/test/test-pipe-close-stdout-read-stdin.c
+build obj/vendor/node/deps/uv/test/run-tests.test-platform-output.o: cc $
+    ../../vendor/node/deps/uv/test/test-platform-output.c
+build obj/vendor/node/deps/uv/test/run-tests.test-poll.o: cc $
+    ../../vendor/node/deps/uv/test/test-poll.c
+build obj/vendor/node/deps/uv/test/run-tests.test-poll-close.o: cc $
+    ../../vendor/node/deps/uv/test/test-poll-close.c
+build $
+    obj/vendor/node/deps/uv/test/run-tests.test-poll-close-doesnt-corrupt-stack.o: $
+    cc ../../vendor/node/deps/uv/test/test-poll-close-doesnt-corrupt-stack.c
+build obj/vendor/node/deps/uv/test/run-tests.test-poll-closesocket.o: cc $
+    ../../vendor/node/deps/uv/test/test-poll-closesocket.c
+build obj/vendor/node/deps/uv/test/run-tests.test-process-title.o: cc $
+    ../../vendor/node/deps/uv/test/test-process-title.c
+build obj/vendor/node/deps/uv/test/run-tests.test-ref.o: cc $
+    ../../vendor/node/deps/uv/test/test-ref.c
+build obj/vendor/node/deps/uv/test/run-tests.test-run-nowait.o: cc $
+    ../../vendor/node/deps/uv/test/test-run-nowait.c
+build obj/vendor/node/deps/uv/test/run-tests.test-run-once.o: cc $
+    ../../vendor/node/deps/uv/test/test-run-once.c
+build obj/vendor/node/deps/uv/test/run-tests.test-semaphore.o: cc $
+    ../../vendor/node/deps/uv/test/test-semaphore.c
+build obj/vendor/node/deps/uv/test/run-tests.test-shutdown-close.o: cc $
+    ../../vendor/node/deps/uv/test/test-shutdown-close.c
+build obj/vendor/node/deps/uv/test/run-tests.test-shutdown-eof.o: cc $
+    ../../vendor/node/deps/uv/test/test-shutdown-eof.c
+build obj/vendor/node/deps/uv/test/run-tests.test-shutdown-twice.o: cc $
+    ../../vendor/node/deps/uv/test/test-shutdown-twice.c
+build obj/vendor/node/deps/uv/test/run-tests.test-signal.o: cc $
+    ../../vendor/node/deps/uv/test/test-signal.c
+build obj/vendor/node/deps/uv/test/run-tests.test-signal-multiple-loops.o: $
+    cc ../../vendor/node/deps/uv/test/test-signal-multiple-loops.c
+build obj/vendor/node/deps/uv/test/run-tests.test-socket-buffer-size.o: cc $
+    ../../vendor/node/deps/uv/test/test-socket-buffer-size.c
+build obj/vendor/node/deps/uv/test/run-tests.test-spawn.o: cc $
+    ../../vendor/node/deps/uv/test/test-spawn.c
+build obj/vendor/node/deps/uv/test/run-tests.test-fs-poll.o: cc $
+    ../../vendor/node/deps/uv/test/test-fs-poll.c
+build obj/vendor/node/deps/uv/test/run-tests.test-stdio-over-pipes.o: cc $
+    ../../vendor/node/deps/uv/test/test-stdio-over-pipes.c
+build obj/vendor/node/deps/uv/test/run-tests.test-tcp-bind-error.o: cc $
+    ../../vendor/node/deps/uv/test/test-tcp-bind-error.c
+build obj/vendor/node/deps/uv/test/run-tests.test-tcp-bind6-error.o: cc $
+    ../../vendor/node/deps/uv/test/test-tcp-bind6-error.c
+build obj/vendor/node/deps/uv/test/run-tests.test-tcp-close.o: cc $
+    ../../vendor/node/deps/uv/test/test-tcp-close.c
+build obj/vendor/node/deps/uv/test/run-tests.test-tcp-close-accept.o: cc $
+    ../../vendor/node/deps/uv/test/test-tcp-close-accept.c
+build $
+    obj/vendor/node/deps/uv/test/run-tests.test-tcp-close-while-connecting.o: $
+    cc ../../vendor/node/deps/uv/test/test-tcp-close-while-connecting.c
+build $
+    obj/vendor/node/deps/uv/test/run-tests.test-tcp-connect-error-after-write.o: $
+    cc ../../vendor/node/deps/uv/test/test-tcp-connect-error-after-write.c
+build $
+    obj/vendor/node/deps/uv/test/run-tests.test-tcp-shutdown-after-write.o: $
+    cc ../../vendor/node/deps/uv/test/test-tcp-shutdown-after-write.c
+build obj/vendor/node/deps/uv/test/run-tests.test-tcp-flags.o: cc $
+    ../../vendor/node/deps/uv/test/test-tcp-flags.c
+build obj/vendor/node/deps/uv/test/run-tests.test-tcp-connect-error.o: cc $
+    ../../vendor/node/deps/uv/test/test-tcp-connect-error.c
+build obj/vendor/node/deps/uv/test/run-tests.test-tcp-connect-timeout.o: cc $
+    ../../vendor/node/deps/uv/test/test-tcp-connect-timeout.c
+build obj/vendor/node/deps/uv/test/run-tests.test-tcp-connect6-error.o: cc $
+    ../../vendor/node/deps/uv/test/test-tcp-connect6-error.c
+build obj/vendor/node/deps/uv/test/run-tests.test-tcp-open.o: cc $
+    ../../vendor/node/deps/uv/test/test-tcp-open.c
+build $
+    obj/vendor/node/deps/uv/test/run-tests.test-tcp-write-to-half-open-connection.o: $
+    cc ../../vendor/node/deps/uv/test/test-tcp-write-to-half-open-connection.c
+build $
+    obj/vendor/node/deps/uv/test/run-tests.test-tcp-write-after-connect.o: $
+    cc ../../vendor/node/deps/uv/test/test-tcp-write-after-connect.c
+build obj/vendor/node/deps/uv/test/run-tests.test-tcp-writealot.o: cc $
+    ../../vendor/node/deps/uv/test/test-tcp-writealot.c
+build obj/vendor/node/deps/uv/test/run-tests.test-tcp-try-write.o: cc $
+    ../../vendor/node/deps/uv/test/test-tcp-try-write.c
+build obj/vendor/node/deps/uv/test/run-tests.test-tcp-unexpected-read.o: cc $
+    ../../vendor/node/deps/uv/test/test-tcp-unexpected-read.c
+build obj/vendor/node/deps/uv/test/run-tests.test-tcp-read-stop.o: cc $
+    ../../vendor/node/deps/uv/test/test-tcp-read-stop.c
+build obj/vendor/node/deps/uv/test/run-tests.test-tcp-write-queue-order.o: $
+    cc ../../vendor/node/deps/uv/test/test-tcp-write-queue-order.c
+build obj/vendor/node/deps/uv/test/run-tests.test-threadpool.o: cc $
+    ../../vendor/node/deps/uv/test/test-threadpool.c
+build obj/vendor/node/deps/uv/test/run-tests.test-threadpool-cancel.o: cc $
+    ../../vendor/node/deps/uv/test/test-threadpool-cancel.c
+build obj/vendor/node/deps/uv/test/run-tests.test-thread-equal.o: cc $
+    ../../vendor/node/deps/uv/test/test-thread-equal.c
+build obj/vendor/node/deps/uv/test/run-tests.test-mutexes.o: cc $
+    ../../vendor/node/deps/uv/test/test-mutexes.c
+build obj/vendor/node/deps/uv/test/run-tests.test-thread.o: cc $
+    ../../vendor/node/deps/uv/test/test-thread.c
+build obj/vendor/node/deps/uv/test/run-tests.test-barrier.o: cc $
+    ../../vendor/node/deps/uv/test/test-barrier.c
+build obj/vendor/node/deps/uv/test/run-tests.test-condvar.o: cc $
+    ../../vendor/node/deps/uv/test/test-condvar.c
+build obj/vendor/node/deps/uv/test/run-tests.test-timer-again.o: cc $
+    ../../vendor/node/deps/uv/test/test-timer-again.c
+build obj/vendor/node/deps/uv/test/run-tests.test-timer-from-check.o: cc $
+    ../../vendor/node/deps/uv/test/test-timer-from-check.c
+build obj/vendor/node/deps/uv/test/run-tests.test-timer.o: cc $
+    ../../vendor/node/deps/uv/test/test-timer.c
+build obj/vendor/node/deps/uv/test/run-tests.test-tty.o: cc $
+    ../../vendor/node/deps/uv/test/test-tty.c
+build obj/vendor/node/deps/uv/test/run-tests.test-udp-bind.o: cc $
+    ../../vendor/node/deps/uv/test/test-udp-bind.c
+build obj/vendor/node/deps/uv/test/run-tests.test-udp-dgram-too-big.o: cc $
+    ../../vendor/node/deps/uv/test/test-udp-dgram-too-big.c
+build obj/vendor/node/deps/uv/test/run-tests.test-udp-ipv6.o: cc $
+    ../../vendor/node/deps/uv/test/test-udp-ipv6.c
+build obj/vendor/node/deps/uv/test/run-tests.test-udp-open.o: cc $
+    ../../vendor/node/deps/uv/test/test-udp-open.c
+build obj/vendor/node/deps/uv/test/run-tests.test-udp-options.o: cc $
+    ../../vendor/node/deps/uv/test/test-udp-options.c
+build obj/vendor/node/deps/uv/test/run-tests.test-udp-send-and-recv.o: cc $
+    ../../vendor/node/deps/uv/test/test-udp-send-and-recv.c
+build obj/vendor/node/deps/uv/test/run-tests.test-udp-send-immediate.o: cc $
+    ../../vendor/node/deps/uv/test/test-udp-send-immediate.c
+build obj/vendor/node/deps/uv/test/run-tests.test-udp-send-unreachable.o: $
+    cc ../../vendor/node/deps/uv/test/test-udp-send-unreachable.c
+build obj/vendor/node/deps/uv/test/run-tests.test-udp-multicast-join.o: cc $
+    ../../vendor/node/deps/uv/test/test-udp-multicast-join.c
+build obj/vendor/node/deps/uv/test/run-tests.test-udp-multicast-join6.o: cc $
+    ../../vendor/node/deps/uv/test/test-udp-multicast-join6.c
+build obj/vendor/node/deps/uv/test/run-tests.test-dlerror.o: cc $
+    ../../vendor/node/deps/uv/test/test-dlerror.c
+build obj/vendor/node/deps/uv/test/run-tests.test-udp-multicast-ttl.o: cc $
+    ../../vendor/node/deps/uv/test/test-udp-multicast-ttl.c
+build obj/vendor/node/deps/uv/test/run-tests.test-ip4-addr.o: cc $
+    ../../vendor/node/deps/uv/test/test-ip4-addr.c
+build $
+    obj/vendor/node/deps/uv/test/run-tests.test-udp-multicast-interface.o: $
+    cc ../../vendor/node/deps/uv/test/test-udp-multicast-interface.c
+build $
+    obj/vendor/node/deps/uv/test/run-tests.test-udp-multicast-interface6.o: $
+    cc ../../vendor/node/deps/uv/test/test-udp-multicast-interface6.c
+build obj/vendor/node/deps/uv/test/run-tests.test-udp-try-send.o: cc $
+    ../../vendor/node/deps/uv/test/test-udp-try-send.c
+build obj/vendor/node/deps/uv/test/run-tests.runner-unix.o: cc $
+    ../../vendor/node/deps/uv/test/runner-unix.c
+
+ldflags = -Wl,-export_dynamic -stdlib=libc++ -mmacosx-version-min=10.8 $
+    -isysroot $
+    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk $
+    -arch x86_64 -L.
+libs = -lm
+build run-tests: link $
+    obj/vendor/node/deps/uv/test/run-tests.blackhole-server.o $
+    obj/vendor/node/deps/uv/test/run-tests.echo-server.o $
+    obj/vendor/node/deps/uv/test/run-tests.run-tests.o $
+    obj/vendor/node/deps/uv/test/run-tests.runner.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-get-loadavg.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-active.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-async.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-async-null-cb.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-callback-stack.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-callback-order.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-close-fd.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-close-order.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-connection-fail.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-cwd-and-chdir.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-default-loop-close.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-delayed-accept.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-error.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-embed.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-emfile.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-fail-always.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-fs.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-fs-event.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-get-currentexe.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-get-memory.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-getaddrinfo.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-getnameinfo.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-getsockname.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-handle-fileno.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-hrtime.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-idle.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-ip6-addr.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-ipc.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-ipc-send-recv.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-loop-handles.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-loop-alive.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-loop-close.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-loop-stop.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-loop-time.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-loop-configure.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-walk-handles.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-watcher-cross-stop.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-multiple-listen.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-osx-select.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-pass-always.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-ping-pong.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-pipe-bind-error.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-pipe-connect-error.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-pipe-getsockname.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-pipe-sendmsg.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-pipe-server-close.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-pipe-close-stdout-read-stdin.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-platform-output.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-poll.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-poll-close.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-poll-close-doesnt-corrupt-stack.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-poll-closesocket.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-process-title.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-ref.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-run-nowait.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-run-once.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-semaphore.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-shutdown-close.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-shutdown-eof.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-shutdown-twice.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-signal.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-signal-multiple-loops.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-socket-buffer-size.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-spawn.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-fs-poll.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-stdio-over-pipes.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-tcp-bind-error.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-tcp-bind6-error.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-tcp-close.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-tcp-close-accept.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-tcp-close-while-connecting.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-tcp-connect-error-after-write.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-tcp-shutdown-after-write.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-tcp-flags.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-tcp-connect-error.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-tcp-connect-timeout.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-tcp-connect6-error.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-tcp-open.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-tcp-write-to-half-open-connection.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-tcp-write-after-connect.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-tcp-writealot.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-tcp-try-write.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-tcp-unexpected-read.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-tcp-read-stop.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-tcp-write-queue-order.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-threadpool.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-threadpool-cancel.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-thread-equal.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-mutexes.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-thread.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-barrier.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-condvar.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-timer-again.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-timer-from-check.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-timer.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-tty.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-udp-bind.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-udp-dgram-too-big.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-udp-ipv6.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-udp-open.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-udp-options.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-udp-send-and-recv.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-udp-send-immediate.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-udp-send-unreachable.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-udp-multicast-join.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-udp-multicast-join6.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-dlerror.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-udp-multicast-ttl.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-ip4-addr.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-udp-multicast-interface.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-udp-multicast-interface6.o $
+    obj/vendor/node/deps/uv/test/run-tests.test-udp-try-send.o $
+    obj/vendor/node/deps/uv/test/run-tests.runner-unix.o libuv.a
+  postbuilds = $ && (export $
+      BUILT_PRODUCTS_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export CONFIGURATION=Release; export EXECUTABLE_NAME=run-tests; $
+      export EXECUTABLE_PATH=run-tests; export FULL_PRODUCT_NAME=run-tests; $
+      export PRODUCT_NAME=run-tests; export $
+      PRODUCT_TYPE=com.apple.product-type.tool; export $
+      SDKROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk; $
+      export $
+      SRCROOT=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release/../../vendor/node/deps/uv; $
+      export SOURCE_ROOT="$${SRCROOT}"; export $
+      TARGET_BUILD_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export TEMP_DIR="$${TMPDIR}"; (cd ../../vendor/node/deps/uv && $
+      dsymutil ../../../../out/Release/run-tests -o $
+      ../../../../out/Release/run-tests.dSYM); G=$$?; ((exit $$G) || rm -rf $
+      run-tests) && exit $$G)

@@ -1,0 +1,167 @@
+defines = -DBPLOG_MINIMUM_SEVERITY=SEVERITY_ERROR -DCOMPONENT_BUILD $
+    -DGURL_DLL -DSKIA_DLL -DNDEBUG -DUSING_V8_SHARED -DWEBKIT_DLL $
+    -DSK_SUPPORT_LEGACY_GETTOPDEVICE -DSK_SUPPORT_LEGACY_BITMAP_CONFIG $
+    -DSK_SUPPORT_LEGACY_DEVICE_VIRTUAL_ISOPAQUE $
+    -DSK_SUPPORT_LEGACY_N32_NAME -DSK_SUPPORT_LEGACY_SETCONFIG $
+    -DSK_IGNORE_ETC1_SUPPORT -DSK_IGNORE_GPU_DITHER
+includes = -I../../vendor/breakpad/src -I../../vendor/breakpad/src/third_party
+cflags = -isysroot $
+    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk $
+    -fasm-blocks -mpascal-strings -Os -gdwarf-2 -Werror $
+    -mmacosx-version-min=10.8 -arch x86_64 -Wall -Wextra $
+    -Wno-unused-parameter -Wno-missing-field-initializers
+cflags_c = -std=c99 -fcolor-diagnostics
+cflags_cc = -std=c++11 -stdlib=libc++ -fno-rtti -fno-exceptions $
+    -fcolor-diagnostics
+cflags_objc = $cflags_c
+cflags_objcc = $cflags_cc
+
+build $
+    obj/vendor/breakpad/src/processor/stackwalk_common.basic_code_modules.o: $
+    cxx ../../vendor/breakpad/src/processor/basic_code_modules.cc
+build $
+    obj/vendor/breakpad/src/processor/stackwalk_common.basic_source_line_resolver.o: $
+    cxx ../../vendor/breakpad/src/processor/basic_source_line_resolver.cc
+build obj/vendor/breakpad/src/processor/stackwalk_common.binarystream.o: $
+    cxx ../../vendor/breakpad/src/processor/binarystream.cc
+build obj/vendor/breakpad/src/processor/stackwalk_common.call_stack.o: cxx $
+    ../../vendor/breakpad/src/processor/call_stack.cc
+build obj/vendor/breakpad/src/processor/stackwalk_common.cfi_frame_info.o: $
+    cxx ../../vendor/breakpad/src/processor/cfi_frame_info.cc
+build $
+    obj/vendor/breakpad/src/processor/stackwalk_common.disassembler_x86.o: $
+    cxx ../../vendor/breakpad/src/processor/disassembler_x86.cc
+build obj/vendor/breakpad/src/processor/stackwalk_common.dump_context.o: $
+    cxx ../../vendor/breakpad/src/processor/dump_context.cc
+build obj/vendor/breakpad/src/processor/stackwalk_common.dump_object.o: cxx $
+    ../../vendor/breakpad/src/processor/dump_object.cc
+build obj/vendor/breakpad/src/processor/stackwalk_common.logging.o: cxx $
+    ../../vendor/breakpad/src/processor/logging.cc
+build $
+    obj/vendor/breakpad/src/processor/stackwalk_common.pathname_stripper.o: $
+    cxx ../../vendor/breakpad/src/processor/pathname_stripper.cc
+build obj/vendor/breakpad/src/processor/stackwalk_common.process_state.o: $
+    cxx ../../vendor/breakpad/src/processor/process_state.cc
+build $
+    obj/vendor/breakpad/src/processor/stackwalk_common.simple_symbol_supplier.o: $
+    cxx ../../vendor/breakpad/src/processor/simple_symbol_supplier.cc
+build $
+    obj/vendor/breakpad/src/processor/stackwalk_common.source_line_resolver_base.o: $
+    cxx ../../vendor/breakpad/src/processor/source_line_resolver_base.cc
+build obj/vendor/breakpad/src/processor/stackwalk_common.stack_frame_cpu.o: $
+    cxx ../../vendor/breakpad/src/processor/stack_frame_cpu.cc
+build $
+    obj/vendor/breakpad/src/processor/stackwalk_common.stack_frame_symbolizer.o: $
+    cxx ../../vendor/breakpad/src/processor/stack_frame_symbolizer.cc
+build $
+    obj/vendor/breakpad/src/processor/stackwalk_common.stackwalk_common.o: $
+    cxx ../../vendor/breakpad/src/processor/stackwalk_common.cc
+build obj/vendor/breakpad/src/processor/stackwalk_common.stackwalker.o: cxx $
+    ../../vendor/breakpad/src/processor/stackwalker.cc
+build $
+    obj/vendor/breakpad/src/processor/stackwalk_common.stackwalker_amd64.o: $
+    cxx ../../vendor/breakpad/src/processor/stackwalker_amd64.cc
+build obj/vendor/breakpad/src/processor/stackwalk_common.stackwalker_arm.o: $
+    cxx ../../vendor/breakpad/src/processor/stackwalker_arm.cc
+build $
+    obj/vendor/breakpad/src/processor/stackwalk_common.stackwalker_arm64.o: $
+    cxx ../../vendor/breakpad/src/processor/stackwalker_arm64.cc
+build $
+    obj/vendor/breakpad/src/processor/stackwalk_common.stackwalker_mips.o: $
+    cxx ../../vendor/breakpad/src/processor/stackwalker_mips.cc
+build obj/vendor/breakpad/src/processor/stackwalk_common.stackwalker_ppc.o: $
+    cxx ../../vendor/breakpad/src/processor/stackwalker_ppc.cc
+build $
+    obj/vendor/breakpad/src/processor/stackwalk_common.stackwalker_ppc64.o: $
+    cxx ../../vendor/breakpad/src/processor/stackwalker_ppc64.cc
+build $
+    obj/vendor/breakpad/src/processor/stackwalk_common.stackwalker_sparc.o: $
+    cxx ../../vendor/breakpad/src/processor/stackwalker_sparc.cc
+build obj/vendor/breakpad/src/processor/stackwalk_common.stackwalker_x86.o: $
+    cxx ../../vendor/breakpad/src/processor/stackwalker_x86.cc
+build obj/vendor/breakpad/src/processor/stackwalk_common.tokenize.o: cxx $
+    ../../vendor/breakpad/src/processor/tokenize.cc
+build $
+    obj/vendor/breakpad/src/third_party/libdisasm/stackwalk_common.ia32_implicit.o: $
+    cc ../../vendor/breakpad/src/third_party/libdisasm/ia32_implicit.c
+build $
+    obj/vendor/breakpad/src/third_party/libdisasm/stackwalk_common.ia32_insn.o: $
+    cc ../../vendor/breakpad/src/third_party/libdisasm/ia32_insn.c
+build $
+    obj/vendor/breakpad/src/third_party/libdisasm/stackwalk_common.ia32_invariant.o: $
+    cc ../../vendor/breakpad/src/third_party/libdisasm/ia32_invariant.c
+build $
+    obj/vendor/breakpad/src/third_party/libdisasm/stackwalk_common.ia32_modrm.o: $
+    cc ../../vendor/breakpad/src/third_party/libdisasm/ia32_modrm.c
+build $
+    obj/vendor/breakpad/src/third_party/libdisasm/stackwalk_common.ia32_opcode_tables.o: $
+    cc ../../vendor/breakpad/src/third_party/libdisasm/ia32_opcode_tables.c
+build $
+    obj/vendor/breakpad/src/third_party/libdisasm/stackwalk_common.ia32_operand.o: $
+    cc ../../vendor/breakpad/src/third_party/libdisasm/ia32_operand.c
+build $
+    obj/vendor/breakpad/src/third_party/libdisasm/stackwalk_common.ia32_reg.o: $
+    cc ../../vendor/breakpad/src/third_party/libdisasm/ia32_reg.c
+build $
+    obj/vendor/breakpad/src/third_party/libdisasm/stackwalk_common.ia32_settings.o: $
+    cc ../../vendor/breakpad/src/third_party/libdisasm/ia32_settings.c
+build $
+    obj/vendor/breakpad/src/third_party/libdisasm/stackwalk_common.x86_disasm.o: $
+    cc ../../vendor/breakpad/src/third_party/libdisasm/x86_disasm.c
+build $
+    obj/vendor/breakpad/src/third_party/libdisasm/stackwalk_common.x86_format.o: $
+    cc ../../vendor/breakpad/src/third_party/libdisasm/x86_format.c
+build $
+    obj/vendor/breakpad/src/third_party/libdisasm/stackwalk_common.x86_imm.o: $
+    cc ../../vendor/breakpad/src/third_party/libdisasm/x86_imm.c
+build $
+    obj/vendor/breakpad/src/third_party/libdisasm/stackwalk_common.x86_insn.o: $
+    cc ../../vendor/breakpad/src/third_party/libdisasm/x86_insn.c
+build $
+    obj/vendor/breakpad/src/third_party/libdisasm/stackwalk_common.x86_misc.o: $
+    cc ../../vendor/breakpad/src/third_party/libdisasm/x86_misc.c
+build $
+    obj/vendor/breakpad/src/third_party/libdisasm/stackwalk_common.x86_operand_list.o: $
+    cc ../../vendor/breakpad/src/third_party/libdisasm/x86_operand_list.c
+
+build libstackwalk_common.a: alink $
+    obj/vendor/breakpad/src/processor/stackwalk_common.basic_code_modules.o $
+    obj/vendor/breakpad/src/processor/stackwalk_common.basic_source_line_resolver.o $
+    obj/vendor/breakpad/src/processor/stackwalk_common.binarystream.o $
+    obj/vendor/breakpad/src/processor/stackwalk_common.call_stack.o $
+    obj/vendor/breakpad/src/processor/stackwalk_common.cfi_frame_info.o $
+    obj/vendor/breakpad/src/processor/stackwalk_common.disassembler_x86.o $
+    obj/vendor/breakpad/src/processor/stackwalk_common.dump_context.o $
+    obj/vendor/breakpad/src/processor/stackwalk_common.dump_object.o $
+    obj/vendor/breakpad/src/processor/stackwalk_common.logging.o $
+    obj/vendor/breakpad/src/processor/stackwalk_common.pathname_stripper.o $
+    obj/vendor/breakpad/src/processor/stackwalk_common.process_state.o $
+    obj/vendor/breakpad/src/processor/stackwalk_common.simple_symbol_supplier.o $
+    obj/vendor/breakpad/src/processor/stackwalk_common.source_line_resolver_base.o $
+    obj/vendor/breakpad/src/processor/stackwalk_common.stack_frame_cpu.o $
+    obj/vendor/breakpad/src/processor/stackwalk_common.stack_frame_symbolizer.o $
+    obj/vendor/breakpad/src/processor/stackwalk_common.stackwalk_common.o $
+    obj/vendor/breakpad/src/processor/stackwalk_common.stackwalker.o $
+    obj/vendor/breakpad/src/processor/stackwalk_common.stackwalker_amd64.o $
+    obj/vendor/breakpad/src/processor/stackwalk_common.stackwalker_arm.o $
+    obj/vendor/breakpad/src/processor/stackwalk_common.stackwalker_arm64.o $
+    obj/vendor/breakpad/src/processor/stackwalk_common.stackwalker_mips.o $
+    obj/vendor/breakpad/src/processor/stackwalk_common.stackwalker_ppc.o $
+    obj/vendor/breakpad/src/processor/stackwalk_common.stackwalker_ppc64.o $
+    obj/vendor/breakpad/src/processor/stackwalk_common.stackwalker_sparc.o $
+    obj/vendor/breakpad/src/processor/stackwalk_common.stackwalker_x86.o $
+    obj/vendor/breakpad/src/processor/stackwalk_common.tokenize.o $
+    obj/vendor/breakpad/src/third_party/libdisasm/stackwalk_common.ia32_implicit.o $
+    obj/vendor/breakpad/src/third_party/libdisasm/stackwalk_common.ia32_insn.o $
+    obj/vendor/breakpad/src/third_party/libdisasm/stackwalk_common.ia32_invariant.o $
+    obj/vendor/breakpad/src/third_party/libdisasm/stackwalk_common.ia32_modrm.o $
+    obj/vendor/breakpad/src/third_party/libdisasm/stackwalk_common.ia32_opcode_tables.o $
+    obj/vendor/breakpad/src/third_party/libdisasm/stackwalk_common.ia32_operand.o $
+    obj/vendor/breakpad/src/third_party/libdisasm/stackwalk_common.ia32_reg.o $
+    obj/vendor/breakpad/src/third_party/libdisasm/stackwalk_common.ia32_settings.o $
+    obj/vendor/breakpad/src/third_party/libdisasm/stackwalk_common.x86_disasm.o $
+    obj/vendor/breakpad/src/third_party/libdisasm/stackwalk_common.x86_format.o $
+    obj/vendor/breakpad/src/third_party/libdisasm/stackwalk_common.x86_imm.o $
+    obj/vendor/breakpad/src/third_party/libdisasm/stackwalk_common.x86_insn.o $
+    obj/vendor/breakpad/src/third_party/libdisasm/stackwalk_common.x86_misc.o $
+    obj/vendor/breakpad/src/third_party/libdisasm/stackwalk_common.x86_operand_list.o

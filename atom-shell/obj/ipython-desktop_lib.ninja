@@ -1,0 +1,474 @@
+defines = '-DPRODUCT_NAME="IPythonDesktop"' $
+    -DSK_SUPPORT_LEGACY_GETTOPDEVICE -DGLIB_DISABLE_DEPRECATION_WARNINGS $
+    -DNODE_WANT_INTERNALS=1 -DHTTP_PARSER_STRICT=0 -D_LARGEFILE_SOURCE $
+    -D_FILE_OFFSET_BITS=64 -D_DARWIN_USE_64_BIT_INODE=1 -DCOMPONENT_BUILD $
+    -DGURL_DLL -DSKIA_DLL -DNDEBUG -DUSING_V8_SHARED -DWEBKIT_DLL $
+    -DSK_SUPPORT_LEGACY_BITMAP_CONFIG $
+    -DSK_SUPPORT_LEGACY_DEVICE_VIRTUAL_ISOPAQUE $
+    -DSK_SUPPORT_LEGACY_N32_NAME -DSK_SUPPORT_LEGACY_SETCONFIG $
+    -DSK_IGNORE_ETC1_SUPPORT -DSK_IGNORE_GPU_DITHER
+includes = -I../.. -I../../chromium_src -I../../vendor/brightray $
+    -I../../vendor/native_mate -Igen -I../../vendor/node/src $
+    -I../../vendor/node/deps/http_parser $
+    -I../../vendor/node/deps/uv/include $
+    -I../../vendor/brightray/vendor/download/libchromiumcontent/src/v8/include $
+    -I../../vendor/node/deps/cares/include $
+    -I../../vendor/brightray/vendor/download/libchromiumcontent/src/third_party/WebKit/Source $
+    -I../../vendor $
+    -I../../vendor/brightray/vendor/download/libchromiumcontent/src $
+    -I../../vendor/brightray/vendor/download/libchromiumcontent/src/skia/config $
+    -I../../vendor/brightray/vendor/download/libchromiumcontent/src/third_party/skia/include/core $
+    -I../../vendor/brightray/vendor/download/libchromiumcontent/src/third_party/icu/source/common $
+    -I../../vendor/brightray/vendor/download/libchromiumcontent/src/third_party/WebKit $
+    -I../../vendor/brightray/vendor/download/libchromiumcontent/Release/gen $
+    -I../../vendor/node/deps/uv/src/ares $
+    -I../../vendor/node/deps/debugger-agent/include $
+    -I../../vendor/node/deps/zlib $
+    -I../../vendor/breakpad/src/client/apple/Framework
+cflags = -isysroot $
+    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk $
+    -fasm-blocks -mpascal-strings -Os -gdwarf-2 -Werror $
+    -mmacosx-version-min=10.8 -arch x86_64 -Wall -Wextra $
+    -Wno-unused-parameter -Wno-missing-field-initializers $
+    -F/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/external_binaries
+cflags_c = -std=c99 -fcolor-diagnostics
+cflags_cc = -std=c++11 -stdlib=libc++ -fno-rtti -fno-exceptions $
+    -fcolor-diagnostics
+cflags_objc = $cflags_c
+cflags_objcc = $cflags_cc
+
+build obj/atom/app/ipython-desktop_lib.atom_content_client.o: cxx $
+    ../../atom/app/atom_content_client.cc || gen/atom_natives.h
+build obj/atom/app/ipython-desktop_lib.atom_main_delegate.o: cxx $
+    ../../atom/app/atom_main_delegate.cc || gen/atom_natives.h
+build obj/atom/app/ipython-desktop_lib.atom_main_delegate_mac.o: objcxx $
+    ../../atom/app/atom_main_delegate_mac.mm || gen/atom_natives.h
+build obj/atom/browser/api/ipython-desktop_lib.atom_api_app.o: cxx $
+    ../../atom/browser/api/atom_api_app.cc || gen/atom_natives.h
+build obj/atom/browser/api/ipython-desktop_lib.atom_api_auto_updater.o: cxx $
+    ../../atom/browser/api/atom_api_auto_updater.cc || gen/atom_natives.h
+build obj/atom/browser/api/ipython-desktop_lib.atom_api_content_tracing.o: $
+    cxx ../../atom/browser/api/atom_api_content_tracing.cc || $
+    gen/atom_natives.h
+build obj/atom/browser/api/ipython-desktop_lib.atom_api_dialog.o: cxx $
+    ../../atom/browser/api/atom_api_dialog.cc || gen/atom_natives.h
+build obj/atom/browser/api/ipython-desktop_lib.atom_api_global_shortcut.o: $
+    cxx ../../atom/browser/api/atom_api_global_shortcut.cc || $
+    gen/atom_natives.h
+build obj/atom/browser/api/ipython-desktop_lib.atom_api_menu.o: cxx $
+    ../../atom/browser/api/atom_api_menu.cc || gen/atom_natives.h
+build obj/atom/browser/api/ipython-desktop_lib.atom_api_menu_mac.o: objcxx $
+    ../../atom/browser/api/atom_api_menu_mac.mm || gen/atom_natives.h
+build obj/atom/browser/api/ipython-desktop_lib.atom_api_power_monitor.o: $
+    cxx ../../atom/browser/api/atom_api_power_monitor.cc || gen/atom_natives.h
+build obj/atom/browser/api/ipython-desktop_lib.atom_api_protocol.o: cxx $
+    ../../atom/browser/api/atom_api_protocol.cc || gen/atom_natives.h
+build obj/atom/browser/api/ipython-desktop_lib.atom_api_screen.o: cxx $
+    ../../atom/browser/api/atom_api_screen.cc || gen/atom_natives.h
+build obj/atom/browser/api/ipython-desktop_lib.atom_api_tray.o: cxx $
+    ../../atom/browser/api/atom_api_tray.cc || gen/atom_natives.h
+build obj/atom/browser/api/ipython-desktop_lib.atom_api_web_contents.o: cxx $
+    ../../atom/browser/api/atom_api_web_contents.cc || gen/atom_natives.h
+build obj/atom/browser/api/ipython-desktop_lib.atom_api_web_view_manager.o: $
+    cxx ../../atom/browser/api/atom_api_web_view_manager.cc || $
+    gen/atom_natives.h
+build obj/atom/browser/api/ipython-desktop_lib.atom_api_window.o: cxx $
+    ../../atom/browser/api/atom_api_window.cc || gen/atom_natives.h
+build obj/atom/browser/api/ipython-desktop_lib.event.o: cxx $
+    ../../atom/browser/api/event.cc || gen/atom_natives.h
+build obj/atom/browser/api/ipython-desktop_lib.event_emitter.o: cxx $
+    ../../atom/browser/api/event_emitter.cc || gen/atom_natives.h
+build obj/atom/browser/ipython-desktop_lib.auto_updater.o: cxx $
+    ../../atom/browser/auto_updater.cc || gen/atom_natives.h
+build obj/atom/browser/ipython-desktop_lib.auto_updater_mac.o: objcxx $
+    ../../atom/browser/auto_updater_mac.mm || gen/atom_natives.h
+build obj/atom/browser/ipython-desktop_lib.atom_access_token_store.o: cxx $
+    ../../atom/browser/atom_access_token_store.cc || gen/atom_natives.h
+build obj/atom/browser/ipython-desktop_lib.atom_browser_client.o: cxx $
+    ../../atom/browser/atom_browser_client.cc || gen/atom_natives.h
+build obj/atom/browser/ipython-desktop_lib.atom_browser_context.o: cxx $
+    ../../atom/browser/atom_browser_context.cc || gen/atom_natives.h
+build obj/atom/browser/ipython-desktop_lib.atom_browser_main_parts.o: cxx $
+    ../../atom/browser/atom_browser_main_parts.cc || gen/atom_natives.h
+build obj/atom/browser/ipython-desktop_lib.atom_browser_main_parts_mac.o: $
+    objcxx ../../atom/browser/atom_browser_main_parts_mac.mm || $
+    gen/atom_natives.h
+build $
+    obj/atom/browser/ipython-desktop_lib.atom_javascript_dialog_manager.o: $
+    cxx ../../atom/browser/atom_javascript_dialog_manager.cc || $
+    gen/atom_natives.h
+build $
+    obj/atom/browser/ipython-desktop_lib.atom_speech_recognition_manager_delegate.o: $
+    cxx ../../atom/browser/atom_speech_recognition_manager_delegate.cc || $
+    gen/atom_natives.h
+build obj/atom/browser/ipython-desktop_lib.browser.o: cxx $
+    ../../atom/browser/browser.cc || gen/atom_natives.h
+build obj/atom/browser/ipython-desktop_lib.browser_mac.o: objcxx $
+    ../../atom/browser/browser_mac.mm || gen/atom_natives.h
+build obj/atom/browser/ipython-desktop_lib.javascript_environment.o: cxx $
+    ../../atom/browser/javascript_environment.cc || gen/atom_natives.h
+build obj/atom/browser/mac/ipython-desktop_lib.atom_application.o: objcxx $
+    ../../atom/browser/mac/atom_application.mm || gen/atom_natives.h
+build obj/atom/browser/mac/ipython-desktop_lib.atom_application_delegate.o: $
+    objcxx ../../atom/browser/mac/atom_application_delegate.mm || $
+    gen/atom_natives.h
+build obj/atom/browser/ipython-desktop_lib.native_window.o: cxx $
+    ../../atom/browser/native_window.cc || gen/atom_natives.h
+build obj/atom/browser/ipython-desktop_lib.native_window_mac.o: objcxx $
+    ../../atom/browser/native_window_mac.mm || gen/atom_natives.h
+build obj/atom/browser/net/ipython-desktop_lib.adapter_request_job.o: cxx $
+    ../../atom/browser/net/adapter_request_job.cc || gen/atom_natives.h
+build $
+    obj/atom/browser/net/asar/ipython-desktop_lib.asar_protocol_handler.o: $
+    cxx ../../atom/browser/net/asar/asar_protocol_handler.cc || $
+    gen/atom_natives.h
+build obj/atom/browser/net/asar/ipython-desktop_lib.url_request_asar_job.o: $
+    cxx ../../atom/browser/net/asar/url_request_asar_job.cc || $
+    gen/atom_natives.h
+build $
+    obj/atom/browser/net/ipython-desktop_lib.atom_url_request_job_factory.o: $
+    cxx ../../atom/browser/net/atom_url_request_job_factory.cc || $
+    gen/atom_natives.h
+build obj/atom/browser/net/ipython-desktop_lib.url_request_string_job.o: $
+    cxx ../../atom/browser/net/url_request_string_job.cc || gen/atom_natives.h
+build obj/atom/browser/ipython-desktop_lib.node_debugger.o: cxx $
+    ../../atom/browser/node_debugger.cc || gen/atom_natives.h
+build obj/atom/browser/ui/ipython-desktop_lib.accelerator_util.o: cxx $
+    ../../atom/browser/ui/accelerator_util.cc || gen/atom_natives.h
+build obj/atom/browser/ui/ipython-desktop_lib.accelerator_util_mac.o: $
+    objcxx ../../atom/browser/ui/accelerator_util_mac.mm || gen/atom_natives.h
+build obj/atom/browser/ui/cocoa/ipython-desktop_lib.atom_menu_controller.o: $
+    objcxx ../../atom/browser/ui/cocoa/atom_menu_controller.mm || $
+    gen/atom_natives.h
+build $
+    obj/atom/browser/ui/cocoa/ipython-desktop_lib.event_processing_window.o: $
+    objcxx ../../atom/browser/ui/cocoa/event_processing_window.mm || $
+    gen/atom_natives.h
+build obj/atom/browser/ui/ipython-desktop_lib.file_dialog_mac.o: objcxx $
+    ../../atom/browser/ui/file_dialog_mac.mm || gen/atom_natives.h
+build obj/atom/browser/ui/ipython-desktop_lib.message_box_mac.o: objcxx $
+    ../../atom/browser/ui/message_box_mac.mm || gen/atom_natives.h
+build obj/atom/browser/ui/ipython-desktop_lib.tray_icon.o: cxx $
+    ../../atom/browser/ui/tray_icon.cc || gen/atom_natives.h
+build obj/atom/browser/ui/ipython-desktop_lib.tray_icon_cocoa.o: objcxx $
+    ../../atom/browser/ui/tray_icon_cocoa.mm || gen/atom_natives.h
+build obj/atom/browser/ipython-desktop_lib.web_view_manager.o: cxx $
+    ../../atom/browser/web_view_manager.cc || gen/atom_natives.h
+build obj/atom/browser/ipython-desktop_lib.web_dialog_helper.o: cxx $
+    ../../atom/browser/web_dialog_helper.cc || gen/atom_natives.h
+build obj/atom/browser/ipython-desktop_lib.window_list.o: cxx $
+    ../../atom/browser/window_list.cc || gen/atom_natives.h
+build obj/atom/common/api/ipython-desktop_lib.atom_api_asar.o: cxx $
+    ../../atom/common/api/atom_api_asar.cc || gen/atom_natives.h
+build obj/atom/common/api/ipython-desktop_lib.atom_api_clipboard.o: cxx $
+    ../../atom/common/api/atom_api_clipboard.cc || gen/atom_natives.h
+build obj/atom/common/api/ipython-desktop_lib.atom_api_crash_reporter.o: $
+    cxx ../../atom/common/api/atom_api_crash_reporter.cc || gen/atom_natives.h
+build obj/atom/common/api/ipython-desktop_lib.atom_api_id_weak_map.o: cxx $
+    ../../atom/common/api/atom_api_id_weak_map.cc || gen/atom_natives.h
+build obj/atom/common/api/ipython-desktop_lib.atom_api_shell.o: cxx $
+    ../../atom/common/api/atom_api_shell.cc || gen/atom_natives.h
+build obj/atom/common/api/ipython-desktop_lib.atom_api_v8_util.o: cxx $
+    ../../atom/common/api/atom_api_v8_util.cc || gen/atom_natives.h
+build obj/atom/common/api/ipython-desktop_lib.atom_bindings.o: cxx $
+    ../../atom/common/api/atom_bindings.cc || gen/atom_natives.h
+build obj/atom/common/api/ipython-desktop_lib.object_life_monitor.o: cxx $
+    ../../atom/common/api/object_life_monitor.cc || gen/atom_natives.h
+build obj/atom/common/asar/ipython-desktop_lib.archive.o: cxx $
+    ../../atom/common/asar/archive.cc || gen/atom_natives.h
+build obj/atom/common/asar/ipython-desktop_lib.scoped_temporary_file.o: cxx $
+    ../../atom/common/asar/scoped_temporary_file.cc || gen/atom_natives.h
+build obj/atom/common/ipython-desktop_lib.common_message_generator.o: cxx $
+    ../../atom/common/common_message_generator.cc || gen/atom_natives.h
+build obj/atom/common/crash_reporter/ipython-desktop_lib.crash_reporter.o: $
+    cxx ../../atom/common/crash_reporter/crash_reporter.cc || $
+    gen/atom_natives.h
+build $
+    obj/atom/common/crash_reporter/ipython-desktop_lib.crash_reporter_mac.o: $
+    objcxx ../../atom/common/crash_reporter/crash_reporter_mac.mm || $
+    gen/atom_natives.h
+build obj/atom/common/ipython-desktop_lib.draggable_region.o: cxx $
+    ../../atom/common/draggable_region.cc || gen/atom_natives.h
+build $
+    obj/atom/common/native_mate_converters/ipython-desktop_lib.accelerator_converter.o: $
+    cxx ../../atom/common/native_mate_converters/accelerator_converter.cc $
+    || gen/atom_natives.h
+build $
+    obj/atom/common/native_mate_converters/ipython-desktop_lib.gfx_converter.o: $
+    cxx ../../atom/common/native_mate_converters/gfx_converter.cc || $
+    gen/atom_natives.h
+build $
+    obj/atom/common/native_mate_converters/ipython-desktop_lib.image_converter.o: $
+    cxx ../../atom/common/native_mate_converters/image_converter.cc || $
+    gen/atom_natives.h
+build $
+    obj/atom/common/native_mate_converters/ipython-desktop_lib.image_converter_mac.o: $
+    objcxx ../../atom/common/native_mate_converters/image_converter_mac.mm $
+    || gen/atom_natives.h
+build $
+    obj/atom/common/native_mate_converters/ipython-desktop_lib.v8_value_converter.o: $
+    cxx ../../atom/common/native_mate_converters/v8_value_converter.cc || $
+    gen/atom_natives.h
+build $
+    obj/atom/common/native_mate_converters/ipython-desktop_lib.value_converter.o: $
+    cxx ../../atom/common/native_mate_converters/value_converter.cc || $
+    gen/atom_natives.h
+build obj/atom/common/ipython-desktop_lib.node_bindings.o: cxx $
+    ../../atom/common/node_bindings.cc || gen/atom_natives.h
+build obj/atom/common/ipython-desktop_lib.node_bindings_mac.o: cxx $
+    ../../atom/common/node_bindings_mac.cc || gen/atom_natives.h
+build obj/atom/common/ipython-desktop_lib.options_switches.o: cxx $
+    ../../atom/common/options_switches.cc || gen/atom_natives.h
+build obj/atom/common/ipython-desktop_lib.platform_util_mac.o: objcxx $
+    ../../atom/common/platform_util_mac.mm || gen/atom_natives.h
+build obj/atom/renderer/api/ipython-desktop_lib.atom_api_renderer_ipc.o: $
+    cxx ../../atom/renderer/api/atom_api_renderer_ipc.cc || gen/atom_natives.h
+build $
+    obj/atom/renderer/api/ipython-desktop_lib.atom_api_spell_check_client.o: $
+    cxx ../../atom/renderer/api/atom_api_spell_check_client.cc || $
+    gen/atom_natives.h
+build obj/atom/renderer/api/ipython-desktop_lib.atom_api_web_frame.o: cxx $
+    ../../atom/renderer/api/atom_api_web_frame.cc || gen/atom_natives.h
+build obj/atom/renderer/ipython-desktop_lib.atom_render_view_observer.o: $
+    cxx ../../atom/renderer/atom_render_view_observer.cc || gen/atom_natives.h
+build obj/atom/renderer/ipython-desktop_lib.atom_renderer_client.o: cxx $
+    ../../atom/renderer/atom_renderer_client.cc || gen/atom_natives.h
+build $
+    obj/chromium_src/chrome/browser/ipython-desktop_lib.browser_process.o: $
+    cxx ../../chromium_src/chrome/browser/browser_process.cc || $
+    gen/atom_natives.h
+build $
+    obj/chromium_src/chrome/browser/extensions/ipython-desktop_lib.global_shortcut_listener.o: $
+    cxx $
+    ../../chromium_src/chrome/browser/extensions/global_shortcut_listener.cc $
+    || gen/atom_natives.h
+build $
+    obj/chromium_src/chrome/browser/extensions/ipython-desktop_lib.global_shortcut_listener_mac.o: $
+    objcxx $
+    ../../chromium_src/chrome/browser/extensions/global_shortcut_listener_mac.mm $
+    || gen/atom_natives.h
+build $
+    obj/chromium_src/chrome/browser/printing/ipython-desktop_lib.print_job.o: $
+    cxx ../../chromium_src/chrome/browser/printing/print_job.cc || $
+    gen/atom_natives.h
+build $
+    obj/chromium_src/chrome/browser/printing/ipython-desktop_lib.print_job_manager.o: $
+    cxx ../../chromium_src/chrome/browser/printing/print_job_manager.cc || $
+    gen/atom_natives.h
+build $
+    obj/chromium_src/chrome/browser/printing/ipython-desktop_lib.print_job_worker.o: $
+    cxx ../../chromium_src/chrome/browser/printing/print_job_worker.cc || $
+    gen/atom_natives.h
+build $
+    obj/chromium_src/chrome/browser/printing/ipython-desktop_lib.print_job_worker_owner.o: $
+    cxx $
+    ../../chromium_src/chrome/browser/printing/print_job_worker_owner.cc || $
+    gen/atom_natives.h
+build $
+    obj/chromium_src/chrome/browser/printing/ipython-desktop_lib.print_view_manager_base.o: $
+    cxx $
+    ../../chromium_src/chrome/browser/printing/print_view_manager_base.cc $
+    || gen/atom_natives.h
+build $
+    obj/chromium_src/chrome/browser/printing/ipython-desktop_lib.print_view_manager_basic.o: $
+    cxx $
+    ../../chromium_src/chrome/browser/printing/print_view_manager_basic.cc $
+    || gen/atom_natives.h
+build $
+    obj/chromium_src/chrome/browser/printing/ipython-desktop_lib.printer_query.o: $
+    cxx ../../chromium_src/chrome/browser/printing/printer_query.cc || $
+    gen/atom_natives.h
+build $
+    obj/chromium_src/chrome/browser/printing/ipython-desktop_lib.printing_message_filter.o: $
+    cxx $
+    ../../chromium_src/chrome/browser/printing/printing_message_filter.cc $
+    || gen/atom_natives.h
+build $
+    obj/chromium_src/chrome/browser/speech/ipython-desktop_lib.tts_controller_impl.o: $
+    cxx ../../chromium_src/chrome/browser/speech/tts_controller_impl.cc || $
+    gen/atom_natives.h
+build obj/chromium_src/chrome/browser/speech/ipython-desktop_lib.tts_mac.o: $
+    objcxx ../../chromium_src/chrome/browser/speech/tts_mac.mm || $
+    gen/atom_natives.h
+build $
+    obj/chromium_src/chrome/browser/speech/ipython-desktop_lib.tts_message_filter.o: $
+    cxx ../../chromium_src/chrome/browser/speech/tts_message_filter.cc || $
+    gen/atom_natives.h
+build $
+    obj/chromium_src/chrome/browser/speech/ipython-desktop_lib.tts_platform.o: $
+    cxx ../../chromium_src/chrome/browser/speech/tts_platform.cc || $
+    gen/atom_natives.h
+build $
+    obj/chromium_src/chrome/browser/ui/cocoa/ipython-desktop_lib.color_chooser_mac.o: $
+    objcxx ../../chromium_src/chrome/browser/ui/cocoa/color_chooser_mac.mm $
+    || gen/atom_natives.h
+build obj/chromium_src/chrome/common/ipython-desktop_lib.print_messages.o: $
+    cxx ../../chromium_src/chrome/common/print_messages.cc || $
+    gen/atom_natives.h
+build $
+    obj/chromium_src/chrome/common/ipython-desktop_lib.tts_utterance_request.o: $
+    cxx ../../chromium_src/chrome/common/tts_utterance_request.cc || $
+    gen/atom_natives.h
+build $
+    obj/chromium_src/chrome/renderer/printing/ipython-desktop_lib.print_web_view_helper.o: $
+    cxx $
+    ../../chromium_src/chrome/renderer/printing/print_web_view_helper.cc || $
+    gen/atom_natives.h
+build $
+    obj/chromium_src/chrome/renderer/printing/ipython-desktop_lib.print_web_view_helper_mac.o: $
+    objcxx $
+    ../../chromium_src/chrome/renderer/printing/print_web_view_helper_mac.mm $
+    || gen/atom_natives.h
+build $
+    obj/chromium_src/chrome/renderer/spellchecker/ipython-desktop_lib.spellcheck_worditerator.o: $
+    cxx $
+    ../../chromium_src/chrome/renderer/spellchecker/spellcheck_worditerator.cc $
+    || gen/atom_natives.h
+build $
+    obj/chromium_src/chrome/renderer/ipython-desktop_lib.tts_dispatcher.o: $
+    cxx ../../chromium_src/chrome/renderer/tts_dispatcher.cc || $
+    gen/atom_natives.h
+build obj/vendor/native_mate/native_mate/ipython-desktop_lib.arguments.o: $
+    cxx ../../vendor/native_mate/native_mate/arguments.cc || $
+    gen/atom_natives.h
+build obj/vendor/native_mate/native_mate/ipython-desktop_lib.converter.o: $
+    cxx ../../vendor/native_mate/native_mate/converter.cc || $
+    gen/atom_natives.h
+build obj/vendor/native_mate/native_mate/ipython-desktop_lib.dictionary.o: $
+    cxx ../../vendor/native_mate/native_mate/dictionary.cc || $
+    gen/atom_natives.h
+build $
+    obj/vendor/native_mate/native_mate/ipython-desktop_lib.function_template.o: $
+    cxx ../../vendor/native_mate/native_mate/function_template.cc || $
+    gen/atom_natives.h
+build obj/vendor/native_mate/native_mate/ipython-desktop_lib.locker.o: cxx $
+    ../../vendor/native_mate/native_mate/locker.cc || gen/atom_natives.h
+build $
+    obj/vendor/native_mate/native_mate/ipython-desktop_lib.object_template_builder.o: $
+    cxx ../../vendor/native_mate/native_mate/object_template_builder.cc || $
+    gen/atom_natives.h
+build $
+    obj/vendor/native_mate/native_mate/ipython-desktop_lib.persistent_dictionary.o: $
+    cxx ../../vendor/native_mate/native_mate/persistent_dictionary.cc || $
+    gen/atom_natives.h
+build obj/vendor/native_mate/native_mate/ipython-desktop_lib.try_catch.o: $
+    cxx ../../vendor/native_mate/native_mate/try_catch.cc || $
+    gen/atom_natives.h
+build obj/vendor/native_mate/native_mate/ipython-desktop_lib.wrappable.o: $
+    cxx ../../vendor/native_mate/native_mate/wrappable.cc || $
+    gen/atom_natives.h
+
+build libipython-desktop_lib.a: alink $
+    obj/atom/app/ipython-desktop_lib.atom_content_client.o $
+    obj/atom/app/ipython-desktop_lib.atom_main_delegate.o $
+    obj/atom/app/ipython-desktop_lib.atom_main_delegate_mac.o $
+    obj/atom/browser/api/ipython-desktop_lib.atom_api_app.o $
+    obj/atom/browser/api/ipython-desktop_lib.atom_api_auto_updater.o $
+    obj/atom/browser/api/ipython-desktop_lib.atom_api_content_tracing.o $
+    obj/atom/browser/api/ipython-desktop_lib.atom_api_dialog.o $
+    obj/atom/browser/api/ipython-desktop_lib.atom_api_global_shortcut.o $
+    obj/atom/browser/api/ipython-desktop_lib.atom_api_menu.o $
+    obj/atom/browser/api/ipython-desktop_lib.atom_api_menu_mac.o $
+    obj/atom/browser/api/ipython-desktop_lib.atom_api_power_monitor.o $
+    obj/atom/browser/api/ipython-desktop_lib.atom_api_protocol.o $
+    obj/atom/browser/api/ipython-desktop_lib.atom_api_screen.o $
+    obj/atom/browser/api/ipython-desktop_lib.atom_api_tray.o $
+    obj/atom/browser/api/ipython-desktop_lib.atom_api_web_contents.o $
+    obj/atom/browser/api/ipython-desktop_lib.atom_api_web_view_manager.o $
+    obj/atom/browser/api/ipython-desktop_lib.atom_api_window.o $
+    obj/atom/browser/api/ipython-desktop_lib.event.o $
+    obj/atom/browser/api/ipython-desktop_lib.event_emitter.o $
+    obj/atom/browser/ipython-desktop_lib.auto_updater.o $
+    obj/atom/browser/ipython-desktop_lib.auto_updater_mac.o $
+    obj/atom/browser/ipython-desktop_lib.atom_access_token_store.o $
+    obj/atom/browser/ipython-desktop_lib.atom_browser_client.o $
+    obj/atom/browser/ipython-desktop_lib.atom_browser_context.o $
+    obj/atom/browser/ipython-desktop_lib.atom_browser_main_parts.o $
+    obj/atom/browser/ipython-desktop_lib.atom_browser_main_parts_mac.o $
+    obj/atom/browser/ipython-desktop_lib.atom_javascript_dialog_manager.o $
+    obj/atom/browser/ipython-desktop_lib.atom_speech_recognition_manager_delegate.o $
+    obj/atom/browser/ipython-desktop_lib.browser.o $
+    obj/atom/browser/ipython-desktop_lib.browser_mac.o $
+    obj/atom/browser/ipython-desktop_lib.javascript_environment.o $
+    obj/atom/browser/mac/ipython-desktop_lib.atom_application.o $
+    obj/atom/browser/mac/ipython-desktop_lib.atom_application_delegate.o $
+    obj/atom/browser/ipython-desktop_lib.native_window.o $
+    obj/atom/browser/ipython-desktop_lib.native_window_mac.o $
+    obj/atom/browser/net/ipython-desktop_lib.adapter_request_job.o $
+    obj/atom/browser/net/asar/ipython-desktop_lib.asar_protocol_handler.o $
+    obj/atom/browser/net/asar/ipython-desktop_lib.url_request_asar_job.o $
+    obj/atom/browser/net/ipython-desktop_lib.atom_url_request_job_factory.o $
+    obj/atom/browser/net/ipython-desktop_lib.url_request_string_job.o $
+    obj/atom/browser/ipython-desktop_lib.node_debugger.o $
+    obj/atom/browser/ui/ipython-desktop_lib.accelerator_util.o $
+    obj/atom/browser/ui/ipython-desktop_lib.accelerator_util_mac.o $
+    obj/atom/browser/ui/cocoa/ipython-desktop_lib.atom_menu_controller.o $
+    obj/atom/browser/ui/cocoa/ipython-desktop_lib.event_processing_window.o $
+    obj/atom/browser/ui/ipython-desktop_lib.file_dialog_mac.o $
+    obj/atom/browser/ui/ipython-desktop_lib.message_box_mac.o $
+    obj/atom/browser/ui/ipython-desktop_lib.tray_icon.o $
+    obj/atom/browser/ui/ipython-desktop_lib.tray_icon_cocoa.o $
+    obj/atom/browser/ipython-desktop_lib.web_view_manager.o $
+    obj/atom/browser/ipython-desktop_lib.web_dialog_helper.o $
+    obj/atom/browser/ipython-desktop_lib.window_list.o $
+    obj/atom/common/api/ipython-desktop_lib.atom_api_asar.o $
+    obj/atom/common/api/ipython-desktop_lib.atom_api_clipboard.o $
+    obj/atom/common/api/ipython-desktop_lib.atom_api_crash_reporter.o $
+    obj/atom/common/api/ipython-desktop_lib.atom_api_id_weak_map.o $
+    obj/atom/common/api/ipython-desktop_lib.atom_api_shell.o $
+    obj/atom/common/api/ipython-desktop_lib.atom_api_v8_util.o $
+    obj/atom/common/api/ipython-desktop_lib.atom_bindings.o $
+    obj/atom/common/api/ipython-desktop_lib.object_life_monitor.o $
+    obj/atom/common/asar/ipython-desktop_lib.archive.o $
+    obj/atom/common/asar/ipython-desktop_lib.scoped_temporary_file.o $
+    obj/atom/common/ipython-desktop_lib.common_message_generator.o $
+    obj/atom/common/crash_reporter/ipython-desktop_lib.crash_reporter.o $
+    obj/atom/common/crash_reporter/ipython-desktop_lib.crash_reporter_mac.o $
+    obj/atom/common/ipython-desktop_lib.draggable_region.o $
+    obj/atom/common/native_mate_converters/ipython-desktop_lib.accelerator_converter.o $
+    obj/atom/common/native_mate_converters/ipython-desktop_lib.gfx_converter.o $
+    obj/atom/common/native_mate_converters/ipython-desktop_lib.image_converter.o $
+    obj/atom/common/native_mate_converters/ipython-desktop_lib.image_converter_mac.o $
+    obj/atom/common/native_mate_converters/ipython-desktop_lib.v8_value_converter.o $
+    obj/atom/common/native_mate_converters/ipython-desktop_lib.value_converter.o $
+    obj/atom/common/ipython-desktop_lib.node_bindings.o $
+    obj/atom/common/ipython-desktop_lib.node_bindings_mac.o $
+    obj/atom/common/ipython-desktop_lib.options_switches.o $
+    obj/atom/common/ipython-desktop_lib.platform_util_mac.o $
+    obj/atom/renderer/api/ipython-desktop_lib.atom_api_renderer_ipc.o $
+    obj/atom/renderer/api/ipython-desktop_lib.atom_api_spell_check_client.o $
+    obj/atom/renderer/api/ipython-desktop_lib.atom_api_web_frame.o $
+    obj/atom/renderer/ipython-desktop_lib.atom_render_view_observer.o $
+    obj/atom/renderer/ipython-desktop_lib.atom_renderer_client.o $
+    obj/chromium_src/chrome/browser/ipython-desktop_lib.browser_process.o $
+    obj/chromium_src/chrome/browser/extensions/ipython-desktop_lib.global_shortcut_listener.o $
+    obj/chromium_src/chrome/browser/extensions/ipython-desktop_lib.global_shortcut_listener_mac.o $
+    obj/chromium_src/chrome/browser/printing/ipython-desktop_lib.print_job.o $
+    obj/chromium_src/chrome/browser/printing/ipython-desktop_lib.print_job_manager.o $
+    obj/chromium_src/chrome/browser/printing/ipython-desktop_lib.print_job_worker.o $
+    obj/chromium_src/chrome/browser/printing/ipython-desktop_lib.print_job_worker_owner.o $
+    obj/chromium_src/chrome/browser/printing/ipython-desktop_lib.print_view_manager_base.o $
+    obj/chromium_src/chrome/browser/printing/ipython-desktop_lib.print_view_manager_basic.o $
+    obj/chromium_src/chrome/browser/printing/ipython-desktop_lib.printer_query.o $
+    obj/chromium_src/chrome/browser/printing/ipython-desktop_lib.printing_message_filter.o $
+    obj/chromium_src/chrome/browser/speech/ipython-desktop_lib.tts_controller_impl.o $
+    obj/chromium_src/chrome/browser/speech/ipython-desktop_lib.tts_mac.o $
+    obj/chromium_src/chrome/browser/speech/ipython-desktop_lib.tts_message_filter.o $
+    obj/chromium_src/chrome/browser/speech/ipython-desktop_lib.tts_platform.o $
+    obj/chromium_src/chrome/browser/ui/cocoa/ipython-desktop_lib.color_chooser_mac.o $
+    obj/chromium_src/chrome/common/ipython-desktop_lib.print_messages.o $
+    obj/chromium_src/chrome/common/ipython-desktop_lib.tts_utterance_request.o $
+    obj/chromium_src/chrome/renderer/printing/ipython-desktop_lib.print_web_view_helper.o $
+    obj/chromium_src/chrome/renderer/printing/ipython-desktop_lib.print_web_view_helper_mac.o $
+    obj/chromium_src/chrome/renderer/spellchecker/ipython-desktop_lib.spellcheck_worditerator.o $
+    obj/chromium_src/chrome/renderer/ipython-desktop_lib.tts_dispatcher.o $
+    obj/vendor/native_mate/native_mate/ipython-desktop_lib.arguments.o $
+    obj/vendor/native_mate/native_mate/ipython-desktop_lib.converter.o $
+    obj/vendor/native_mate/native_mate/ipython-desktop_lib.dictionary.o $
+    obj/vendor/native_mate/native_mate/ipython-desktop_lib.function_template.o $
+    obj/vendor/native_mate/native_mate/ipython-desktop_lib.locker.o $
+    obj/vendor/native_mate/native_mate/ipython-desktop_lib.object_template_builder.o $
+    obj/vendor/native_mate/native_mate/ipython-desktop_lib.persistent_dictionary.o $
+    obj/vendor/native_mate/native_mate/ipython-desktop_lib.try_catch.o $
+    obj/vendor/native_mate/native_mate/ipython-desktop_lib.wrappable.o || $
+    gen/atom_natives.h

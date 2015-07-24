@@ -1,0 +1,121 @@
+build $
+    crash_report_sender.app/Contents/Resources/English.lproj/Localizable.strings: $
+    mac_tool $
+    ../../vendor/breakpad/src/client/mac/sender/English.lproj/Localizable.strings
+  mactool_cmd = copy-bundle-resource
+build crash_report_sender.app/Contents/Resources/crash_report_sender.icns: $
+    mac_tool $
+    ../../vendor/breakpad/src/client/mac/sender/crash_report_sender.icns
+  mactool_cmd = copy-bundle-resource
+build crash_report_sender.app/Contents/Resources/Breakpad.nib: mac_tool $
+    ../../vendor/breakpad/src/client/mac/sender/Breakpad.xib
+  mactool_cmd = copy-bundle-resource
+build crash_report_sender.app/Contents/Info.plist: copy_infoplist $
+    ../../vendor/breakpad/src/client/mac/sender/crash_report_sender-Info.plist
+  env = export ALWAYS_SEARCH_USER_PATHS=NO; export ARCHS=x86_64; export $
+      BUILT_PRODUCTS_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export CC=/usr/bin/clang; export CLANG_CXX_LANGUAGE_STANDARD=c++11; $
+      export CLANG_CXX_LIBRARY=libc++; export COMBINE_HIDPI_IMAGES=YES; $
+      export CONFIGURATION=Release; export $
+      CONTENTS_FOLDER_PATH=crash_report_sender.app/Contents; export $
+      COPY_PHASE_STRIP=NO; export DEBUG_INFORMATION_FORMAT=dwarf-with-dsym; $
+      export EXECUTABLE_NAME=crash_report_sender; export $
+      EXECUTABLE_PATH=crash_report_sender.app/Contents/MacOS/crash_report_sender; $
+      export FULL_PRODUCT_NAME=crash_report_sender.app; export $
+      GCC_C_LANGUAGE_STANDARD=c99; export GCC_ENABLE_CPP_EXCEPTIONS=NO; $
+      export GCC_ENABLE_CPP_RTTI=NO; export GCC_OPTIMIZATION_LEVEL=0; $
+      export GCC_TREAT_WARNINGS_AS_ERRORS=YES; export $
+      INFOPLIST_FILE=src/client/mac/sender/crash_report_sender-Info.plist; $
+      export INFOPLIST_PATH=crash_report_sender.app/Contents/Info.plist; $
+      export LDPLUSPLUS=/usr/bin/clang++; export MACH_O_TYPE=mh_execute; $
+      export MACOSX_DEPLOYMENT_TARGET=10.8; export $
+      OTHER_CFLAGS=-fcolor-diagnostics; export $
+      OTHER_LDFLAGS="-stdlib=libc++"; export $
+      PRODUCT_NAME=crash_report_sender; export $
+      PRODUCT_TYPE=com.apple.product-type.application; export $
+      RUN_CLANG_STATIC_ANALYZER=YES; export $
+      SDKROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk; $
+      export $
+      SRCROOT=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release/../../vendor/breakpad; $
+      export SOURCE_ROOT="$${SRCROOT}"; export $
+      TARGET_BUILD_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export TEMP_DIR="$${TMPDIR}"; export $
+      UNLOCALIZED_RESOURCES_FOLDER_PATH=crash_report_sender.app/Contents/Resources; $
+      export USE_HEADER_MAP=NO; export WARNING_CFLAGS="-Wall -Wextra $
+      -Wno-unused-parameter -Wno-missing-field-initializers $
+      -Wno-deprecated-declarations -Wno-deprecated-register $
+      -Wno-unused-private-field -Wno-unused-function"; export $
+      WRAPPER_NAME=crash_report_sender.app;
+  keys = '{"DTXcode": "0611", "BuildMachineOSBuild": "14C109", "DTSDKName": $
+      "macosx", "DTXcodeBuild": "6A2008a", "DTSDKBuild": "14A382"}'
+defines = -DCOMPONENT_BUILD -DGURL_DLL -DSKIA_DLL -DNDEBUG $
+    -DUSING_V8_SHARED -DWEBKIT_DLL -DSK_SUPPORT_LEGACY_GETTOPDEVICE $
+    -DSK_SUPPORT_LEGACY_BITMAP_CONFIG $
+    -DSK_SUPPORT_LEGACY_DEVICE_VIRTUAL_ISOPAQUE $
+    -DSK_SUPPORT_LEGACY_N32_NAME -DSK_SUPPORT_LEGACY_SETCONFIG $
+    -DSK_IGNORE_ETC1_SUPPORT -DSK_IGNORE_GPU_DITHER
+includes = -I../../vendor/breakpad/src -I../../vendor/breakpad/src/common/mac
+cflags = -isysroot $
+    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk $
+    -fasm-blocks -mpascal-strings -Os -gdwarf-2 -Werror $
+    -mmacosx-version-min=10.8 -arch x86_64 -Wall -Wextra $
+    -Wno-unused-parameter -Wno-missing-field-initializers $
+    -Wno-deprecated-declarations -Wno-deprecated-register $
+    -Wno-unused-private-field -Wno-unused-function
+cflags_c = -std=c99 -fcolor-diagnostics
+cflags_cc = -std=c++11 -stdlib=libc++ -fno-rtti -fno-exceptions $
+    -fcolor-diagnostics
+cflags_objc = $cflags_c
+cflags_objcc = $cflags_cc
+
+build $
+    obj/vendor/breakpad/src/common/mac/crash_report_sender.HTTPMultipartUpload.o: $
+    objc ../../vendor/breakpad/src/common/mac/HTTPMultipartUpload.m
+build $
+    obj/vendor/breakpad/src/client/mac/sender/crash_report_sender.crash_report_sender.o: $
+    objc ../../vendor/breakpad/src/client/mac/sender/crash_report_sender.m
+build $
+    obj/vendor/breakpad/src/client/mac/sender/crash_report_sender.uploader.o: $
+    objcxx ../../vendor/breakpad/src/client/mac/sender/uploader.mm
+build obj/vendor/breakpad/src/common/mac/crash_report_sender.GTMLogger.o: $
+    objc ../../vendor/breakpad/src/common/mac/GTMLogger.m
+
+ldflags = -Wl,-export_dynamic -stdlib=libc++ -mmacosx-version-min=10.8 $
+    -isysroot $
+    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk $
+    -arch x86_64 -L.
+libs = -framework AppKit -framework Foundation -framework SystemConfiguration
+build crash_report_sender.app/Contents/MacOS/crash_report_sender: link $
+    obj/vendor/breakpad/src/common/mac/crash_report_sender.HTTPMultipartUpload.o $
+    obj/vendor/breakpad/src/client/mac/sender/crash_report_sender.crash_report_sender.o $
+    obj/vendor/breakpad/src/client/mac/sender/crash_report_sender.uploader.o $
+    obj/vendor/breakpad/src/common/mac/crash_report_sender.GTMLogger.o
+  ld = $ldxx
+build crash_report_sender.app: stamp $
+    crash_report_sender.app/Contents/Resources/English.lproj/Localizable.strings $
+    crash_report_sender.app/Contents/Resources/crash_report_sender.icns $
+    crash_report_sender.app/Contents/Resources/Breakpad.nib $
+    crash_report_sender.app/Contents/Info.plist $
+    crash_report_sender.app/Contents/MacOS/crash_report_sender
+  postbuilds = (export $
+      BUILT_PRODUCTS_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export CONFIGURATION=Release; export $
+      CONTENTS_FOLDER_PATH=crash_report_sender.app/Contents; export $
+      EXECUTABLE_NAME=crash_report_sender; export $
+      EXECUTABLE_PATH=crash_report_sender.app/Contents/MacOS/crash_report_sender; $
+      export FULL_PRODUCT_NAME=crash_report_sender.app; export $
+      INFOPLIST_PATH=crash_report_sender.app/Contents/Info.plist; export $
+      MACH_O_TYPE=mh_execute; export PRODUCT_NAME=crash_report_sender; $
+      export PRODUCT_TYPE=com.apple.product-type.application; export $
+      SDKROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk; $
+      export $
+      SRCROOT=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release/../../vendor/breakpad; $
+      export SOURCE_ROOT="$${SRCROOT}"; export $
+      TARGET_BUILD_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export TEMP_DIR="$${TMPDIR}"; export $
+      UNLOCALIZED_RESOURCES_FOLDER_PATH=crash_report_sender.app/Contents/Resources; $
+      export WRAPPER_NAME=crash_report_sender.app; (cd $
+      ../../vendor/breakpad && dsymutil $
+      ../../out/Release/crash_report_sender.app/Contents/MacOS/crash_report_sender $
+      -o ../../out/Release/crash_report_sender.app.dSYM); G=$$?; ((exit $
+      $$G) || rm -rf crash_report_sender.app) && exit $$G) && 

@@ -1,0 +1,99 @@
+defines = -DHAVE_MACH_O_NLIST_H -DCOMPONENT_BUILD -DGURL_DLL -DSKIA_DLL $
+    -DNDEBUG -DUSING_V8_SHARED -DWEBKIT_DLL $
+    -DSK_SUPPORT_LEGACY_GETTOPDEVICE -DSK_SUPPORT_LEGACY_BITMAP_CONFIG $
+    -DSK_SUPPORT_LEGACY_DEVICE_VIRTUAL_ISOPAQUE $
+    -DSK_SUPPORT_LEGACY_N32_NAME -DSK_SUPPORT_LEGACY_SETCONFIG $
+    -DSK_IGNORE_ETC1_SUPPORT -DSK_IGNORE_GPU_DITHER
+includes = -I../../vendor/breakpad/src -I../../vendor/breakpad/src/common/mac
+cflags = -isysroot $
+    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk $
+    -funsigned-char -fasm-blocks -mpascal-strings -Os -gdwarf-2 -Werror $
+    -mmacosx-version-min=10.8 -arch x86_64 -Wall -Wextra $
+    -Wno-unused-parameter -Wno-missing-field-initializers $
+    -Wno-deprecated-declarations -Wno-deprecated-register $
+    -Wno-unused-private-field -Wno-unused-function
+cflags_c = -std=c99 -fcolor-diagnostics
+cflags_cc = -std=c++11 -stdlib=libc++ -fno-exceptions -fcolor-diagnostics
+cflags_objc = $cflags_c
+cflags_objcc = $cflags_cc
+
+build obj/vendor/breakpad/src/common/dwarf/dump_syms.bytereader.o: cxx $
+    ../../vendor/breakpad/src/common/dwarf/bytereader.cc
+build obj/vendor/breakpad/src/common/dump_syms.dwarf_cfi_to_module.o: cxx $
+    ../../vendor/breakpad/src/common/dwarf_cfi_to_module.cc
+build obj/vendor/breakpad/src/common/dump_syms.dwarf_cu_to_module.o: cxx $
+    ../../vendor/breakpad/src/common/dwarf_cu_to_module.cc
+build obj/vendor/breakpad/src/common/dwarf/dump_syms.dwarf2diehandler.o: $
+    cxx ../../vendor/breakpad/src/common/dwarf/dwarf2diehandler.cc
+build obj/vendor/breakpad/src/common/dwarf/dump_syms.dwarf2reader.o: cxx $
+    ../../vendor/breakpad/src/common/dwarf/dwarf2reader.cc
+build obj/vendor/breakpad/src/common/dump_syms.dwarf_line_to_module.o: cxx $
+    ../../vendor/breakpad/src/common/dwarf_line_to_module.cc
+build obj/vendor/breakpad/src/common/dump_syms.language.o: cxx $
+    ../../vendor/breakpad/src/common/language.cc
+build obj/vendor/breakpad/src/common/mac/dump_syms.arch_utilities.o: cxx $
+    ../../vendor/breakpad/src/common/mac/arch_utilities.cc
+build obj/vendor/breakpad/src/common/mac/dump_syms.dump_syms.o: objcxx $
+    ../../vendor/breakpad/src/common/mac/dump_syms.mm
+build obj/vendor/breakpad/src/common/mac/dump_syms.file_id.o: cxx $
+    ../../vendor/breakpad/src/common/mac/file_id.cc
+build obj/vendor/breakpad/src/common/mac/dump_syms.macho_id.o: cxx $
+    ../../vendor/breakpad/src/common/mac/macho_id.cc
+build obj/vendor/breakpad/src/common/mac/dump_syms.macho_reader.o: cxx $
+    ../../vendor/breakpad/src/common/mac/macho_reader.cc
+build obj/vendor/breakpad/src/common/mac/dump_syms.macho_utilities.o: cxx $
+    ../../vendor/breakpad/src/common/mac/macho_utilities.cc
+build obj/vendor/breakpad/src/common/mac/dump_syms.macho_walker.o: cxx $
+    ../../vendor/breakpad/src/common/mac/macho_walker.cc
+build obj/vendor/breakpad/src/common/dump_syms.md5.o: cxx $
+    ../../vendor/breakpad/src/common/md5.cc
+build obj/vendor/breakpad/src/common/dump_syms.module.o: cxx $
+    ../../vendor/breakpad/src/common/module.cc
+build obj/vendor/breakpad/src/common/dump_syms.stabs_reader.o: cxx $
+    ../../vendor/breakpad/src/common/stabs_reader.cc
+build obj/vendor/breakpad/src/common/dump_syms.stabs_to_module.o: cxx $
+    ../../vendor/breakpad/src/common/stabs_to_module.cc
+build $
+    obj/vendor/breakpad/src/tools/mac/dump_syms/dump_syms.dump_syms_tool.o: $
+    objcxx ../../vendor/breakpad/src/tools/mac/dump_syms/dump_syms_tool.mm
+
+ldflags = -Wl,-export_dynamic -stdlib=libc++ -mmacosx-version-min=10.8 $
+    -isysroot $
+    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk $
+    -arch x86_64 -L.
+libs = -framework Foundation
+build dump_syms: link $
+    obj/vendor/breakpad/src/common/dwarf/dump_syms.bytereader.o $
+    obj/vendor/breakpad/src/common/dump_syms.dwarf_cfi_to_module.o $
+    obj/vendor/breakpad/src/common/dump_syms.dwarf_cu_to_module.o $
+    obj/vendor/breakpad/src/common/dwarf/dump_syms.dwarf2diehandler.o $
+    obj/vendor/breakpad/src/common/dwarf/dump_syms.dwarf2reader.o $
+    obj/vendor/breakpad/src/common/dump_syms.dwarf_line_to_module.o $
+    obj/vendor/breakpad/src/common/dump_syms.language.o $
+    obj/vendor/breakpad/src/common/mac/dump_syms.arch_utilities.o $
+    obj/vendor/breakpad/src/common/mac/dump_syms.dump_syms.o $
+    obj/vendor/breakpad/src/common/mac/dump_syms.file_id.o $
+    obj/vendor/breakpad/src/common/mac/dump_syms.macho_id.o $
+    obj/vendor/breakpad/src/common/mac/dump_syms.macho_reader.o $
+    obj/vendor/breakpad/src/common/mac/dump_syms.macho_utilities.o $
+    obj/vendor/breakpad/src/common/mac/dump_syms.macho_walker.o $
+    obj/vendor/breakpad/src/common/dump_syms.md5.o $
+    obj/vendor/breakpad/src/common/dump_syms.module.o $
+    obj/vendor/breakpad/src/common/dump_syms.stabs_reader.o $
+    obj/vendor/breakpad/src/common/dump_syms.stabs_to_module.o $
+    obj/vendor/breakpad/src/tools/mac/dump_syms/dump_syms.dump_syms_tool.o
+  ld = $ldxx
+  postbuilds = $ && (export $
+      BUILT_PRODUCTS_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export CONFIGURATION=Release; export EXECUTABLE_NAME=dump_syms; $
+      export EXECUTABLE_PATH=dump_syms; export FULL_PRODUCT_NAME=dump_syms; $
+      export PRODUCT_NAME=dump_syms; export $
+      PRODUCT_TYPE=com.apple.product-type.tool; export $
+      SDKROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk; $
+      export $
+      SRCROOT=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release/../../vendor/breakpad; $
+      export SOURCE_ROOT="$${SRCROOT}"; export $
+      TARGET_BUILD_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export TEMP_DIR="$${TMPDIR}"; (cd ../../vendor/breakpad && dsymutil $
+      ../../out/Release/dump_syms -o ../../out/Release/dump_syms.dSYM); $
+      G=$$?; ((exit $$G) || rm -rf dump_syms) && exit $$G)

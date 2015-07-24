@@ -1,0 +1,29 @@
+build obj/ipython-desktop_dump_symbols.actions_depends.stamp: stamp $
+    IPythonDesktop.app dump_syms
+
+rule $
+    ipython_desktop_dump_symbols_target_Dump_Symbols_538d3c48fc309cb9dc3b8635de91ea9f
+  command = cd ../../; export $
+      BUILT_PRODUCTS_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export CONFIGURATION=Release; export $
+      PRODUCT_NAME=ipython-desktop_dump_symbols; export $
+      SDKROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk; $
+      export $
+      SRCROOT=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release/../../; $
+      export SOURCE_ROOT="$${SRCROOT}"; export $
+      TARGET_BUILD_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export TEMP_DIR="$${TMPDIR}";python $
+      tools/posix/generate_breakpad_symbols.py "--build-dir=out/Release" $
+      "--binary=out/Release/IPythonDesktop.app/Contents/MacOS/IPythonDesktop" $
+      "--symbols-dir=out/Release/Atom-Shell.breakpad.syms" $
+      "--libchromiumcontent-dir=vendor/brightray/vendor/download/libchromiumcontent/Release" $
+      --clear "--jobs=16"
+  description = ACTION ipython-desktop_dump_symbols: Dump $
+      Symbols_538d3c48fc309cb9dc3b8635de91ea9f
+  restat = 1
+
+build Atom-Shell.breakpad.syms: $
+    ipython_desktop_dump_symbols_target_Dump_Symbols_538d3c48fc309cb9dc3b8635de91ea9f $
+    IPythonDesktop.app/Contents/MacOS/IPythonDesktop || $
+    obj/ipython-desktop_dump_symbols.actions_depends.stamp
+

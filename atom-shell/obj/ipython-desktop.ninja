@@ -1,0 +1,158 @@
+build obj/ipython-desktop.actions_depends.stamp: stamp $
+    obj/compile_coffee.actions_rules_copies.stamp $
+    IPythonDesktop$ Framework.framework IPythonDesktop$ Helper.app
+
+build obj/ipython-desktop.compile_depends.stamp: stamp $
+    obj/compile_coffee.actions_rules_copies.stamp $
+    obj/ipython-desktop_framework.actions_rules_copies.stamp $
+    obj/ipython-desktop_framework.actions_rules_copies.stamp
+
+build IPythonDesktop.app/Contents/Frameworks/IPythonDesktop$ Helper.app: $
+    copy IPythonDesktop$ Helper.app || $
+    obj/ipython-desktop.actions_depends.stamp
+build $
+    IPythonDesktop.app/Contents/Frameworks/IPythonDesktop$ Framework.framework: $
+    copy IPythonDesktop$ Framework.framework || $
+    obj/ipython-desktop.actions_depends.stamp
+build IPythonDesktop.app/Contents/Frameworks/Squirrel.framework: copy $
+    ../../external_binaries/Squirrel.framework || $
+    obj/ipython-desktop.actions_depends.stamp
+build IPythonDesktop.app/Contents/Frameworks/ReactiveCocoa.framework: copy $
+    ../../external_binaries/ReactiveCocoa.framework || $
+    obj/ipython-desktop.actions_depends.stamp
+build IPythonDesktop.app/Contents/Frameworks/Mantle.framework: copy $
+    ../../external_binaries/Mantle.framework || $
+    obj/ipython-desktop.actions_depends.stamp
+build IPythonDesktop.app/Contents/Resources/default_app: copy $
+    ../../atom/browser/default_app || $
+    obj/ipython-desktop.actions_depends.stamp
+build obj/ipython-desktop.actions_rules_copies.stamp: stamp $
+    IPythonDesktop.app/Contents/Frameworks/IPythonDesktop$ Helper.app $
+    IPythonDesktop.app/Contents/Frameworks/IPythonDesktop$ Framework.framework $
+    IPythonDesktop.app/Contents/Frameworks/Squirrel.framework $
+    IPythonDesktop.app/Contents/Frameworks/ReactiveCocoa.framework $
+    IPythonDesktop.app/Contents/Frameworks/Mantle.framework $
+    IPythonDesktop.app/Contents/Resources/default_app
+
+build IPythonDesktop.app/Contents/Resources/atom.icns: mac_tool $
+    ../../atom/browser/resources/mac/atom.icns
+  mactool_cmd = copy-bundle-resource
+build IPythonDesktop.app/Contents/Info.plist: copy_infoplist $
+    ../../atom/browser/resources/mac/Info.plist
+  env = export ALWAYS_SEARCH_USER_PATHS=NO; export ARCHS=x86_64; export $
+      BUILT_PRODUCTS_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export CC=/usr/bin/clang; export CLANG_CXX_LANGUAGE_STANDARD=c++11; $
+      export CLANG_CXX_LIBRARY=libc++; export COMBINE_HIDPI_IMAGES=YES; $
+      export CONFIGURATION=Release; export $
+      CONTENTS_FOLDER_PATH=IPythonDesktop.app/Contents; export $
+      COPY_PHASE_STRIP=NO; export DEBUG_INFORMATION_FORMAT=dwarf-with-dsym; $
+      export EXECUTABLE_NAME=IPythonDesktop; export $
+      EXECUTABLE_PATH=IPythonDesktop.app/Contents/MacOS/IPythonDesktop; $
+      export FULL_PRODUCT_NAME=IPythonDesktop.app; export $
+      GCC_C_LANGUAGE_STANDARD=c99; export GCC_ENABLE_CPP_EXCEPTIONS=NO; $
+      export GCC_ENABLE_CPP_RTTI=NO; export GCC_OPTIMIZATION_LEVEL=0; $
+      export GCC_TREAT_WARNINGS_AS_ERRORS=YES; export $
+      INFOPLIST_FILE=atom/browser/resources/mac/Info.plist; export $
+      INFOPLIST_PATH=IPythonDesktop.app/Contents/Info.plist; export $
+      LDPLUSPLUS=/usr/bin/clang++; export $
+      LD_RUNPATH_SEARCH_PATHS=@executable_path/../Frameworks; export $
+      MACH_O_TYPE=mh_execute; export MACOSX_DEPLOYMENT_TARGET=10.8; export $
+      OTHER_CFLAGS=-fcolor-diagnostics; export $
+      OTHER_LDFLAGS="-stdlib=libc++"; export PRODUCT_NAME=IPythonDesktop; $
+      export PRODUCT_TYPE=com.apple.product-type.application; export $
+      RUN_CLANG_STATIC_ANALYZER=YES; export $
+      SDKROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk; $
+      export $
+      SRCROOT=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release/../../; $
+      export SOURCE_ROOT="$${SRCROOT}"; export $
+      TARGET_BUILD_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export TEMP_DIR="$${TMPDIR}"; export $
+      UNLOCALIZED_RESOURCES_FOLDER_PATH=IPythonDesktop.app/Contents/Resources; $
+      export USE_HEADER_MAP=NO; export WARNING_CFLAGS="-Wall -Wextra $
+      -Wno-unused-parameter -Wno-missing-field-initializers"; export $
+      WRAPPER_NAME=IPythonDesktop.app;
+  keys = '{"DTXcode": "0611", "BuildMachineOSBuild": "14C109", "DTSDKName": $
+      "macosx", "DTXcodeBuild": "6A2008a", "DTSDKBuild": "14A382"}'
+defines = -DCOMPONENT_BUILD -DGURL_DLL -DSKIA_DLL -DNDEBUG $
+    -DUSING_V8_SHARED -DWEBKIT_DLL -DSK_SUPPORT_LEGACY_GETTOPDEVICE $
+    -DSK_SUPPORT_LEGACY_BITMAP_CONFIG $
+    -DSK_SUPPORT_LEGACY_DEVICE_VIRTUAL_ISOPAQUE $
+    -DSK_SUPPORT_LEGACY_N32_NAME -DSK_SUPPORT_LEGACY_SETCONFIG $
+    -DSK_IGNORE_ETC1_SUPPORT -DSK_IGNORE_GPU_DITHER
+includes = -I../.. -I../../vendor/brightray -I../../vendor $
+    -I../../vendor/brightray/vendor/download/libchromiumcontent/src $
+    -I../../vendor/brightray/vendor/download/libchromiumcontent/src/skia/config $
+    -I../../vendor/brightray/vendor/download/libchromiumcontent/src/third_party/skia/include/core $
+    -I../../vendor/brightray/vendor/download/libchromiumcontent/src/third_party/icu/source/common $
+    -I../../vendor/brightray/vendor/download/libchromiumcontent/src/third_party/WebKit $
+    -I../../vendor/brightray/vendor/download/libchromiumcontent/Release/gen
+cflags = -isysroot $
+    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk $
+    -fasm-blocks -mpascal-strings -Os -gdwarf-2 -Werror $
+    -mmacosx-version-min=10.8 -arch x86_64 -Wall -Wextra $
+    -Wno-unused-parameter -Wno-missing-field-initializers $
+    -F/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/external_binaries
+cflags_c = -std=c99 -fcolor-diagnostics
+cflags_cc = -std=c++11 -stdlib=libc++ -fno-rtti -fno-exceptions $
+    -fcolor-diagnostics
+cflags_objc = $cflags_c
+cflags_objcc = $cflags_cc
+
+build obj/atom/app/ipython-desktop.atom_main.o: cxx $
+    ../../atom/app/atom_main.cc || $
+    obj/ipython-desktop.actions_rules_copies.stamp
+
+ldflags = -Wl,-export_dynamic -stdlib=libc++ -mmacosx-version-min=10.8 $
+    -isysroot $
+    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk $
+    -arch x86_64 -L. -Wl,-rpath,@executable_path/../Frameworks $
+    -F/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/external_binaries
+libs = -framework Carbon -framework QuartzCore -framework Squirrel $
+    -framework ReactiveCocoa -framework Mantle
+build IPythonDesktop.app/Contents/MacOS/IPythonDesktop: link $
+    obj/atom/app/ipython-desktop.atom_main.o $
+    IPythonDesktop$ Framework.framework/Versions/A/IPythonDesktop$ Framework $
+    | obj/compile_coffee.actions_rules_copies.stamp $
+    IPythonDesktop$ Framework.framework IPythonDesktop$ Helper.app
+  ld = $ldxx
+build IPythonDesktop.app: stamp $
+    IPythonDesktop.app/Contents/Frameworks/IPythonDesktop$ Helper.app $
+    IPythonDesktop.app/Contents/Frameworks/IPythonDesktop$ Framework.framework $
+    IPythonDesktop.app/Contents/Frameworks/Squirrel.framework $
+    IPythonDesktop.app/Contents/Frameworks/ReactiveCocoa.framework $
+    IPythonDesktop.app/Contents/Frameworks/Mantle.framework $
+    IPythonDesktop.app/Contents/Resources/default_app $
+    IPythonDesktop.app/Contents/Resources/atom.icns $
+    IPythonDesktop.app/Contents/Info.plist $
+    IPythonDesktop.app/Contents/MacOS/IPythonDesktop
+  postbuilds = (export $
+      BUILT_PRODUCTS_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export CONFIGURATION=Release; export $
+      CONTENTS_FOLDER_PATH=IPythonDesktop.app/Contents; export $
+      EXECUTABLE_NAME=IPythonDesktop; export $
+      EXECUTABLE_PATH=IPythonDesktop.app/Contents/MacOS/IPythonDesktop; $
+      export FULL_PRODUCT_NAME=IPythonDesktop.app; export $
+      INFOPLIST_PATH=IPythonDesktop.app/Contents/Info.plist; export $
+      MACH_O_TYPE=mh_execute; export PRODUCT_NAME=IPythonDesktop; export $
+      PRODUCT_TYPE=com.apple.product-type.application; export $
+      SDKROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk; $
+      export $
+      SRCROOT=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release/../../; $
+      export SOURCE_ROOT="$${SRCROOT}"; export $
+      TARGET_BUILD_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export TEMP_DIR="$${TMPDIR}"; export $
+      UNLOCALIZED_RESOURCES_FOLDER_PATH=IPythonDesktop.app/Contents/Resources; $
+      export WRAPPER_NAME=IPythonDesktop.app; (cd ../../ && dsymutil $
+      out/Release/IPythonDesktop.app/Contents/MacOS/IPythonDesktop -o $
+      out/Release/IPythonDesktop.app.dSYM && $
+      vendor/brightray/tools/mac/make_more_helpers.sh Frameworks $
+      IPythonDesktop && tools/mac/make_locale_dirs.sh am.lproj ar.lproj $
+      bg.lproj bn.lproj ca.lproj cs.lproj da.lproj de.lproj el.lproj $
+      en_GB.lproj en.lproj es_419.lproj es.lproj et.lproj fa.lproj fi.lproj $
+      fil.lproj fr.lproj gu.lproj he.lproj hi.lproj hr.lproj hu.lproj $
+      id.lproj it.lproj ja.lproj kn.lproj ko.lproj lt.lproj lv.lproj $
+      ml.lproj mr.lproj ms.lproj nb.lproj nl.lproj pl.lproj pt_BR.lproj $
+      pt_PT.lproj ro.lproj ru.lproj sk.lproj sl.lproj sr.lproj sv.lproj $
+      sw.lproj ta.lproj te.lproj th.lproj tr.lproj uk.lproj vi.lproj $
+      zh_CN.lproj zh_TW.lproj); G=$$?; ((exit $$G) || rm -rf $
+      IPythonDesktop.app) && exit $$G) && 

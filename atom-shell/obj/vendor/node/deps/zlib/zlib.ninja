@@ -1,0 +1,67 @@
+defines = -DZ_HAVE_UNISTD_H -DUSE_FILE32API -DCOMPONENT_BUILD -DGURL_DLL $
+    -DSKIA_DLL -DNDEBUG -DUSING_V8_SHARED -DWEBKIT_DLL $
+    -DSK_SUPPORT_LEGACY_GETTOPDEVICE -DSK_SUPPORT_LEGACY_BITMAP_CONFIG $
+    -DSK_SUPPORT_LEGACY_DEVICE_VIRTUAL_ISOPAQUE $
+    -DSK_SUPPORT_LEGACY_N32_NAME -DSK_SUPPORT_LEGACY_SETCONFIG $
+    -DSK_IGNORE_ETC1_SUPPORT -DSK_IGNORE_GPU_DITHER
+includes = -I../../vendor/node/deps/zlib
+cflags = -isysroot $
+    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk $
+    -fasm-blocks -mpascal-strings -Os -gdwarf-2 -mmacosx-version-min=10.8 $
+    -arch x86_64 -Wall -Wextra -Wno-unused-parameter $
+    -Wno-missing-field-initializers -Wno-parentheses-equality $
+    -Wno-unused-function -Wno-sometimes-uninitialized -Wno-pointer-sign $
+    -Wno-string-plus-int -Wno-unused-variable -Wno-deprecated-declarations $
+    -Wno-return-type -Wno-gnu-folding-constant
+cflags_c = -std=c99 -fcolor-diagnostics
+cflags_cc = -std=c++11 -stdlib=libc++ -fno-rtti -fno-exceptions $
+    -fcolor-diagnostics
+cflags_objc = $cflags_c
+cflags_objcc = $cflags_cc
+
+build obj/vendor/node/deps/zlib/zlib.adler32.o: cc $
+    ../../vendor/node/deps/zlib/adler32.c
+build obj/vendor/node/deps/zlib/zlib.compress.o: cc $
+    ../../vendor/node/deps/zlib/compress.c
+build obj/vendor/node/deps/zlib/zlib.crc32.o: cc $
+    ../../vendor/node/deps/zlib/crc32.c
+build obj/vendor/node/deps/zlib/zlib.deflate.o: cc $
+    ../../vendor/node/deps/zlib/deflate.c
+build obj/vendor/node/deps/zlib/zlib.gzclose.o: cc $
+    ../../vendor/node/deps/zlib/gzclose.c
+build obj/vendor/node/deps/zlib/zlib.gzlib.o: cc $
+    ../../vendor/node/deps/zlib/gzlib.c
+build obj/vendor/node/deps/zlib/zlib.gzread.o: cc $
+    ../../vendor/node/deps/zlib/gzread.c
+build obj/vendor/node/deps/zlib/zlib.gzwrite.o: cc $
+    ../../vendor/node/deps/zlib/gzwrite.c
+build obj/vendor/node/deps/zlib/zlib.infback.o: cc $
+    ../../vendor/node/deps/zlib/infback.c
+build obj/vendor/node/deps/zlib/zlib.inffast.o: cc $
+    ../../vendor/node/deps/zlib/inffast.c
+build obj/vendor/node/deps/zlib/zlib.inflate.o: cc $
+    ../../vendor/node/deps/zlib/inflate.c
+build obj/vendor/node/deps/zlib/zlib.inftrees.o: cc $
+    ../../vendor/node/deps/zlib/inftrees.c
+build obj/vendor/node/deps/zlib/zlib.trees.o: cc $
+    ../../vendor/node/deps/zlib/trees.c
+build obj/vendor/node/deps/zlib/zlib.uncompr.o: cc $
+    ../../vendor/node/deps/zlib/uncompr.c
+build obj/vendor/node/deps/zlib/zlib.zutil.o: cc $
+    ../../vendor/node/deps/zlib/zutil.c
+
+build libzlib.a: alink obj/vendor/node/deps/zlib/zlib.adler32.o $
+    obj/vendor/node/deps/zlib/zlib.compress.o $
+    obj/vendor/node/deps/zlib/zlib.crc32.o $
+    obj/vendor/node/deps/zlib/zlib.deflate.o $
+    obj/vendor/node/deps/zlib/zlib.gzclose.o $
+    obj/vendor/node/deps/zlib/zlib.gzlib.o $
+    obj/vendor/node/deps/zlib/zlib.gzread.o $
+    obj/vendor/node/deps/zlib/zlib.gzwrite.o $
+    obj/vendor/node/deps/zlib/zlib.infback.o $
+    obj/vendor/node/deps/zlib/zlib.inffast.o $
+    obj/vendor/node/deps/zlib/zlib.inflate.o $
+    obj/vendor/node/deps/zlib/zlib.inftrees.o $
+    obj/vendor/node/deps/zlib/zlib.trees.o $
+    obj/vendor/node/deps/zlib/zlib.uncompr.o $
+    obj/vendor/node/deps/zlib/zlib.zutil.o

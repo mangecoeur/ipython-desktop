@@ -1,0 +1,22 @@
+rule $
+    copy_chromedriver_target_Copy_ChromeDriver_Binary_01521c25ea0967c0108a3458a281e1bd
+  command = cd ../../; export $
+      BUILT_PRODUCTS_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export CONFIGURATION=Release; export PRODUCT_NAME=copy_chromedriver; $
+      export $
+      SDKROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk; $
+      export $
+      SRCROOT=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release/../../; $
+      export SOURCE_ROOT="$${SRCROOT}"; export $
+      TARGET_BUILD_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export TEMP_DIR="$${TMPDIR}";python tools/copy_binary.py $
+      vendor/brightray/vendor/download/libchromiumcontent/Release/chromedriver $
+      out/Release/chromedriver
+  description = ACTION copy_chromedriver: Copy ChromeDriver $
+      Binary_01521c25ea0967c0108a3458a281e1bd
+  restat = 1
+
+build chromedriver: $
+    copy_chromedriver_target_Copy_ChromeDriver_Binary_01521c25ea0967c0108a3458a281e1bd $
+    ../../vendor/brightray/vendor/download/libchromiumcontent/Release/chromedriver
+

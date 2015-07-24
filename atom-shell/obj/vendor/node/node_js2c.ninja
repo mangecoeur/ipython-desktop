@@ -1,0 +1,67 @@
+rule node_js2c_target_node_js2c_53550f1b383f372d1a82a7c39436821e
+  command = cd ../../vendor/node; export $
+      BUILT_PRODUCTS_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export CONFIGURATION=Release; export PRODUCT_NAME=node_js2c; export $
+      SDKROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk; $
+      export $
+      SRCROOT=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release/../../vendor/node; $
+      export SOURCE_ROOT="$${SRCROOT}"; export $
+      TARGET_BUILD_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export TEMP_DIR="$${TMPDIR}";python tools/js2c.py $
+      ../../out/Release/gen/node_natives.h src/node.js lib/_debug_agent.js $
+      lib/_debugger.js lib/_linklist.js lib/assert.js lib/buffer.js $
+      lib/child_process.js lib/console.js lib/constants.js lib/crypto.js $
+      lib/cluster.js lib/dgram.js lib/dns.js lib/domain.js lib/events.js $
+      lib/freelist.js lib/fs.js lib/http.js lib/_http_agent.js $
+      lib/_http_client.js lib/_http_common.js lib/_http_incoming.js $
+      lib/_http_outgoing.js lib/_http_server.js lib/https.js lib/module.js $
+      lib/net.js lib/os.js lib/path.js lib/process.js lib/punycode.js $
+      lib/querystring.js lib/readline.js lib/repl.js lib/smalloc.js $
+      lib/stream.js lib/_stream_readable.js lib/_stream_writable.js $
+      lib/_stream_duplex.js lib/_stream_transform.js $
+      lib/_stream_passthrough.js lib/string_decoder.js lib/sys.js $
+      lib/timers.js lib/tls.js lib/_tls_common.js lib/_tls_legacy.js $
+      lib/_tls_wrap.js lib/tty.js lib/url.js lib/util.js lib/v8.js $
+      lib/vm.js lib/zlib.js ./config.gypi src/notrace_macros.py $
+      src/perfctr_macros.py
+  description = ACTION node_js2c: node_js2c_53550f1b383f372d1a82a7c39436821e
+  restat = 1
+
+build gen/node_natives.h: $
+    node_js2c_target_node_js2c_53550f1b383f372d1a82a7c39436821e $
+    ../../vendor/node/src/node.js ../../vendor/node/lib/_debug_agent.js $
+    ../../vendor/node/lib/_debugger.js ../../vendor/node/lib/_linklist.js $
+    ../../vendor/node/lib/assert.js ../../vendor/node/lib/buffer.js $
+    ../../vendor/node/lib/child_process.js ../../vendor/node/lib/console.js $
+    ../../vendor/node/lib/constants.js ../../vendor/node/lib/crypto.js $
+    ../../vendor/node/lib/cluster.js ../../vendor/node/lib/dgram.js $
+    ../../vendor/node/lib/dns.js ../../vendor/node/lib/domain.js $
+    ../../vendor/node/lib/events.js ../../vendor/node/lib/freelist.js $
+    ../../vendor/node/lib/fs.js ../../vendor/node/lib/http.js $
+    ../../vendor/node/lib/_http_agent.js $
+    ../../vendor/node/lib/_http_client.js $
+    ../../vendor/node/lib/_http_common.js $
+    ../../vendor/node/lib/_http_incoming.js $
+    ../../vendor/node/lib/_http_outgoing.js $
+    ../../vendor/node/lib/_http_server.js ../../vendor/node/lib/https.js $
+    ../../vendor/node/lib/module.js ../../vendor/node/lib/net.js $
+    ../../vendor/node/lib/os.js ../../vendor/node/lib/path.js $
+    ../../vendor/node/lib/process.js ../../vendor/node/lib/punycode.js $
+    ../../vendor/node/lib/querystring.js ../../vendor/node/lib/readline.js $
+    ../../vendor/node/lib/repl.js ../../vendor/node/lib/smalloc.js $
+    ../../vendor/node/lib/stream.js $
+    ../../vendor/node/lib/_stream_readable.js $
+    ../../vendor/node/lib/_stream_writable.js $
+    ../../vendor/node/lib/_stream_duplex.js $
+    ../../vendor/node/lib/_stream_transform.js $
+    ../../vendor/node/lib/_stream_passthrough.js $
+    ../../vendor/node/lib/string_decoder.js ../../vendor/node/lib/sys.js $
+    ../../vendor/node/lib/timers.js ../../vendor/node/lib/tls.js $
+    ../../vendor/node/lib/_tls_common.js $
+    ../../vendor/node/lib/_tls_legacy.js ../../vendor/node/lib/_tls_wrap.js $
+    ../../vendor/node/lib/tty.js ../../vendor/node/lib/url.js $
+    ../../vendor/node/lib/util.js ../../vendor/node/lib/v8.js $
+    ../../vendor/node/lib/vm.js ../../vendor/node/lib/zlib.js $
+    ../../vendor/node/config.gypi ../../vendor/node/src/notrace_macros.py $
+    ../../vendor/node/src/perfctr_macros.py
+

@@ -1,0 +1,159 @@
+cc = /usr/bin/clang
+cxx = /usr/bin/clang++
+ld = $cc
+ldxx = $cxx
+ar = ar
+
+pool link_pool
+  depth = 4
+
+rule cc
+  command = $cc -MMD -MF $out.d $defines $includes $cflags $cflags_c $cflags_pch_c -c $in -o $out
+  description = CC $out
+  depfile = $out.d
+  deps = gcc
+rule cc_s
+  command = $cc $defines $includes $cflags $cflags_c $cflags_pch_c -c $in -o $out
+  description = CC $out
+rule cxx
+  command = $cxx -MMD -MF $out.d $defines $includes $cflags $cflags_cc $cflags_pch_cc -c $in -o $out
+  description = CXX $out
+  depfile = $out.d
+  deps = gcc
+rule objc
+  command = $cc -MMD -MF $out.d $defines $includes $cflags $cflags_objc $cflags_pch_objc -c $in -o $out
+  description = OBJC $out
+  depfile = $out.d
+  deps = gcc
+rule objcxx
+  command = $cxx -MMD -MF $out.d $defines $includes $cflags $cflags_objcc $cflags_pch_objcc -c $in -o $out
+  description = OBJCXX $out
+  depfile = $out.d
+  deps = gcc
+rule alink
+  command = rm -f $out && ./gyp-mac-tool filter-libtool libtool $libtool_flags -static -o $out $in$postbuilds
+  description = LIBTOOL-STATIC $out, POSTBUILDS
+rule lipo
+  command = rm -f $out && lipo -create $in -output $out$postbuilds
+  description = LIPO $out, POSTBUILDS
+rule solink
+  command = if [ ! -e $lib -o ! -e $lib.TOC ] || otool -l $lib | grep -q LC_REEXPORT_DYLIB ; then $ld -shared $
+      $ldflags -o $lib @$link_file_list$postbuilds && { otool -l $lib | grep LC_ID_DYLIB -A 5; nm -gP $lib | cut $
+      -f1-2 -d' ' | grep -v U$$; true; } > $lib.TOC; else $ld -shared $ldflags -o $lib @$link_file_list$postbuilds && $
+      { otool -l $lib | grep LC_ID_DYLIB -A 5; nm -gP $lib | cut -f1-2 -d' ' | grep -v U$$; true; } > $lib.tmp && if $
+      ! cmp -s $lib.tmp $lib.TOC; then mv $lib.tmp $lib.TOC ; fi; fi
+  description = SOLINK $lib, POSTBUILDS
+  pool = link_pool
+  restat = 1
+  rspfile = $link_file_list
+  rspfile_content = $in $solibs $libs
+rule solink_notoc
+  command = $ld -shared $ldflags -o $lib @$link_file_list$postbuilds
+  description = SOLINK $lib, POSTBUILDS
+  pool = link_pool
+  restat = 1
+  rspfile = $link_file_list
+  rspfile_content = $in $solibs $libs
+rule solink_module
+  command = if [ ! -e $lib -o ! -e $lib.TOC ] || otool -l $lib | grep -q LC_REEXPORT_DYLIB ; then $ld -bundle $
+      $ldflags -o $lib @$link_file_list$postbuilds && { otool -l $lib | grep LC_ID_DYLIB -A 5; nm -gP $lib | cut $
+      -f1-2 -d' ' | grep -v U$$; true; } > $lib.TOC; else $ld -bundle $ldflags -o $lib @$link_file_list$postbuilds && $
+      { otool -l $lib | grep LC_ID_DYLIB -A 5; nm -gP $lib | cut -f1-2 -d' ' | grep -v U$$; true; } > $lib.tmp && if $
+      ! cmp -s $lib.tmp $lib.TOC; then mv $lib.tmp $lib.TOC ; fi; fi
+  description = SOLINK(module) $lib, POSTBUILDS
+  pool = link_pool
+  restat = 1
+  rspfile = $link_file_list
+  rspfile_content = $in $solibs $libs
+rule solink_module_notoc
+  command = $ld -bundle $ldflags -o $lib @$link_file_list$postbuilds
+  description = SOLINK(module) $lib, POSTBUILDS
+  pool = link_pool
+  restat = 1
+  rspfile = $link_file_list
+  rspfile_content = $in $solibs $libs
+rule link
+  command = $ld $ldflags -o $out $in $solibs $libs$postbuilds
+  description = LINK $out, POSTBUILDS
+  pool = link_pool
+rule preprocess_infoplist
+  command = $cc -E -P -Wno-trigraphs -x c $defines $in -o $out && plutil -convert xml1 $out $out
+  description = PREPROCESS INFOPLIST $out
+rule copy_infoplist
+  command = $env ./gyp-mac-tool copy-info-plist $in $out $keys
+  description = COPY INFOPLIST $in
+rule mac_tool
+  command = $env ./gyp-mac-tool $mactool_cmd $in $out
+  description = MACTOOL $mactool_cmd $in
+rule package_framework
+  command = ./gyp-mac-tool package-framework $out $version$postbuilds && touch $out
+  description = PACKAGE FRAMEWORK $out, POSTBUILDS
+rule stamp
+  command = ${postbuilds}touch $out
+  description = STAMP $out
+rule copy
+  command = ln -f $in $out 2>/dev/null || (rm -rf $out && cp -af $in $out)
+  description = COPY $in $out
+
+subninja obj/copy_chromedriver.ninja
+subninja obj/vendor/node/deps/zlib/zlib.ninja
+subninja obj/vendor/breakpad/minidump_dump.ninja
+subninja obj/vendor/brightray/brightray.ninja
+subninja obj/vendor/node/deps/http_parser/http_parser_strict.ninja
+subninja obj/vendor/node/deps/openssl/openssl.ninja
+subninja obj/vendor/breakpad/breakpad_utilities.ninja
+subninja obj/vendor/node/deps/http_parser/http_parser.ninja
+subninja obj/vendor/breakpad/crash_report_sender.ninja
+subninja obj/vendor/node/deps/uv/libuv.ninja
+subninja obj/atom_coffee2c.ninja
+subninja obj/vendor/node/deps/http_parser/test-nonstrict.ninja
+subninja obj/vendor/breakpad/dump_syms.ninja
+subninja obj/vendor/node/deps/cares/cares.ninja
+subninja obj/vendor/breakpad/symupload.ninja
+subninja obj/vendor/breakpad/stackwalk_common.ninja
+subninja obj/compile_coffee.ninja
+subninja obj/vendor/node/deps/http_parser/test-strict.ninja
+subninja obj/vendor/node/deps/openssl/openssl-cli.ninja
+subninja obj/vendor/node/node_js2c.ninja
+subninja obj/vendor/breakpad/Inspector.ninja
+subninja obj/vendor/breakpad/microdump_stackwalk.ninja
+subninja obj/vendor/node/deps/uv/run-benchmarks.ninja
+subninja obj/vendor/node/deps/uv/run-tests.ninja
+subninja obj/vendor/breakpad/minidump_stackwalk.ninja
+subninja obj/vendor/node/node_lib.ninja
+subninja obj/vendor/breakpad/breakpad.ninja
+subninja obj/vendor/node/iojs.ninja
+subninja obj/ipython-desktop_lib.ninja
+subninja obj/ipython-desktop_framework.ninja
+subninja obj/ipython-desktop_helper.ninja
+subninja obj/ipython-desktop.ninja
+subninja obj/ipython-desktop_dump_symbols.ninja
+
+# Short names for targets.
+build cares: phony libcares.a
+build breakpad: phony libbreakpad.a
+build breakpad_utilities: phony libbreakpad_utilities.a
+build node_lib: phony libnode_lib.a
+build ipython-desktop_helper: phony IPythonDesktop$ Helper.app
+build zlib: phony libzlib.a
+build ipython-desktop_lib: phony libipython-desktop_lib.a
+build openssl: phony libopenssl.a
+build node_js2c: phony gen/node_natives.h
+build copy_chromedriver: phony chromedriver
+build ipython-desktop_framework: phony IPythonDesktop$ Framework.framework
+build brightray: phony libbrightray.a
+build ipython-desktop: phony IPythonDesktop.app
+build ipython-desktop_dump_symbols: phony Atom-Shell.breakpad.syms
+build http_parser_strict: phony libhttp_parser_strict.a
+build stackwalk_common: phony libstackwalk_common.a
+build compile_coffee: phony obj/compile_coffee.actions_rules_copies.stamp
+build crash_report_sender: phony crash_report_sender.app
+build atom_coffee2c: phony gen/atom_natives.h
+build libuv: phony libuv.a
+build http_parser: phony libhttp_parser.a
+
+build all: phony libzlib.a dump_syms libipython-desktop_lib.a IPythonDesktop$ Helper.app libbrightray.a libcares.a $
+    libhttp_parser.a obj/compile_coffee.actions_rules_copies.stamp libbreakpad_utilities.a $
+    IPythonDesktop$ Framework.framework crash_report_sender.app chromedriver gen/node_natives.h libuv.a $
+    gen/atom_natives.h Inspector libbreakpad.a IPythonDesktop.app Atom-Shell.breakpad.syms libopenssl.a libnode_lib.a
+default all

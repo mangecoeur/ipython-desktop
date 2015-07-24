@@ -1,0 +1,55 @@
+defines = -DBPLOG_MINIMUM_SEVERITY=SEVERITY_ERROR -DCOMPONENT_BUILD $
+    -DGURL_DLL -DSKIA_DLL -DNDEBUG -DUSING_V8_SHARED -DWEBKIT_DLL $
+    -DSK_SUPPORT_LEGACY_GETTOPDEVICE -DSK_SUPPORT_LEGACY_BITMAP_CONFIG $
+    -DSK_SUPPORT_LEGACY_DEVICE_VIRTUAL_ISOPAQUE $
+    -DSK_SUPPORT_LEGACY_N32_NAME -DSK_SUPPORT_LEGACY_SETCONFIG $
+    -DSK_IGNORE_ETC1_SUPPORT -DSK_IGNORE_GPU_DITHER
+includes = -I../../vendor/breakpad/src -I../../vendor/breakpad/src/third_party
+cflags = -isysroot $
+    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk $
+    -fasm-blocks -mpascal-strings -Os -gdwarf-2 -Werror $
+    -mmacosx-version-min=10.8 -arch x86_64 -Wall -Wextra $
+    -Wno-unused-parameter -Wno-missing-field-initializers
+cflags_c = -std=c99 -fcolor-diagnostics
+cflags_cc = -std=c++11 -stdlib=libc++ -fno-rtti -fno-exceptions $
+    -fcolor-diagnostics
+cflags_objc = $cflags_c
+cflags_objcc = $cflags_cc
+
+build obj/vendor/breakpad/src/processor/microdump_stackwalk.microdump.o: $
+    cxx ../../vendor/breakpad/src/processor/microdump.cc
+build $
+    obj/vendor/breakpad/src/processor/microdump_stackwalk.microdump_processor.o: $
+    cxx ../../vendor/breakpad/src/processor/microdump_processor.cc
+build $
+    obj/vendor/breakpad/src/processor/microdump_stackwalk.microdump_stackwalk.o: $
+    cxx ../../vendor/breakpad/src/processor/microdump_stackwalk.cc
+
+ldflags = -Wl,-export_dynamic -stdlib=libc++ -mmacosx-version-min=10.8 $
+    -isysroot $
+    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk $
+    -arch x86_64 -L.
+libs = 
+build microdump_stackwalk: link $
+    obj/vendor/breakpad/src/processor/microdump_stackwalk.microdump.o $
+    obj/vendor/breakpad/src/processor/microdump_stackwalk.microdump_processor.o $
+    obj/vendor/breakpad/src/processor/microdump_stackwalk.microdump_stackwalk.o $
+    libstackwalk_common.a
+  ld = $ldxx
+  postbuilds = $ && (export $
+      BUILT_PRODUCTS_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export CONFIGURATION=Release; export $
+      EXECUTABLE_NAME=microdump_stackwalk; export $
+      EXECUTABLE_PATH=microdump_stackwalk; export $
+      FULL_PRODUCT_NAME=microdump_stackwalk; export $
+      PRODUCT_NAME=microdump_stackwalk; export $
+      PRODUCT_TYPE=com.apple.product-type.tool; export $
+      SDKROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk; $
+      export $
+      SRCROOT=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release/../../vendor/breakpad; $
+      export SOURCE_ROOT="$${SRCROOT}"; export $
+      TARGET_BUILD_DIR=/private/var/folders/d3/5kh1fj9j3954p3tnb3nb_jmr0000gn/T/ipython-desktop-build/atom-shell/out/Release; $
+      export TEMP_DIR="$${TMPDIR}"; (cd ../../vendor/breakpad && dsymutil $
+      ../../out/Release/microdump_stackwalk -o $
+      ../../out/Release/microdump_stackwalk.dSYM); G=$$?; ((exit $$G) || rm $
+      -rf microdump_stackwalk) && exit $$G)

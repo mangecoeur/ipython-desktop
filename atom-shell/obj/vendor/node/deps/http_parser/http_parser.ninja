@@ -1,0 +1,26 @@
+defines = -DHTTP_PARSER_STRICT=0 -DCOMPONENT_BUILD -DGURL_DLL -DSKIA_DLL $
+    -DNDEBUG -DUSING_V8_SHARED -DWEBKIT_DLL $
+    -DSK_SUPPORT_LEGACY_GETTOPDEVICE -DSK_SUPPORT_LEGACY_BITMAP_CONFIG $
+    -DSK_SUPPORT_LEGACY_DEVICE_VIRTUAL_ISOPAQUE $
+    -DSK_SUPPORT_LEGACY_N32_NAME -DSK_SUPPORT_LEGACY_SETCONFIG $
+    -DSK_IGNORE_ETC1_SUPPORT -DSK_IGNORE_GPU_DITHER
+includes = -I../../vendor/node/deps/http_parser
+cflags = -isysroot $
+    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk $
+    -fasm-blocks -mpascal-strings -Os -gdwarf-2 -mmacosx-version-min=10.8 $
+    -arch x86_64 -Wall -Wextra -Wno-unused-parameter $
+    -Wno-missing-field-initializers -Wno-parentheses-equality $
+    -Wno-unused-function -Wno-sometimes-uninitialized -Wno-pointer-sign $
+    -Wno-string-plus-int -Wno-unused-variable -Wno-deprecated-declarations $
+    -Wno-return-type -Wno-gnu-folding-constant
+cflags_c = -std=c99 -fcolor-diagnostics
+cflags_cc = -std=c++11 -stdlib=libc++ -fno-rtti -fno-exceptions $
+    -fcolor-diagnostics
+cflags_objc = $cflags_c
+cflags_objcc = $cflags_cc
+
+build obj/vendor/node/deps/http_parser/http_parser.http_parser.o: cc $
+    ../../vendor/node/deps/http_parser/http_parser.c
+
+build libhttp_parser.a: alink $
+    obj/vendor/node/deps/http_parser/http_parser.http_parser.o
