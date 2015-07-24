@@ -44,28 +44,36 @@ var prefs = require('../ipyd_preferences.js');
 var server = {};
 
 //Global ref to webview, hope it doesn't get GCed
-var nbServerView = null;
+var nbServerView = document.getElementById('ipython-webview');
+var notebookTabs = [];
 
 window.onbeforeunload = function(e){
     cleanupWebviews();
     return true;
 }
 
+registerButtons();
+registerIPC();
+
 
 function requestServerStatus(serverId) {
-    ipc.send('server.status');
+    ipc.send('server:status');
 };
 
 //Atom-shell tends to crash if you dont clean up web views
 function cleanupWebviews(){
-    nbServerView.setAttribute('src', 'about:blank');
+    nbServerView = document.getElementById('ipython-webview');
+    if (nbServerView) {
+        nbServerView.setAttribute('src', 'about:blank');
 
-    for (var i=0; i<notebookTabs.length; i++) {
-        var v = notebookTabs[i];
-        v.tab.remove();
-        v.tabPane.remove();
+        for (var i=0; i<notebookTabs.length; i++) {
+            var v = notebookTabs[i];
+            v.tab.remove();
+            v.tabPane.remove();
+        }
+        notebookTabs = [];
     }
-    notebookTabs = [];
+
 }
 
 function registerButtons(){
@@ -75,9 +83,9 @@ function registerButtons(){
         //}
         var serverId = prefs.defaultId();
 
-        $rootScope.$broadcast("serverStarting", serverId);
+        //$rootScope.$broadcast("serverStarting", serverId);
 
-        ipc.send('server.start', serverId);
+        ipc.send('server:start', serverId);
     })
 
     $('#stop-ipython-button').click(function () {
@@ -86,13 +94,12 @@ function registerButtons(){
         //}
         var serverId = prefs.defaultId();
 
-        $rootScope.$broadcast("serverStopping", serverId);
+        //$rootScope.$broadcast("serverStopping", serverId);
 
-        ipc.send('server.stop', serverId);
+        ipc.send('server:stop', serverId);
 
     })
 }
-
 
 
 function registerIPC(){
@@ -100,27 +107,26 @@ function registerIPC(){
     // register ipc event listeners
     //-----------------------
     //TODO: Server started should only get called once, but JS refuses to comply!
-    ipc.on('server.started', function(srv) {
+    ipc.on('server:started', function(srv) {
         server.title = "IPython Notebook";
         if (!_.isEmpty(srv.conf.ipyProfile)) {
             server.title += " - " + srv.conf.ipyProfile.ipyProfile;
         }
 
-        Page.setTitle(server.title);
+        document.title = server.title;
 
         setupServerView(srv.url);
         server.status = 'started';
 
     });
 
-    ipc.on('server.stopped', function(serverId) {
-        $scope.server.status = 'stopped';
+    ipc.on('server:stopped', function(serverId) {
         document.title = "IPython";
         cleanupWebviews();
     });
 
 
-    ipc.on('server.status', function(srvlist) {
+    ipc.on('server:status', function(srvlist) {
         var servers = srvlist;
         if (srvlist.length > 0) {
             server.status = 'started';
@@ -210,23 +216,6 @@ function setupServerView(url){
     // });
 }
 
-
-/* App Module */
-angular.module('ipython', ['ui.bootstrap'])
-    .config(
-    function($sceDelegateProvider) {
-        $sceDelegateProvider.resourceUrlWhitelist([
-            // Allow same origin resource loads.
-            'self',
-            // Allow loading from our assets domain.  Notice the difference between * and **.
-            'http://127.0.0.1**',
-            'http://localhost**'
-        ]);
-    })
-    .service('ipyServers', IpyServerService)
-    .factory('Page', PageService)
-    .controller('StartPage', StartPage)
-    .controller('EditIpythonConfig', EditIpythonConfig);
 
 
 function PageService() {

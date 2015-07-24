@@ -33,6 +33,8 @@ class Application
     @pkgJson = require '../../package.json'
     @windows = []
 
+    @handleIPC()
+
     @openWithOptions(options)
 
     #Quit when all windows are closed (including for Mac - though this could change)
@@ -76,22 +78,39 @@ class Application
     menu.on 'application:run-specs', =>
       @openWithOptions(test: true)
 
-  removeAppWindow: (appWindow) =>
+  removeAppWindow: (appWindow)->
     @windows.splice(idx, 1) for w, idx in @windows when w is appWindow
 
+  openServerWindow: (server) =>
+    win = new BrowserWindow({ width: 800, height: 600, show: false });
+    @windows.push(win);
+    win.on 'closed', =>
+      win = null
+
+    server.on 'server:stopped', =>
+      win.close();
+
+
+    win.loadUrl(server.url);
+    win.show();
+
   handleIPC: () ->
-    ipc.on 'server.start', (event, serverId) ->
-      if (!isRunning(serverId))
-        nbservers.startServer(serverId, event.sender)
+    ipc.on 'server:start', (event, serverId) ->
+      if (!nbservers.isRunning(serverId))
+        # Create server and open window when it's started
+        srv = nbservers.startServer(serverId)
+
+        srv.on 'server:started', =>
+          @openServerWindow(srv)
 
       else if (nbservers.isRunning(serverId))
         srv = _.pick(nbservers.runningServer(serverId), 'id', 'name', 'conf', 'url', 'type');
         event.sender.send('server.started', srv); #don't bother with process
 
-    ipc.on 'server.stop', (event, serverId) ->
+    ipc.on 'server:stop', (event, serverId) ->
       nbservers.stopServer(serverId, event.sender);
 
-    ipc.on 'server.status', (event, serverId) ->
+    ipc.on 'server:status', (event, serverId) ->
       if (serverId != undefined)
         result = nbservers.runningServer(serverId)
         result = _.pick(result, 'id', 'name', 'conf', 'url', 'type')
@@ -100,9 +119,9 @@ class Application
         result = _.map nbservers.runningServers, (srv, srvId) =>
             return _.pick(srv, 'id', 'name', 'conf', 'url', 'type')
 
-        event.sender.send('server.status', result)
+        event.sender.send('server:status', result)
 
-    ipc.on 'notebook.new-window', (event, url) ->
+    ipc.on 'notebook:new-window', (event, url) ->
       win = new BrowserWindow({ width: 800, height: 600, 'node-integration':false });
       win.loadUrl(url);
 #      win.webContents.addEventListener 'new-window', (e) -> require('shell').openExternal(e.url)
